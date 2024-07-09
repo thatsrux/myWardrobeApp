@@ -13,11 +13,11 @@ struct OutfitScreen: View {
     @State private var isInfoOutfitScreenActive = false
     @State var stato:Int
     
-    struct Outfits{
-        let shirt:Dress
-        let trousers:Dress
-        let shoes:Dress
-    }
+//    struct Outfits{
+//        let shirt:Dress
+//        let trousers:Dress
+//        let shoes:Dress
+//    }
     
     @State private var searchText = ""
     @State private var searchIsActive = false
@@ -29,7 +29,7 @@ struct OutfitScreen: View {
                     Text("Outfit che non indossi da un po'")
                     ScrollView(.horizontal,showsIndicators: false){
                         HStack(spacing:20){
-                            ForEach(0..<nOutfits) { n in
+                            ForEach(0..<10) { n in
                                 Button("\(n)",systemImage: "tshirt") {
                                     print("Outfit che non indossi da un po'")
                                     stato = n
@@ -102,5 +102,5 @@ struct OutfitScreen: View {
     }
 }
 #Preview {
-    OutfitScreen(stato: 0,nOutfits: ["primo","secondo"])
+    OutfitScreen(stato: 0)
 }
