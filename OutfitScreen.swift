@@ -11,20 +11,24 @@ struct OutfitScreen: View {
     @State private var isAddOutfitScreenActive = false
     @State private var isEditOutfitScreenActive = false
     @State private var isInfoOutfitScreenActive = false
-    @State var stato:Int
+    @State var stato:Outfit
     
     @State private var searchText = ""
     @State private var searchIsActive = false
     
+    let maglia = Vestito(nomeImmagine: "gucci", tipoVestito: "maglia")
+    let pantaloni = Vestito(nomeImmagine: "cargo", tipoVestito:"pantaloni")
+    let scarpe = Vestito(nomeImmagine: "balenciaga", tipoVestito: "scarpe")
     
+    let maglia_estiva = Vestito(nomeImmagine: "thenorthface", tipoVestito: "maglia")
+    let pantaloni_estivi = Vestito(nomeImmagine: "bermuda", tipoVestito: "pantaloni")
+    let scarpe_estive = Vestito(nomeImmagine: "vans", tipoVestito: "scarpe")
     
     
     var body: some View {
+        let outfit = Outfit(shirt:maglia,trousers:pantaloni,shoes:scarpe)
+        let outfit_estivo = Outfit(shirt:maglia_estiva,trousers:pantaloni_estivi,shoes:scarpe_estive)
         NavigationStack {
-            let maglia = Vestito(nomeImmagine: "gucci", tipoVestito: "maglia")
-            let pantaloni = Vestito(nomeImmagine: "cargo", tipoVestito:"pantaloni")
-            let scarpe = Vestito(nomeImmagine: "balenciaga", tipoVestito: "scarpe")
-            let outfit = Outfit(shirt:maglia,trousers:pantaloni,shoes:scarpe)
             ScrollView{
                 VStack{
                     Text("Outfit che non indossi da un po'")
@@ -32,8 +36,7 @@ struct OutfitScreen: View {
                         HStack(spacing:20){
                             ForEach(0..<10) { n in
                                 Button("\(n)",systemImage: "tshirt") {
-                                    print("Outfit che non indossi da un po'")
-                                    stato = n
+                                    stato = outfit
                                     isInfoOutfitScreenActive = true
                                 }
                                     .foregroundStyle(.black)
@@ -53,8 +56,7 @@ struct OutfitScreen: View {
                         HStack(spacing:20){
                             ForEach(0..<10) { n in
                                 Button("\(n)",systemImage: "tshirt") {
-                                    print("Outfit estivo")
-                                    stato = n
+                                    stato = outfit_estivo
                                     isInfoOutfitScreenActive = true
                                 }
                                 .foregroundStyle(.black)
@@ -103,5 +105,5 @@ struct OutfitScreen: View {
     }
 }
 #Preview {
-    OutfitScreen(stato: 0)
+    OutfitScreen(stato: Outfit(shirt: Vestito(nomeImmagine: " ", tipoVestito: " "), trousers: Vestito(nomeImmagine: " ", tipoVestito: " "), shoes:Vestito(nomeImmagine: " ", tipoVestito: " ")))
 }
