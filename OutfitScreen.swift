@@ -13,17 +13,18 @@ struct OutfitScreen: View {
     @State private var isInfoOutfitScreenActive = false
     @State var stato:Int
     
-//    struct Outfits{
-//        let shirt:Dress
-//        let trousers:Dress
-//        let shoes:Dress
-//    }
-    
     @State private var searchText = ""
     @State private var searchIsActive = false
     
+    
+    
+    
     var body: some View {
         NavigationStack {
+            let maglia = Vestito(nomeImmagine: "gucci", tipoVestito: "maglia")
+            let pantaloni = Vestito(nomeImmagine: "cargo", tipoVestito:"pantaloni")
+            let scarpe = Vestito(nomeImmagine: "balenciaga", tipoVestito: "scarpe")
+            let outfit = Outfit(shirt:maglia,trousers:pantaloni,shoes:scarpe)
             ScrollView{
                 VStack{
                     Text("Outfit che non indossi da un po'")
