@@ -54,6 +54,7 @@ struct AddClothScreen: View {
     }
     
     var body: some View {
+        ScrollView{
             VStack{
                 if image.image != nil {
                     Image(uiImage: image.image!)
@@ -146,8 +147,19 @@ struct AddClothScreen: View {
                   Text("Colore primario: ")
                 }
                 
-            } .navigationTitle("Advices")
+            }
+        
+        } 
+        .toolbar {
+            ToolbarItem (placement: .topBarTrailing){
+                Button (action: {
+                    
+                }, label: {Text("Salva")}
+                )
+            }
         }
+        .navigationTitle("Advices")
+    }
         
                 
 }
