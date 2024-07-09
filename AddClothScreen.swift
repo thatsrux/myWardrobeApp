@@ -8,27 +8,11 @@
 import SwiftUI
 
 struct AddClothScreen: View {
-    var image: Image?
-    
-    init(image: Image?){
-        self.image = image
-    }
-    
     var body: some View {
-    
-        if image != nil {
-            image!
-                .resizable()
-                      .aspectRatio(contentMode: .fit)
-                      .frame(width: 300, height: 400)
-        }
-        
-        
-        
+        Text("Add Cloth Screen!")
     }
-                
 }
 
 #Preview {
-    AddClothScreen(image: Image("icon"))
+    AddClothScreen()
 }

@@ -11,7 +11,7 @@ struct ContentView: View {
     @State var selection = 0
     var body: some View {
             TabView(selection: $selection) {
-                OutfitScreen()
+                OutfitScreen(stato: "prova",nOutfits: 5)
                     .tabItem {
                         Label ("Galleria Outfit", systemImage: "tshirt")
                         .accentColor(.primary)}
@@ -29,6 +29,18 @@ struct ContentView: View {
                     }.tag(1)
                 }
         }
+}
+
+
+struct Vestito: Identifiable, Codable {
+    var id = UUID()
+    var nome: String?
+    var nomeImmagine: String
+    var tipoVestito: String
+//    var stile: String
+//    var colore1: Color
+//    var colore2: Color?
+//    var colore3: Color?
 }
 
 #Preview {

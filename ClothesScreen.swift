@@ -92,15 +92,13 @@ struct ClothesScreen: View {
             .sheet(isPresented: $isPresenting){
                 ImagePicker(uiImage: $uiImage, isPresenting:  $isPresenting, sourceType: $sourceType)
                     .onDisappear{
-                        isAddClothScreenActive = true
+                        isEditClothScreenActive = true
                     }
                 
             }
+            
             .navigationDestination(isPresented: $isAddClothScreenActive){
-                if uiImage != nil {
-                    AddClothScreen(image: Image(uiImage: uiImage!))
-                }
-                
+                AddClothScreen()
             }
             .navigationDestination(isPresented: $isEditClothScreenActive){
                 EditClothScreen()

@@ -6,22 +6,77 @@
 //
 
 import SwiftUI
+import ColorKit
+
+class imageClass {
+    let image = UIImage(named: "gucci2")
+    let averageColor: UIColor!
+    let colors: [UIColor]
+    let palette: ColorPalette
+    
+    init() {
+        do {
+            averageColor = try image!.averageColor()
+            
+            colors = try image!.dominantColors(with: .fair, algorithm: .kMeansClustering)
+            
+            palette = ColorPalette(orderedColors: colors, ignoreContrastRatio: true)!
+        }
+        catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+}
 
 struct AdvicesScreen: View {
+    let image = imageClass.init()
     var body: some View {
         NavigationStack {
             VStack{
-                Image("icon")
+                Image("gucci2")
                     .resizable()
                     .frame(width: 80, height: 80)
+                //Image(uiImage: image!)
                 
-                Text("Cambia il tuo stile!")
+                Text("Colore medio")
                     .fontWeight(.bold)
-                    .font(.system(size: 36))
                 
-                Text("Crea il tuo guardaroba personale.\nTocca il pulsante + per iniziare!")
-                    .multilineTextAlignment(.center)
-                    .font(.system(size: 20))
+                Rectangle()
+                    .fill(Color(image.averageColor))
+                
+                Text("Colori presi dall'array")
+                    .fontWeight(.bold)
+                
+                Rectangle()
+                    .fill(Color(image.colors[0]))
+                Rectangle()
+                    .fill(Color(image.colors[1]))
+                Rectangle()
+                    .fill(Color(image.colors[2]))
+                Rectangle()
+                    .fill(Color(image.colors[3]))
+                Rectangle()
+                    .fill(Color(image.colors[4]))
+                Rectangle()
+                    .fill(Color(image.colors[5]))
+                Rectangle()
+                    .fill(Color(image.colors[6]))
+                Rectangle()
+                    .fill(Color(image.colors[7]))
+                
+                
+                Text("Colori presi dalla palette")
+                    .fontWeight(.bold)
+                
+                Text("Colore principale:")
+                Rectangle()
+                .fill(Color(image.palette.secondary!))
+                Text("Colore secondario:")
+                Rectangle()
+                    .fill(Color(image.palette.primary))
+                Text("Colore di sfondo:")
+                Rectangle()
+                    .fill(Color(image.palette.background))
             } .navigationTitle("Advices")
         }
     }
