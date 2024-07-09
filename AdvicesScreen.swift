@@ -8,11 +8,16 @@
 import SwiftUI
 import ColorKit
 
+let imageName = "gucci"
+
 class imageClass {
-    let image = UIImage(named: "gucci2")
+    let image = UIImage(named: imageName)
     let averageColor: UIColor!
     let colors: [UIColor]
     let palette: ColorPalette
+    
+    var primaryColor: UIColor!
+    var secondaryColor: UIColor!
     
     init() {
         do {
@@ -25,6 +30,18 @@ class imageClass {
         catch {
             fatalError(error.localizedDescription)
         }
+        
+        primaryColor = colors[0]
+        secondaryColor = colors[0]
+        
+        colors.forEach {color in
+            if (color.difference(from: averageColor, using: .CIE94) < primaryColor.difference(from: averageColor, using: .CIE94)) {
+                primaryColor = color
+            }
+        }
+        if (secondaryColor == primaryColor) {
+            secondaryColor = colors[1]
+        }
     }
 }
 
@@ -33,7 +50,7 @@ struct AdvicesScreen: View {
     var body: some View {
         NavigationStack {
             VStack{
-                Image("gucci2")
+                Image(imageName)
                     .resizable()
                     .frame(width: 80, height: 80)
                 //Image(uiImage: image!)
@@ -47,36 +64,61 @@ struct AdvicesScreen: View {
                 Text("Colori presi dall'array")
                     .fontWeight(.bold)
                 
-                Rectangle()
-                    .fill(Color(image.colors[0]))
-                Rectangle()
-                    .fill(Color(image.colors[1]))
-                Rectangle()
-                    .fill(Color(image.colors[2]))
-                Rectangle()
-                    .fill(Color(image.colors[3]))
-                Rectangle()
-                    .fill(Color(image.colors[4]))
-                Rectangle()
-                    .fill(Color(image.colors[5]))
-                Rectangle()
-                    .fill(Color(image.colors[6]))
-                Rectangle()
-                    .fill(Color(image.colors[7]))
-                
+                HStack() {
+                    Rectangle()
+                        .fill(Color(image.colors[0]))
+                    Rectangle()
+                        .fill(Color(image.colors[1]))
+                    Rectangle()
+                        .fill(Color(image.colors[2]))
+                    Rectangle()
+                        .fill(Color(image.colors[3]))
+                    Rectangle()
+                        .fill(Color(image.colors[4]))
+                    Rectangle()
+                        .fill(Color(image.colors[5]))
+                    Rectangle()
+                        .fill(Color(image.colors[6]))
+                    Rectangle()
+                        .fill(Color(image.colors[7]))
+                }
                 
                 Text("Colori presi dalla palette")
                     .fontWeight(.bold)
                 
-                Text("Colore principale:")
-                Rectangle()
-                .fill(Color(image.palette.secondary!))
-                Text("Colore secondario:")
-                Rectangle()
-                    .fill(Color(image.palette.primary))
-                Text("Colore di sfondo:")
-                Rectangle()
-                    .fill(Color(image.palette.background))
+                HStack() {
+                    VStack() {
+                        Text("Principale:")
+                        Rectangle()
+                            .fill(Color(image.palette.primary))
+                    }
+                    VStack() {
+                        Text("Secondario:")
+                        Rectangle()
+                            .fill(Color(image.palette.secondary!))
+                    }
+                    VStack() {
+                        Text("Sfondo:")
+                        Rectangle()
+                            .fill(Color(image.palette.background))
+                    }
+                }
+                
+                Text("Processo analitico")
+                    .fontWeight(.bold)
+                HStack() {
+                    VStack() {
+                        Text("Colore principale:")
+                        Rectangle()
+                            .fill(Color(image.primaryColor))
+                    }
+                    VStack() {
+                        Text("Colore secondario:")
+                        Rectangle()
+                            .fill(Color(image.secondaryColor))
+                    }
+                }
+                
             } .navigationTitle("Advices")
         }
     }
