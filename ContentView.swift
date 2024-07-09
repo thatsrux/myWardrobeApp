@@ -11,7 +11,7 @@ struct ContentView: View {
     @State var selection = 0
     var body: some View {
             TabView(selection: $selection) {
-                OutfitScreen(stato: "prova",nOutfits: 5)
+                OutfitScreen(stato: "prova",nOutfits: ["primo","secondo"])
                     .tabItem {
                         Label ("Galleria Outfit", systemImage: "tshirt")
                         .accentColor(.primary)}

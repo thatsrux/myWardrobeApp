@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct InfoOutfitScreen: View {
-    @State var stato:String
+    @State var stato:Int
     
-    init(stato: String){
+    init(stato: Int){
         self.stato = stato
     }
     var body: some View {
-        Text("InfoOutfitScreen \($stato)")
+        Text("Hai selezionato l'outfit numero\(stato)")
     }
 }
 
 #Preview {
-    InfoOutfitScreen(stato: "prova")
+    InfoOutfitScreen(stato: 0)
 }

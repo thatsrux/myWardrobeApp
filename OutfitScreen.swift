@@ -11,9 +11,14 @@ struct OutfitScreen: View {
     @State private var isAddOutfitScreenActive = false
     @State private var isEditOutfitScreenActive = false
     @State private var isInfoOutfitScreenActive = false
-    @State var stato:String
+    @State var stato:Int
     
-    var nOutfits:Int
+    struct Outfits{
+        let shirt:Dress
+        let trousers:Dress
+        let shoes:Dress
+    }
+    
     @State private var searchText = ""
     @State private var searchIsActive = false
     
@@ -24,10 +29,10 @@ struct OutfitScreen: View {
                     Text("Outfit che non indossi da un po'")
                     ScrollView(.horizontal,showsIndicators: false){
                         HStack(spacing:20){
-                            ForEach(0..<10) {
-                                Button("\($0)",systemImage: "tshirt") {
+                            ForEach(0..<nOutfits) { n in
+                                Button("\(n)",systemImage: "tshirt") {
                                     print("Outfit che non indossi da un po'")
-                                    stato = "Outfit che non indossi da un po' numero "
+                                    stato = n
                                     isInfoOutfitScreenActive = true
                                 }
                                     .foregroundStyle(.black)
@@ -45,10 +50,10 @@ struct OutfitScreen: View {
                     Text("Outfit estivi")
                     ScrollView(.horizontal,showsIndicators: false){
                         HStack(spacing:20){
-                            ForEach(0..<10) {
-                                Button("\($0)",systemImage: "tshirt") {
+                            ForEach(0..<10) { n in
+                                Button("\(n)",systemImage: "tshirt") {
                                     print("Outfit estivo")
-                                    stato = "Outfit estivo numero "
+                                    stato = n
                                     isInfoOutfitScreenActive = true
                                 }
                                 .foregroundStyle(.black)
@@ -97,5 +102,5 @@ struct OutfitScreen: View {
     }
 }
 #Preview {
-    OutfitScreen(stato: "prova",nOutfits: 3)
+    OutfitScreen(stato: 0,nOutfits: ["primo","secondo"])
 }
