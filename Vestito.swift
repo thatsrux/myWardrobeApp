@@ -24,3 +24,8 @@ struct Outfit{
     let trousers:Vestito
     let shoes:Vestito
 }
+
+
+
+
+

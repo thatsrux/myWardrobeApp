@@ -11,7 +11,7 @@ struct ContentView: View {
     @State var selection = 0
     var body: some View {
             TabView(selection: $selection) {
-                OutfitScreen(stato: Outfit(shirt: Vestito(nomeImmagine: "", tipoVestito: ""), trousers: Vestito(nomeImmagine: "", tipoVestito: ""), shoes: Vestito(nomeImmagine: "", tipoVestito: "")))
+                OutfitScreen(stato:[Outfit(shirt: Vestito(nomeImmagine: "", tipoVestito: ""), trousers: Vestito(nomeImmagine: "", tipoVestito: ""), shoes: Vestito(nomeImmagine: "", tipoVestito: ""))])
                     .tabItem {
                         Label ("Galleria Outfit", systemImage: "tshirt")
                         .accentColor(.primary)}

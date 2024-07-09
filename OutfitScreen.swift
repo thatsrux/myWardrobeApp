@@ -8,26 +8,32 @@
 import SwiftUI
 
 struct OutfitScreen: View {
+    
+
     @State private var isAddOutfitScreenActive = false
     @State private var isEditOutfitScreenActive = false
     @State private var isInfoOutfitScreenActive = false
-    @State var stato:Outfit
+    @State var stato:[Outfit]
     
     @State private var searchText = ""
     @State private var searchIsActive = false
     
-    let maglia = Vestito(nomeImmagine: "gucci", tipoVestito: "maglia")
-    let pantaloni = Vestito(nomeImmagine: "cargo", tipoVestito:"pantaloni")
-    let scarpe = Vestito(nomeImmagine: "balenciaga", tipoVestito: "scarpe")
+    @State var maglia = Vestito(nomeImmagine: "", tipoVestito: "")
+    @State var pantaloni = Vestito(nomeImmagine: "", tipoVestito: "")
+    @State var scarpe = Vestito(nomeImmagine: "", tipoVestito: "")
+        
+    @State var maglia_estiva = Vestito(nomeImmagine: "", tipoVestito: "")
+    @State var pantaloni_estivi = Vestito(nomeImmagine: "", tipoVestito: "")
+    @State var scarpe_estive = Vestito(nomeImmagine: "", tipoVestito: "")
     
-    let maglia_estiva = Vestito(nomeImmagine: "thenorthface", tipoVestito: "maglia")
-    let pantaloni_estivi = Vestito(nomeImmagine: "bermuda", tipoVestito: "pantaloni")
-    let scarpe_estive = Vestito(nomeImmagine: "vans", tipoVestito: "scarpe")
+    @State var outfits:[Outfit] = []
+
     
     
     var body: some View {
-        let outfit = Outfit(shirt:maglia,trousers:pantaloni,shoes:scarpe)
-        let outfit_estivo = Outfit(shirt:maglia_estiva,trousers:pantaloni_estivi,shoes:scarpe_estive)
+        //let outfit = Outfit(shirt:maglia,trousers:pantaloni,shoes:scarpe)
+        //let outfit_estivo = Outfit(shirt:maglia_estiva,trousers:pantaloni_estivi,shoes:scarpe_estive)
+        
         NavigationStack {
             ScrollView{
                 VStack{
@@ -36,7 +42,12 @@ struct OutfitScreen: View {
                         HStack(spacing:20){
                             ForEach(0..<10) { n in
                                 Button("\(n)",systemImage: "tshirt") {
-                                    stato = outfit
+                                    maglia = Vestito(nomeImmagine: "gucci", tipoVestito: "maglia")
+                                    pantaloni = Vestito(nomeImmagine: "cargo", tipoVestito:"pantaloni")
+                                    scarpe = Vestito(nomeImmagine: "balenciaga", tipoVestito: "scarpe")
+                                    outfits.append(Outfit(shirt: maglia, trousers: pantaloni, shoes: scarpe))
+                                    stato = outfits
+                                    
                                     isInfoOutfitScreenActive = true
                                 }
                                     .foregroundStyle(.black)
@@ -56,7 +67,12 @@ struct OutfitScreen: View {
                         HStack(spacing:20){
                             ForEach(0..<10) { n in
                                 Button("\(n)",systemImage: "tshirt") {
-                                    stato = outfit_estivo
+                                     maglia_estiva = Vestito(nomeImmagine: "thenorthface", tipoVestito: "maglia")
+                                     pantaloni_estivi = Vestito(nomeImmagine: "bermuda", tipoVestito: "pantaloni")
+                                     scarpe_estive = Vestito(nomeImmagine: "vans", tipoVestito: "scarpe")
+                                    
+                                    stato = outfits
+                                    
                                     isInfoOutfitScreenActive = true
                                 }
                                 .foregroundStyle(.black)
@@ -99,11 +115,11 @@ struct OutfitScreen: View {
                 EditOutfitScreen()
             }
             .navigationDestination(isPresented: $isInfoOutfitScreenActive){
-                InfoOutfitScreen(stato: stato)
+                InfoOutfitScreen(outfits: outfits)
             }
         }
     }
 }
 #Preview {
-    OutfitScreen(stato: Outfit(shirt: Vestito(nomeImmagine: " ", tipoVestito: " "), trousers: Vestito(nomeImmagine: " ", tipoVestito: " "), shoes:Vestito(nomeImmagine: " ", tipoVestito: " ")))
+    OutfitScreen(stato:[Outfit(shirt: Vestito(nomeImmagine: "", tipoVestito: ""), trousers: Vestito(nomeImmagine: "", tipoVestito: ""), shoes: Vestito(nomeImmagine: "", tipoVestito: ""))])
 }
