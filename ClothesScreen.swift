@@ -98,7 +98,7 @@ struct ClothesScreen: View {
             }
             
             .navigationDestination(isPresented: $isAddClothScreenActive){
-                AddClothScreen()
+                AddClothScreen(image: Image(uiImage: uiImage!), string: "")
             }
             .navigationDestination(isPresented: $isEditClothScreenActive){
                 EditClothScreen()
