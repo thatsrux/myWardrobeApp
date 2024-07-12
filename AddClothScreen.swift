@@ -20,18 +20,23 @@ class Cloth {
     var secondColor: Color?
     var thirdColor: Color?
     
+    var palette: [UIColor]
+    
     let backgroundRemoval = BackgroundRemoval()
     
     init(image: UIImage) {
         self.image = image
         do {
             self.imageNoBackground = try backgroundRemoval.removeBackground(image: image)
+            
+            palette = try imageNoBackground.dominantColors(with: .fair, algorithm: .kMeansClustering)
         }catch {
             fatalError(error.localizedDescription)
         }
         let colors = imageNoBackground.getColors()
         mainColor = Color((colors?.background)!)
         if let second = colors?.primary {
+            let
             secondColor = Color(second)
         }
         if let third = colors?.secondary {
@@ -75,6 +80,27 @@ struct AddClothScreen: View {
                             Rectangle()
                                 .fill(Color(thirdColor))
                         }
+                    }
+                }
+                HStack() {
+                    Text("È sbagliato? Scegli tra questi")
+                    VStack() {
+                        Rectangle()
+                            .fill(Color((cloth.palette[0])))
+                        Rectangle()
+                            .fill(Color((cloth.palette[1])))
+                        Rectangle()
+                            .fill(Color((cloth.palette[2])))
+                        Rectangle()
+                            .fill(Color((cloth.palette[3])))
+                        Rectangle()
+                            .fill(Color((cloth.palette[4])))
+                        Rectangle()
+                            .fill(Color((cloth.palette[5])))
+                        Rectangle()
+                            .fill(Color((cloth.palette[6])))
+                        Rectangle()
+                            .fill(Color((cloth.palette[7])))
                     }
                 }
                 LabeledContent {
