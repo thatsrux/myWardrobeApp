@@ -77,6 +77,26 @@ struct AddClothScreen: View {
                         }
                     }
                 }
+                LabeledContent {
+                    TextField("", text: $s)
+                } label: {
+                    Text("Categoria: ")
+                }
+                LabeledContent {
+                    TextField("", text: $s)
+                } label: {
+                    Text("Nome articolo: ")
+                }
+                LabeledContent {
+                    TextField("", text: $s)
+                } label: {
+                    Text("Taglia: ")
+                }
+                LabeledContent {
+                    TextField("", text: $s)
+                } label: {
+                    Text("Colore primario: ")
+                }
             }
             
         }
