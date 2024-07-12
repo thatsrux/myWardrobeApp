@@ -26,26 +26,29 @@ struct OutfitScreen: View {
     @State var pantaloni_estivi = Vestito(nomeImmagine: "", tipoVestito: "")
     @State var scarpe_estive = Vestito(nomeImmagine: "", tipoVestito: "")
     
-    @State var outfits:[Outfit] = []
+    
 
     
     
     var body: some View {
-        //let outfit = Outfit(shirt:maglia,trousers:pantaloni,shoes:scarpe)
-        //let outfit_estivo = Outfit(shirt:maglia_estiva,trousers:pantaloni_estivi,shoes:scarpe_estive)
+
+        @State var outfits:[Outfit] = [Outfit(shirt: maglia, trousers: pantaloni, shoes: scarpe)]
+
         
+        @State var range: Range<Int> = 0..<outfits.count
+
         NavigationStack {
             ScrollView{
                 VStack{
                     Text("Outfit che non indossi da un po'")
                     ScrollView(.horizontal,showsIndicators: false){
                         HStack(spacing:20){
-                            ForEach(0..<10) { n in
+                            ForEach(range, id: \.self) { n in
                                 Button("\(n)",systemImage: "tshirt") {
                                     maglia = Vestito(nomeImmagine: "gucci", tipoVestito: "maglia")
                                     pantaloni = Vestito(nomeImmagine: "cargo", tipoVestito:"pantaloni")
                                     scarpe = Vestito(nomeImmagine: "balenciaga", tipoVestito: "scarpe")
-                                    outfits.append(Outfit(shirt: maglia, trousers: pantaloni, shoes: scarpe))
+                                    
                                     stato = outfits
                                     
                                     isInfoOutfitScreenActive = true
@@ -65,7 +68,7 @@ struct OutfitScreen: View {
                     Text("Outfit estivi")
                     ScrollView(.horizontal,showsIndicators: false){
                         HStack(spacing:20){
-                            ForEach(0..<10) { n in
+                            ForEach(range, id: \.self) { n in
                                 Button("\(n)",systemImage: "tshirt") {
                                      maglia_estiva = Vestito(nomeImmagine: "thenorthface", tipoVestito: "maglia")
                                      pantaloni_estivi = Vestito(nomeImmagine: "bermuda", tipoVestito: "pantaloni")
