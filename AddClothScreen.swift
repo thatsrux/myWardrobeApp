@@ -11,28 +11,31 @@ import UIImageColors
 import BackgroundRemoval
 
 
-let backgroundRemoval = BackgroundRemoval()
 
 
 class Cloth {
     let image: UIImage
+    let imageNoBackground: UIImage
     let mainColor: Color
     var secondColor: Color?
     var thirdColor: Color?
     
+    let backgroundRemoval = BackgroundRemoval()
+    
     init(image: UIImage) {
+        self.image = image
         do {
-            self.image = try backgroundRemoval.removeBackground(image: image)
-            let colors = image.getColors()
-            mainColor = Color((colors?.background)!)
-            if let second = colors?.primary {
-                secondColor = Color(second)
-            }
-            if let third = colors?.secondary {
-                thirdColor = Color(third)
-            }
+            self.imageNoBackground = try backgroundRemoval.removeBackground(image: image)
         }catch {
             fatalError(error.localizedDescription)
+        }
+        let colors = imageNoBackground.getColors()
+        mainColor = Color((colors?.background)!)
+        if let second = colors?.primary {
+            secondColor = Color(second)
+        }
+        if let third = colors?.secondary {
+            thirdColor = Color(third)
         }
     }
 }
@@ -49,7 +52,7 @@ struct AddClothScreen: View {
     var body: some View {
         ScrollView{
             VStack{
-                Image(uiImage: cloth.image)
+                Image(uiImage: cloth.imageNoBackground)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 150, height: 200)
