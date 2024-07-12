@@ -100,7 +100,7 @@ struct ClothesScreen: View {
             .navigationDestination(isPresented: $isAddClothScreenActive){
                 if uiImage != nil {
                     
-                    AddClothScreen(cloth: Cloth(image: uiImage!), string: "")
+                    AddClothScreen(cloth: Cloth(image: uiImage!))
                 }
             }
             .navigationDestination(isPresented: $isEditClothScreenActive){
