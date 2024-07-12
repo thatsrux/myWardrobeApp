@@ -59,6 +59,8 @@ struct AddClothScreen: View {
     @State var cpColor3:Color
 
     
+    @ObservedObject var classifier = ImageClassifier()
+    
     init(cloth: Cloth){
         self.cloth = cloth
         self.categoriaText = ""
@@ -67,7 +69,7 @@ struct AddClothScreen: View {
         self.cpColor1 = Color(cloth.mainColor)
         self.cpColor2 = Color(cloth.secondColor!)
         self.cpColor3 = Color(cloth.thirdColor!)
-
+        classifier.detect(uiImage: cloth.image)
     }
     
     var body: some View {
@@ -77,6 +79,23 @@ struct AddClothScreen: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 150, height: 200)
+                
+                Group {
+                    if classifier.imageConfidence>0 {
+                        HStack{
+                            Text("Image categories:")
+                                .font(.caption)
+                            Text(classifier.imageClass)
+                                .bold()
+                            Text("(\(classifier.imageConfidence))")
+                        }
+                    } else {
+                        HStack{
+                            Text("Image categories: NA")
+                                .font(.caption)
+                        }
+                    }
+                }
                 HStack() {
                     VStack() {
                         Text("Colore principale")
