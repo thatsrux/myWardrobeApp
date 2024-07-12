@@ -82,9 +82,9 @@ struct AddClothScreen: View {
                         }
                     }
                 }
-                HStack() {
+                VStack() {
                     Text("È sbagliato? Scegli tra questi")
-                    VStack() {
+                    HStack() {
                         Rectangle()
                             .fill(Color((cloth.palette[0])))
                         Rectangle()
