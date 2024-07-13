@@ -11,7 +11,7 @@ class ImageClassifier: ObservableObject {
     
     @Published private var classifier = Classifier()
     
-    var imageClass: String {
+     var imageClass: String {
         var res = ""
         if classifier.confidence != nil {
                 res = classifier.results!

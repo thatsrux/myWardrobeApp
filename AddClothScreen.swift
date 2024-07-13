@@ -3,14 +3,13 @@ import SwiftUI
 
 struct AddClothScreen: View {
     var cloth: Cloth
-    @State var categoriaText = ""
     @State var nomeText = ""
     @State var tagliaText = ""
     
     @State var cpColor1:Color
     @State var cpColor2:Color
     @State var cpColor3:Color
-
+    @State var categoriaClassificata = ""
     
     @ObservedObject var classifier = ImageClassifier()
     
@@ -22,6 +21,7 @@ struct AddClothScreen: View {
         self.cpColor2 = Color(cloth.secondColor!)
         self.cpColor3 = Color(cloth.thirdColor!)
         classifier.detect(uiImage: cloth.image)
+        self.categoriaClassificata = classifier.imageClass
     }
     
     var body: some View {
@@ -48,58 +48,88 @@ struct AddClothScreen: View {
                         }
                     }
                 }
-                HStack() {
-                    VStack() {
-                        Text("Colore principale")
-                        Rectangle()
-                            .fill(Color((cpColor1)))
+                HStack(alignment:.center) {
+                    VStack(alignment:.center) {
+                        Text("Colore principale").frame(
+                            minWidth: 0,
+                            maxWidth: 80,
+                            minHeight: 0,
+                            maxHeight: 50,
+                            alignment: .center
+                        ).multilineTextAlignment(.center)
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(.black, lineWidth: 1)
+                            .fill(Color(cpColor1))
+                            .frame(width: 100, height: 50)
+                            .overlay {
+                                ColorPicker("", selection: $cpColor1)
+                                    .opacity(0.015)
+                                    .scaleEffect(x:3,y:3)
+                                    .labelsHidden()
+                            }
                     }
                     if let secondColor = cloth.secondColor {
                         VStack() {
-                            Text("Secondo colore")
-                            Rectangle()
+                            Text("Secondo colore").frame(
+                                minWidth: 0,
+                                maxWidth: 80,
+                                minHeight: 0,
+                                maxHeight: 50,
+                                alignment: .center
+                            ).multilineTextAlignment(.center)
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(.black, lineWidth: 1)
                                 .fill(Color(cpColor2))
+                                .frame(width: 100, height: 50)
+                                .overlay {
+                                    ColorPicker("", selection: $cpColor2)
+                                        .opacity(0.015)
+                                        .scaleEffect(x:3,y:3)
+                                        .labelsHidden()
+                                    
+                                }
                         }
                     }
                     if let thirdColor = cloth.thirdColor {
                         VStack() {
-                            Text("Terzo colore")
-                            Rectangle()
+                            Text("Terzo colore").frame(
+                                minWidth: 0,
+                                maxWidth: 80,
+                                minHeight: 0,
+                                maxHeight: 50,
+                                alignment: .center
+                            ).multilineTextAlignment(.center)
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(.black, lineWidth: 1)
                                 .fill(Color(cpColor3))
+                                .frame(width: 100, height: 50)
+                                .overlay {
+                                    ColorPicker("", selection: $cpColor3)
+                                        .opacity(0.015)
+                                        .scaleEffect(x:3,y:3)
+                                        .labelsHidden()
+                                    
+                                }
+                            
                         }
                     }
-                }
+                }.padding(.bottom,20)
                 
                 LabeledContent {
-                    TextField("", text: $categoriaText)
+                    TextField("\(classifier.imageClass)",text:$categoriaClassificata).padding(.bottom,10).padding(.leading,10).foregroundColor(.blue)
                 } label: {
                     Text("Categoria: ")
-                }
+                }.padding(.leading,20)
                 LabeledContent {
-                    TextField("", text: $nomeText)
+                    TextField("", text: $nomeText).padding(.bottom,10).padding(.leading,10)
                 } label: {
                     Text("Nome articolo: ")
-                }
+                }.padding(.leading,20)
                 LabeledContent {
-                    TextField("", text: $tagliaText)
+                    TextField("", text: $tagliaText).padding(.bottom,10).padding(.leading,10)
                 } label: {
                     Text("Taglia: ")
-                }
-                LabeledContent {
-                    ColorPicker("", selection: $cpColor1)
-                } label: {
-                    Text("Colore primario: ")
-                }
-                LabeledContent {
-                    ColorPicker("", selection: $cpColor2)
-                } label: {
-                    Text("Colore secondario: ")
-                }
-                LabeledContent {
-                    ColorPicker("", selection: $cpColor3)
-                } label: {
-                    Text("Colore terziario: ")
-                }
+                }.padding(.leading,20)
             }
             
         }
