@@ -9,19 +9,21 @@ import SwiftUI
 
 struct InfoOutfitScreen: View {
     
-    var outfits:[Outfit] = []
-    @State var outfit:Outfit
-    @State var index:Int
+    var outfits = [Outfit]()
+    var index:Int
+    var outfit:Outfit
     
     init(outfits: [Outfit],index:Int){
         self.outfits = outfits
         self.index = index
-        outfit = outfits[index]
+        self.outfit = outfits[index]
     }
     var body: some View {
         Text("""
 Outfit selezionato (indice \(index))
-\(outfits[index].shirt.nome)
+\(outfits[index].shirt.categoria): \(outfits[index].shirt.nome)
+\(outfits[index].trousers.categoria): \(outfits[index].trousers.nome)
+\(outfits[index].shoes.categoria): \(outfits[index].shoes.nome)
 """)
     }
 }
