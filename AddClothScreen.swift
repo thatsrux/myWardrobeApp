@@ -1,5 +1,49 @@
+//
+//  AddClothScreen.swift
+//  myWardrobe
+//
+//  Created by Studente on 02/07/24.
+//
+// https://github.com/yamoridon/ColorThiefSwift
+//
+
 import ColorKit
 import SwiftUI
+
+import UIImageColors
+import BackgroundRemoval
+import ColorThiefSwift
+
+class Cloth {
+    let image: UIImage
+    let imageNoBackground: UIImage
+    
+    var mainColor: Color
+    var secondColor: Color
+    var thirdColor: Color
+    
+    var categoria: String
+    var nome:String
+    var taglia:String
+    
+    let backgroundRemoval = BackgroundRemoval()
+    
+    init(image: UIImage) {
+        self.image = image
+        do {
+            self.imageNoBackground = try backgroundRemoval.removeBackground(image: image)
+        }catch {
+            fatalError(error.localizedDescription)
+        }
+        let colors = ColorThief.getPalette(from: imageNoBackground, colorCount: 9, quality: 10, ignoreWhite: false)
+        mainColor = Color(colors![0].makeUIColor())
+        secondColor = Color(colors![1].makeUIColor())
+        thirdColor = Color(colors![2].makeUIColor())
+        self.categoria = ""
+        self.nome = ""
+        self.taglia = ""
+    }
+}
 
 struct AddClothScreen: View {
     var cloth: Cloth
@@ -10,7 +54,7 @@ struct AddClothScreen: View {
     @State var cpColor1:Color
     @State var cpColor2:Color
     @State var cpColor3:Color
-
+    
     
     @ObservedObject var classifier = ImageClassifier()
     
@@ -19,8 +63,8 @@ struct AddClothScreen: View {
         self.nomeText = ""
         self.tagliaText = ""
         self.cpColor1 = Color(cloth.mainColor)
-        self.cpColor2 = Color(cloth.secondColor!)
-        self.cpColor3 = Color(cloth.thirdColor!)
+        self.cpColor2 = Color(cloth.secondColor)
+        self.cpColor3 = Color(cloth.thirdColor)
         classifier.detect(uiImage: cloth.image)
     }
     
@@ -54,21 +98,20 @@ struct AddClothScreen: View {
                         Rectangle()
                             .fill(Color((cpColor1)))
                     }
-                    if let secondColor = cloth.secondColor {
-                        VStack() {
-                            Text("Secondo colore")
-                            Rectangle()
-                                .fill(Color(cpColor2))
-                        }
+                    
+                    VStack() {
+                        Text("Secondo colore")
+                        Rectangle()
+                            .fill(Color(cpColor2))
                     }
-                    if let thirdColor = cloth.thirdColor {
-                        VStack() {
-                            Text("Terzo colore")
-                            Rectangle()
-                                .fill(Color(cpColor3))
-                        }
+                    VStack() {
+                        Text("Terzo colore")
+                        Rectangle()
+                            .fill(Color(cpColor3))
+                        
                     }
                 }
+                Text("ColorThief")
                 
                 LabeledContent {
                     TextField("", text: $categoriaText)
@@ -116,8 +159,7 @@ struct AddClothScreen: View {
     
     
 }
-/*
- #Preview {
- //AddClothScreen(image: imageClass(image: Image("")), string: "")
- }
- */
+
+#Preview {
+    AddClothScreen(cloth: Cloth(image: UIImage(named: "juve2")!))
+}
