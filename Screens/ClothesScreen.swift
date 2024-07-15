@@ -12,7 +12,7 @@ struct ClothesScreen: View {
     @State var uiImage: UIImage?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
-    @State private var isAddClothScreenActive = false
+    @State private var isInfoClothScreenActive = false
     @State private var isEditClothScreenActive = false
     
     @State private var searchText = ""
@@ -22,7 +22,7 @@ struct ClothesScreen: View {
     
     func deleteCloth(at offsets: IndexSet){
         clothes.remove(atOffsets: offsets)
-        AddClothScreen.save(clothes: clothes)
+        InfoClothScreen.save(clothes: clothes)
     }
     
     var body: some View {
@@ -31,7 +31,7 @@ struct ClothesScreen: View {
             ScrollView(.horizontal,showsIndicators: false){
                 HStack(spacing:20){
                     ForEach($clothes, id: \.id) { $cloth in
-                        NavigationLink(destination: AddClothScreen(cloth: cloth, clothes: $clothes)){
+                        NavigationLink(destination: InfoClothScreen(cloth: cloth, clothes: $clothes)){
                             Image(uiImage: UIImage(data: cloth.image)!)
                                 .resizable()
                                 .frame(maxWidth: 200,maxHeight: 200)
@@ -65,7 +65,7 @@ struct ClothesScreen: View {
                     Image(systemName: "camera")
                 }
                 Button {
-                        isAddClothScreenActive = true
+                        isInfoClothScreenActive = true
                     }
                     
                 label: {
@@ -87,14 +87,14 @@ struct ClothesScreen: View {
             .sheet(isPresented: $isPresenting){
                 ImagePicker(uiImage: $uiImage, isPresenting:  $isPresenting, sourceType: $sourceType)
                     .onDisappear{
-                        isAddClothScreenActive = true
+                        isInfoClothScreenActive = true
                     }
                 
             }
             
-            .navigationDestination(isPresented: $isAddClothScreenActive){
+            .navigationDestination(isPresented: $isInfoClothScreenActive){
                 if uiImage != nil {
-                    AddClothScreen(image: uiImage!, clothes: $clothes)
+                    InfoClothScreen(image: uiImage!, clothes: $clothes)
                 }
             }
             .navigationDestination(isPresented: $isEditClothScreenActive){

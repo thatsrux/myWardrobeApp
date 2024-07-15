@@ -115,11 +115,6 @@ struct OutfitScreen: View {
                     Image(systemName: "ellipsis.circle")
                 }
                 }
-            }.navigationDestination(isPresented: $isAddOutfitScreenActive){
-                AddOutfitScreen()
-            }
-            .navigationDestination(isPresented: $isEditOutfitScreenActive){
-                EditOutfitScreen()
             }
             .navigationDestination(isPresented: $isInfoOutfitScreenActive){
                 if outfits.isEmpty == false{
