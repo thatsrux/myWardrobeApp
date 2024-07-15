@@ -20,6 +20,11 @@ struct ClothesScreen: View {
     
     @Binding var clothes : [Cloth]
     
+    func deleteCloth(at offsets: IndexSet){
+        clothes.remove(atOffsets: offsets)
+        AddClothScreen.save(clothes: clothes)
+    }
+    
     var body: some View {
         NavigationStack {
             List{
@@ -27,6 +32,7 @@ struct ClothesScreen: View {
                     $cloth in
                     Image(uiImage: UIImage(data: cloth.image)!)
                 }
+                .onDelete(perform: deleteCloth)
             }
             .navigationTitle("My Wardrobe")
             .toolbar {
@@ -60,6 +66,7 @@ struct ClothesScreen: View {
                 }
                     Button {
                         isEditClothScreenActive = true
+                        clothes.removeAll()
                     }
                 label: {
                     Image(systemName: "ellipsis.circle")
