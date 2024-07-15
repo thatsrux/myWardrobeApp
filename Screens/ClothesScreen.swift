@@ -27,13 +27,20 @@ struct ClothesScreen: View {
     
     var body: some View {
         NavigationStack {
-            List{
-                ForEach($clothes, id: \.id) {
-                    $cloth in
-                    Image(uiImage: UIImage(data: cloth.image)!)
-                }
-                .onDelete(perform: deleteCloth)
+            Text("T-Shirt")
+            ScrollView(.horizontal,showsIndicators: false){
+                HStack(spacing:20){
+                    ForEach($clothes, id: \.id) { $cloth in
+                        NavigationLink(destination: AddClothScreen(cloth: cloth, clothes: $clothes)){
+                            Image(uiImage: UIImage(data: cloth.image)!)
+                                .resizable()
+                                .frame(maxWidth: 200,maxHeight: 200)
+                        }
+                        
+                    }
+                }.padding()
             }
+            Spacer()
             .navigationTitle("My Wardrobe")
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {

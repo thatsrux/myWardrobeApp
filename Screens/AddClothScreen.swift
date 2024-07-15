@@ -7,7 +7,7 @@ struct AddClothScreen: View {
     var image: UIImage
     
     @Binding var clothes: [Cloth]
-    
+    var cloth:Cloth
     @State var nomeText = ""
     @State var tagliaText = ""
     
@@ -23,8 +23,32 @@ struct AddClothScreen: View {
     
     private var imageNoBackground: UIImage
     
+    init(cloth: Cloth, clothes: Binding<[Cloth]>){
+        self.cloth = cloth
+        self.cloth.mainColor = cloth.mainColor
+        self.cloth.secondColor = cloth.secondColor
+        self.cloth.thirdColor = cloth.thirdColor
+        self.cloth.image = cloth.image
+        self.cloth.categoria = cloth.categoria
+        self.cloth.nome = cloth.nome
+        self.cloth.taglia = cloth.taglia
+        _clothes = clothes
+        
+        let backgroundRemoval = BackgroundRemoval()
+        do {
+            self.imageNoBackground = try backgroundRemoval.removeBackground(image: UIImage(data: cloth.image)!)
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+        self.image = UIImage(data:cloth.image)!
+    }
+    
     init(image: UIImage, clothes: Binding<[Cloth]>) {
+        
         self.image = image
+        
+        self.cloth = Cloth(image: image)
+        
         _clothes = clothes
         
         let backgroundRemoval = BackgroundRemoval()

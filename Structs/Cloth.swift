@@ -6,7 +6,7 @@ import BackgroundRemoval
 class Cloth: Identifiable, Codable {
     var id = UUID()
     
-    let image: Data
+    var image: Data
     
     var mainColor: ColorData
     var secondColor: ColorData
