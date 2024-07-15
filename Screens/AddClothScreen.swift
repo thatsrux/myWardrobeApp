@@ -4,7 +4,6 @@
 //
 //  Created by Studente on 02/07/24.
 //
-// https://github.com/yamoridon/ColorThiefSwift
 //
 
 import ColorKit
@@ -14,28 +13,8 @@ import UIImageColors
 import BackgroundRemoval
 import ColorThiefSwift
 
-
-//
-//    let backgroundRemoval = BackgroundRemoval()
-//
-//    init(image: UIImage) {
-//        self.image = image
-//        do {
-//            self.imageNoBackground = try backgroundRemoval.removeBackground(image: image)
-//        }catch {
-//            fatalError(error.localizedDescription)
-//        }
-//        let colors = ColorThief.getPalette(from: imageNoBackground, colorCount: 9, quality: 10, ignoreWhite: false)
-//        mainColor = Color(colors![0].makeUIColor())
-//        secondColor = Color(colors![1].makeUIColor())
-//        thirdColor = Color(colors![2].makeUIColor())
-//        self.categoria = ""
-//        self.nome = ""
-//        self.taglia = ""
-//    }
-//}
-
 struct AddClothScreen: View {
+    var image: UIImage
     var cloth: Cloth
     
     @State var nomeText = ""
@@ -44,25 +23,28 @@ struct AddClothScreen: View {
     @State var cpColor1: Color
     @State var cpColor2: Color
     @State var cpColor3: Color
+    
     @State var categoriaClassificata = ""
     
     @ObservedObject var classifier = ImageClassifier()
     
     var imageNoBackground : UIImage
     
-    init(cloth: Cloth){
-        self.cloth = cloth
+    init(image: UIImage){
+        self.image = image
         
         let backgroundRemoval = BackgroundRemoval()
         
         
         do {
-            imageNoBackground = try backgroundRemoval.removeBackground(image: UIImage(data: cloth.image)!)
+            imageNoBackground = try backgroundRemoval.removeBackground(image: image)
         }catch {
             fatalError(error.localizedDescription)
         }
         
         let colors = ColorThief.getPalette(from: imageNoBackground, colorCount: 9, quality: 10, ignoreWhite: false)
+        
+        cloth = Cloth(image: image)
         
         cloth.mainColor = ColorData(uiColor: colors![0].makeUIColor())
         cloth.secondColor = ColorData(uiColor: colors![1].makeUIColor())
@@ -70,10 +52,13 @@ struct AddClothScreen: View {
         
         self.nomeText = ""
         self.tagliaText = ""
+        
         self.cpColor1 = Color(red: cloth.mainColor.red, green: cloth.mainColor.green, blue: cloth.mainColor.blue)
         self.cpColor2 = Color(red: cloth.secondColor.red, green: cloth.secondColor.green, blue: cloth.secondColor.blue)
         self.cpColor3 = Color(red: cloth.thirdColor.red, green: cloth.thirdColor.green, blue: cloth.thirdColor.blue)
+        
         classifier.detect(uiImage: UIImage(data: cloth.image)!)
+        
         self.categoriaClassificata = classifier.imageClass
     }
     
@@ -199,8 +184,6 @@ struct AddClothScreen: View {
     
 }
 
-/*
- #Preview {
- AddClothScreen(cloth: Cloth(image: UIImage(named: "juve2")!))
- }
- */
+#Preview {
+    AddClothScreen(image: UIImage(named: "juve2")!)
+}
