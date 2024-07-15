@@ -17,6 +17,8 @@ struct AddClothScreen: View {
     var image: UIImage
     var cloth: Cloth
     
+    // @Binding var clothes: [Cloth]
+    
     @State var nomeText = ""
     @State var tagliaText = ""
     
@@ -28,6 +30,15 @@ struct AddClothScreen: View {
     
     @ObservedObject var classifier = ImageClassifier()
     
+    static func salva(clothes:[Cloth]){
+        do {
+            let data = try JSONEncoder().encode(clothes)
+            UserDefaults.standard.set(data, forKey: "CLOTHES")
+        } catch {
+            print("Impossibile salvare \(error)")
+        }
+    }
+    
     var imageNoBackground : UIImage
     
     init(image: UIImage){
@@ -38,7 +49,7 @@ struct AddClothScreen: View {
         
         do {
             imageNoBackground = try backgroundRemoval.removeBackground(image: image)
-        }catch {
+        } catch {
             fatalError(error.localizedDescription)
         }
         
@@ -60,6 +71,9 @@ struct AddClothScreen: View {
         classifier.detect(uiImage: UIImage(data: cloth.image)!)
         
         self.categoriaClassificata = classifier.imageClass
+        
+        
+        
     }
     
     var body: some View {
@@ -173,7 +187,9 @@ struct AddClothScreen: View {
         .toolbar {
             ToolbarItem (placement: .topBarTrailing){
                 Button (action: {
-                    
+                    //clothes.append(cloth)
+                    //AddClothScreen.salva(clothes: clothes)
+                    print("salvata")
                 }, label: {Text("Salva")}
                 )
             }

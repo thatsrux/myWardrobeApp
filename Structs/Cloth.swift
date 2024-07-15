@@ -23,16 +23,6 @@ class Cloth: Identifiable, Codable {
         self.thirdColor = ColorData(uiColor: .black)
     }
     
-    init(image: UIImage, mainColor: ColorData, secondColor: ColorData, thirdColor: ColorData, categoria: String, nome: String, taglia: String) {
-        self.image = image.pngData()!
-        self.mainColor = mainColor
-        self.secondColor = secondColor
-        self.thirdColor = thirdColor
-        self.categoria = categoria
-        self.nome = nome
-        self.taglia = taglia
-    }
-    
     init(nome: String, categoria: String) {
 
         self.image = UIImage(imageLiteralResourceName: "juve1").pngData()!
