@@ -7,20 +7,24 @@ class Cloth: Identifiable, Codable {
     var id = UUID()
     
     let image: Data
-    let imageNoBackground: Data
     
     var mainColor: ColorData
     var secondColor: ColorData
     var thirdColor: ColorData
     
-    var categoria: String
-    var nome: String
-    var taglia: String
+    var categoria: String = ""
+    var nome: String = ""
+    var taglia: String = ""
     
-    init(id: UUID = UUID(), image: UIImage, imageNoBackground: UIImage, mainColor: ColorData, secondColor: ColorData, thirdColor: ColorData, categoria: String, nome: String, taglia: String) {
-        self.id = id
+    init(image: UIImage){
         self.image = image.pngData()!
-        self.imageNoBackground = imageNoBackground.pngData()!
+        self.mainColor = ColorData(uiColor: .black)
+        self.secondColor = ColorData(uiColor: .black)
+        self.thirdColor = ColorData(uiColor: .black)
+    }
+    
+    init(image: UIImage, mainColor: ColorData, secondColor: ColorData, thirdColor: ColorData, categoria: String, nome: String, taglia: String) {
+        self.image = image.pngData()!
         self.mainColor = mainColor
         self.secondColor = secondColor
         self.thirdColor = thirdColor
@@ -28,6 +32,17 @@ class Cloth: Identifiable, Codable {
         self.nome = nome
         self.taglia = taglia
     }
+    /*
+    init(nome: String, categoria: String) {
+        self.image = UIImage().pngData()!
+        self.mainColor = ColorData(uiColor: .white)
+        self.secondColor = ColorData(uiColor: .white)
+        self.thirdColor = ColorData(uiColor: .white)
+        self.categoria = categoria
+        self.nome = nome
+        self.taglia = ""
+    }*/
+    
 }
 
 struct ColorData: Codable {

@@ -27,7 +27,8 @@ Outfit selezionato (indice \(index))
 """)
     }
 }
-
+/*
 #Preview {
     InfoOutfitScreen(outfits: [Outfit(shirt: Cloth(nome: " ", categoria: " "), trousers: Cloth(nome: " ", categoria: " "), shoes:Cloth(nome: " ", categoria: " "))],index: 0)
 }
+*/

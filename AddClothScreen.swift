@@ -48,8 +48,26 @@ struct AddClothScreen: View {
     
     @ObservedObject var classifier = ImageClassifier()
     
+    var imageNoBackground : UIImage
+    
     init(cloth: Cloth){
         self.cloth = cloth
+        
+        let backgroundRemoval = BackgroundRemoval()
+        
+        
+        do {
+            imageNoBackground = try backgroundRemoval.removeBackground(image: UIImage(data: cloth.image)!)
+        }catch {
+            fatalError(error.localizedDescription)
+        }
+        
+        let colors = ColorThief.getPalette(from: imageNoBackground, colorCount: 9, quality: 10, ignoreWhite: false)
+        
+        cloth.mainColor = ColorData(uiColor: colors![0].makeUIColor())
+        cloth.secondColor = ColorData(uiColor: colors![1].makeUIColor())
+        cloth.thirdColor = ColorData(uiColor: colors![2].makeUIColor())
+        
         self.nomeText = ""
         self.tagliaText = ""
         self.cpColor1 = Color(red: cloth.mainColor.red, green: cloth.mainColor.green, blue: cloth.mainColor.blue)
@@ -62,7 +80,7 @@ struct AddClothScreen: View {
     var body: some View {
         ScrollView{
             VStack{
-                Image(uiImage: UIImage(data: cloth.imageNoBackground)!)
+                Image(uiImage: imageNoBackground)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 150, height: 200)
