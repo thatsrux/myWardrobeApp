@@ -32,16 +32,17 @@ class Cloth: Identifiable, Codable {
         self.nome = nome
         self.taglia = taglia
     }
-    /*
+    
     init(nome: String, categoria: String) {
-        self.image = UIImage().pngData()!
+
+        self.image = UIImage(imageLiteralResourceName: "juve1").pngData()!
         self.mainColor = ColorData(uiColor: .white)
         self.secondColor = ColorData(uiColor: .white)
         self.thirdColor = ColorData(uiColor: .white)
         self.categoria = categoria
         self.nome = nome
         self.taglia = ""
-    }*/
+    }
     
 }
 
