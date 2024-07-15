@@ -28,63 +28,63 @@ struct ClothesScreen: View {
                     Image(uiImage: UIImage(data: cloth.image)!)
                 }
             }
-        }
-        .navigationTitle("My Wardrobe")
-        .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                
-                Menu() {
-                    Button(action: {
-                        isPresenting = true
-                        sourceType = .photoLibrary
-                    }) {
-                        Text("Scegli foto")
-                        Image(systemName: "photo.on.rectangle")
+            .navigationTitle("My Wardrobe")
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    
+                    Menu() {
+                        Button(action: {
+                            isPresenting = true
+                            sourceType = .photoLibrary
+                        }) {
+                            Text("Scegli foto")
+                            Image(systemName: "photo.on.rectangle")
+                        }
+                        Button(action: {
+                            isPresenting = true
+                            sourceType = .camera
+                        }) {
+                            Text("Scatta foto")
+                            Image(systemName: "camera")
+                        }
                     }
-                    Button(action: {
-                        isPresenting = true
-                        sourceType = .camera
-                    }) {
-                        Text("Scatta foto")
-                        Image(systemName: "camera")
+                label:{
+                    Image(systemName: "camera")
+                }
+                    Button {
+                        isAddClothScreenActive = true
                     }
+                    
+                label: {
+                    Image(systemName: "plus.circle")
                 }
-            label:{
-                Image(systemName: "camera")
+                    Button {
+                        isEditClothScreenActive = true
+                    }
+                label: {
+                    Image(systemName: "ellipsis.circle")
+                    
+                }
+                    
+                }
             }
-                Button {
-                    isAddClothScreenActive = true
-                }
+            .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
+            .sheet(isPresented: $isPresenting){
+                ImagePicker(uiImage: $uiImage, isPresenting:  $isPresenting, sourceType: $sourceType)
+                    .onDisappear{
+                        isAddClothScreenActive = true
+                    }
                 
-            label: {
-                Image(systemName: "plus.circle")
             }
-                Button {
-                    isEditClothScreenActive = true
-                }
-            label: {
-                Image(systemName: "ellipsis.circle")
-                
-            }
-                
-            }
-        }
-        .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
-        .sheet(isPresented: $isPresenting){
-            ImagePicker(uiImage: $uiImage, isPresenting:  $isPresenting, sourceType: $sourceType)
-                .onDisappear{
-                    isAddClothScreenActive = true
-                }
             
-        }
-        
-        .navigationDestination(isPresented: $isAddClothScreenActive){
-            if uiImage != nil {
-                AddClothScreen(image: uiImage!)
+            .navigationDestination(isPresented: $isAddClothScreenActive){
+                if uiImage != nil {
+                    AddClothScreen(image: uiImage!, clothes: $clothes)
+                }
             }
-        }
-        .navigationDestination(isPresented: $isEditClothScreenActive){
-            EditClothScreen()
+            .navigationDestination(isPresented: $isEditClothScreenActive){
+                EditClothScreen()
+            }
         }
     }
 }

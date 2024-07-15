@@ -41,7 +41,7 @@ struct ColorData: Codable {
     let green: CGFloat
     let blue: CGFloat
     let alpha: CGFloat
-
+    
     init(_ color: ColorData){
         self.red = color.red
         self.green = color.green
