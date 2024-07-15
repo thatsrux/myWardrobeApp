@@ -9,22 +9,25 @@ import SwiftUI
 
 struct InfoOutfitScreen: View {
     
-    var outfits:[Outfit] = []
-    @State var stato:[Outfit]
+    var outfits = [Outfit]()
+    var index:Int
+    var outfit:Outfit
     
-    init(outfits: [Outfit]){
+    init(outfits: [Outfit],index:Int){
         self.outfits = outfits
-        stato = [Outfit(shirt: Vestito(nomeImmagine: " ", tipoVestito: " "), trousers: Vestito(nomeImmagine: " ", tipoVestito: " "), shoes:Vestito(nomeImmagine: " ", tipoVestito: " "))]
+        self.index = index
+        self.outfit = outfits[index]
     }
     var body: some View {
         Text("""
-Hai selezionato l'outfit:
-
-numero di outfit: \(outfits.count)
+Outfit selezionato (indice \(index))
+\(outfits[index].shirt.categoria): \(outfits[index].shirt.nome)
+\(outfits[index].trousers.categoria): \(outfits[index].trousers.nome)
+\(outfits[index].shoes.categoria): \(outfits[index].shoes.nome)
 """)
     }
 }
 
 #Preview {
-    InfoOutfitScreen(outfits: [Outfit(shirt: Vestito(nomeImmagine: " ", tipoVestito: " "), trousers: Vestito(nomeImmagine: " ", tipoVestito: " "), shoes:Vestito(nomeImmagine: " ", tipoVestito: " "))])
+    InfoOutfitScreen(outfits: [Outfit(shirt: Cloth(nome: " ", categoria: " "), trousers: Cloth(nome: " ", categoria: " "), shoes:Cloth(nome: " ", categoria: " "))],index: 0)
 }

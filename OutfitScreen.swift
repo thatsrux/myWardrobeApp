@@ -9,73 +9,85 @@ import SwiftUI
 
 struct OutfitScreen: View {
     
-
+    
     @State private var isAddOutfitScreenActive = false
     @State private var isEditOutfitScreenActive = false
     @State private var isInfoOutfitScreenActive = false
-    @State var stato:[Outfit]
+    @State var outfits1 = [Outfit]()
+    @State var outfits2 = [Outfit]()
+    @State var outfits = [Outfit]()
+    @State var range1: Range<Int> = 0..<0
+    @State var range2: Range<Int> = 0..<0
+    @State var index:Int
     
     @State private var searchText = ""
     @State private var searchIsActive = false
-    
-    @State var maglia = Vestito(nomeImmagine: "", tipoVestito: "")
-    @State var pantaloni = Vestito(nomeImmagine: "", tipoVestito: "")
-    @State var scarpe = Vestito(nomeImmagine: "", tipoVestito: "")
-        
-    @State var maglia_estiva = Vestito(nomeImmagine: "", tipoVestito: "")
-    @State var pantaloni_estivi = Vestito(nomeImmagine: "", tipoVestito: "")
-    @State var scarpe_estive = Vestito(nomeImmagine: "", tipoVestito: "")
-    
-    
 
+    @State var count1 = 0
+    @State var count2 = 0
+    init(outfits:[Outfit]){
+        // Aggiungere funzione che divide l'array totale degli outfit in un array per ogni tipologia di outfit
+        // Da capire perchè State Array non è mai vuoto ma ha [myWardrobe.Outfit(shirt: myWardrobe.Cloth, trousers: myWardrobe.Cloth, shoes: myWardrobe.Cloth)]
+        self.outfits1 = outfits
+        self.outfits2 = outfits
+        self.index = 0
+        self.range1 = 0..<self.outfits1.count
+        self.range2 = 0..<self.outfits2.count
+        print("nOutfit1:\(self.outfits1.count)\(self.outfits1)")
+        print("nOutfit2:\(self.outfits2.count)\(self.outfits2)")
+
+    }
+    
+    
     
     
     var body: some View {
-
-        @State var outfits:[Outfit] = [Outfit(shirt: maglia, trousers: pantaloni, shoes: scarpe)]
-
         
-        @State var range: Range<Int> = 0..<outfits.count
-
+        
+        
         NavigationStack {
             ScrollView{
                 VStack{
                     Text("Outfit che non indossi da un po'")
+                    Button("Aggiungi Outfit ", systemImage: "plus", action: {
+                        outfits1.append(Outfit(shirt: Cloth(nome: "gucci \(count1)", categoria: "maglia \(count1)"), trousers: Cloth(nome: "cargo \(count1)", categoria: "pantaloni \(count1)"), shoes: Cloth(nome: "jordan \(count1)", categoria: "scarpe \(count1)")))
+                        count1 += 1
+                        range1 = 0..<outfits1.count-1
+                    })
                     ScrollView(.horizontal,showsIndicators: false){
                         HStack(spacing:20){
-                            ForEach(range, id: \.self) { n in
+                            ForEach(range1, id: \.self) { n in
                                 Button("\(n)",systemImage: "tshirt") {
-                                    maglia = Vestito(nomeImmagine: "gucci", tipoVestito: "maglia")
-                                    pantaloni = Vestito(nomeImmagine: "cargo", tipoVestito:"pantaloni")
-                                    scarpe = Vestito(nomeImmagine: "balenciaga", tipoVestito: "scarpe")
-                                    
-                                    stato = outfits
-                                    
+                                    outfits = outfits1
+                                    index = n
                                     isInfoOutfitScreenActive = true
                                 }
-                                    .foregroundStyle(.black)
-                                    .font(.largeTitle)
-                                    .frame(width: 200, height: 350)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 20)
-                                            .stroke(.red, lineWidth: 5)
-                                    )
+                                .foregroundStyle(.black)
+                                .font(.largeTitle)
+                                .frame(width: 200, height: 350)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .stroke(.red, lineWidth: 5)
+                                )
                             }
-                        }.padding()
+                        }
+                        .padding()
                     }
                     
                     Spacer().frame(height: 20)
                     Text("Outfit estivi")
+                    Button("Aggiungi outfit estivo", systemImage: "plus", action: {
+                        outfits2.append(Outfit(shirt: Cloth(nome: "TheNorthFace \(count2)", categoria: "maglia \(count2)"), trousers: Cloth(nome: "baggy \(count2)", categoria: "pantaloni \(count2)"), shoes: Cloth(nome: "balenciaga \(count2)", categoria: "scarpe \(count2)")))
+                        count2 += 1
+                        range2 = 0..<outfits2.count-1
+
+                    })
                     ScrollView(.horizontal,showsIndicators: false){
                         HStack(spacing:20){
-                            ForEach(range, id: \.self) { n in
+                            ForEach(range2, id: \.self) { n in
                                 Button("\(n)",systemImage: "tshirt") {
-                                     maglia_estiva = Vestito(nomeImmagine: "thenorthface", tipoVestito: "maglia")
-                                     pantaloni_estivi = Vestito(nomeImmagine: "bermuda", tipoVestito: "pantaloni")
-                                     scarpe_estive = Vestito(nomeImmagine: "vans", tipoVestito: "scarpe")
-                                    
-                                    stato = outfits
-                                    
+                                    outfits = outfits2
+                                    index = n
                                     isInfoOutfitScreenActive = true
                                 }
                                 .foregroundStyle(.black)
@@ -89,6 +101,9 @@ struct OutfitScreen: View {
                         }.padding()
                     }
                     Spacer()
+                }.onAppear{
+                    range1 = 0..<outfits1.count-1
+                    range2 = 0..<outfits2.count-1
                 }
             }
             .navigationTitle("My Outfits")
@@ -118,11 +133,17 @@ struct OutfitScreen: View {
                 EditOutfitScreen()
             }
             .navigationDestination(isPresented: $isInfoOutfitScreenActive){
-                InfoOutfitScreen(outfits: outfits)
+                if outfits.isEmpty == false{
+                    InfoOutfitScreen(outfits: outfits,index:index)
+                }
+                else{
+                    InfoOutfitScreen(outfits: outfits1,index:index)
+                }
+                
             }
         }
     }
 }
 #Preview {
-    OutfitScreen(stato:[Outfit(shirt: Vestito(nomeImmagine: "", tipoVestito: ""), trousers: Vestito(nomeImmagine: "", tipoVestito: ""), shoes: Vestito(nomeImmagine: "", tipoVestito: ""))])
+    OutfitScreen(outfits:[Outfit(shirt: Cloth(nome: "", categoria: ""), trousers: Cloth(nome: "", categoria: ""), shoes: Cloth(nome: "", categoria: ""))])
 }

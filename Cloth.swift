@@ -36,4 +36,17 @@ class Cloth {
         self.nome = ""
         self.taglia = ""
     }
+    
+    init(nome:String,categoria:String){
+        self.nome = nome
+        self.categoria = categoria
+        self.taglia = ""
+        
+        self.mainColor = Color(.white)
+        self.secondColor = Color(.white)
+        self.thirdColor = Color(.white)
+        
+        self.image = UIImage()
+        self.imageNoBackground = UIImage()
+    }
 }
