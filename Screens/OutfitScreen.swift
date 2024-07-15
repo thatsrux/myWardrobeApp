@@ -33,9 +33,6 @@ struct OutfitScreen: View {
         self.index = 0
         self.range1 = 0..<self.outfits1.count
         self.range2 = 0..<self.outfits2.count
-        print("nOutfit1:\(self.outfits1.count)\(self.outfits1)")
-        print("nOutfit2:\(self.outfits2.count)\(self.outfits2)")
-
     }
     
     

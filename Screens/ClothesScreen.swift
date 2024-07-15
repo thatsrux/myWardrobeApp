@@ -37,7 +37,6 @@ struct ClothesScreen: View {
             .navigationTitle("My Wardrobe")
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    
                     Menu() {
                         Button(action: {
                             isPresenting = true
@@ -46,6 +45,7 @@ struct ClothesScreen: View {
                             Text("Scegli foto")
                             Image(systemName: "photo.on.rectangle")
                         }
+                
                         Button(action: {
                             isPresenting = true
                             sourceType = .camera
@@ -57,17 +57,18 @@ struct ClothesScreen: View {
                 label:{
                     Image(systemName: "camera")
                 }
-                    Button {
+                Button {
                         isAddClothScreenActive = true
                     }
                     
                 label: {
                     Image(systemName: "plus.circle")
                 }
-                    Button {
+                
+                Button {
                         isEditClothScreenActive = true
                         clothes.removeAll()
-                    }
+                }
                 label: {
                     Image(systemName: "ellipsis.circle")
                     
