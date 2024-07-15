@@ -7,15 +7,16 @@ struct InfoClothScreen: View {
     var image: UIImage
     
     @Binding var clothes: [Cloth]
-    var cloth:Cloth
+    
+    var cloth: Cloth
+    
     @State var nomeText = ""
     @State var tagliaText = ""
+    @State var categoriaText = ""
     
-    @State var cpColor1: Color = .clear
-    @State var cpColor2: Color = .clear
-    @State var cpColor3: Color = .clear
-    
-    @State private var categoriaClassificata = ""
+    @State var cpColor1: Color
+    @State var cpColor2: Color
+    @State var cpColor3: Color
     
     @ObservedObject var classifier = ImageClassifier()
     
@@ -25,16 +26,16 @@ struct InfoClothScreen: View {
     
     init(cloth: Cloth, clothes: Binding<[Cloth]>){
         self.cloth = cloth
-        self.image = UIImage(data:cloth.image)!
+        self.image = UIImage(data: cloth.image)!
         
         self.cpColor1 = cloth.mainColor.toColor()
         self.cpColor2 = cloth.secondColor.toColor()
         self.cpColor3 = cloth.thirdColor.toColor()
         
-        self.cloth.image = cloth.image
-        self.cloth.categoria = cloth.categoria
-        self.cloth.nome = cloth.nome
-        self.cloth.taglia = cloth.taglia
+        nomeText = cloth.nome
+        tagliaText = cloth.taglia
+        categoriaText = cloth.categoria
+        
         _clothes = clothes
         
         let backgroundRemoval = BackgroundRemoval()
@@ -74,8 +75,14 @@ struct InfoClothScreen: View {
             cloth.thirdColor = ColorData(uiColor: colors[2].makeUIColor())
             
             classifier.detect(uiImage: UIImage(data: cloth.image)!)
-            self.categoriaClassificata = classifier.imageClass
+            self.categoriaText = classifier.imageClass
+            
+        } else {
+            self.cpColor1 = Color(.clear)
+            self.cpColor2 = Color(.clear)
+            self.cpColor3 = Color(.clear)
         }
+        
     }
     
     var body: some View {
@@ -145,7 +152,6 @@ struct InfoClothScreen: View {
                                             }
                                     }
                                     
-                                    
                                     VStack() {
                                         Text("Terzo colore").frame(
                                             minWidth: 0,
@@ -165,12 +171,11 @@ struct InfoClothScreen: View {
                                                     .labelsHidden()
                                                 
                                             }
-                                        
                                     }
                                 }.padding(.bottom,20)
                                 
                 LabeledContent {
-                    TextField("Categoria", text: $categoriaClassificata)
+                    TextField("Categoria", text: $categoriaText)
                 } label: {
                     Text("Categoria: ")
                 }
@@ -204,16 +209,19 @@ struct InfoClothScreen: View {
     
     func saveCloth() {
         let newCloth = Cloth(image: image)
+        
         newCloth.mainColor = ColorData(uiColor: UIColor(cpColor1))
         newCloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
         newCloth.thirdColor = ColorData(uiColor: UIColor(cpColor3))
+        
         newCloth.nome = nomeText
         newCloth.taglia = tagliaText
-        newCloth.categoria = categoriaClassificata
+        newCloth.categoria = categoriaText
         
         clothes.append(newCloth)
+        
         InfoClothScreen.save(clothes: clothes)
-        print("Saved")
+        
     }
     
     static func save(clothes: [Cloth]) {
