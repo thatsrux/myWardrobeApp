@@ -19,6 +19,8 @@ struct AddClothScreen: View {
     
     @ObservedObject var classifier = ImageClassifier()
     
+    @Environment(\.dismiss) private var dismiss
+    
     private var imageNoBackground: UIImage
     
     init(image: UIImage, clothes: Binding<[Cloth]>) {
@@ -151,7 +153,8 @@ struct AddClothScreen: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: {
-                    self.saveCloth()
+                    saveCloth()
+                    dismiss()
                 }) {
                     Text("Salva")
                 }

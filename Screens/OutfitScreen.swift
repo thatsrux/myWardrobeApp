@@ -35,14 +35,9 @@ struct OutfitScreen: View {
         self.range2 = 0..<self.outfits2.count
     }
     
-    
-    
-    
     var body: some View {
         
-        
-        
-        NavigationStack {
+    NavigationStack {
             ScrollView{
                 VStack{
                     Text("Outfit che non indossi da un po'")
@@ -108,16 +103,13 @@ struct OutfitScreen: View {
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
-                        isAddOutfitScreenActive = true
-                        print("A")
-                    }
+                        isAddOutfitScreenActive = true                    }
                     
                 label: {
                     Image(systemName: "plus.circle")
                 }
                     Button {
                         isEditOutfitScreenActive = true
-                        print("B")
                     }
                 label: {
                     Image(systemName: "ellipsis.circle")
