@@ -25,9 +25,12 @@ struct InfoClothScreen: View {
     
     init(cloth: Cloth, clothes: Binding<[Cloth]>){
         self.cloth = cloth
-        self.cloth.mainColor = cloth.mainColor
-        self.cloth.secondColor = cloth.secondColor
-        self.cloth.thirdColor = cloth.thirdColor
+        self.image = UIImage(data:cloth.image)!
+        
+        self.cpColor1 = cloth.mainColor.toColor()
+        self.cpColor2 = cloth.secondColor.toColor()
+        self.cpColor3 = cloth.thirdColor.toColor()
+        
         self.cloth.image = cloth.image
         self.cloth.categoria = cloth.categoria
         self.cloth.nome = cloth.nome
@@ -40,7 +43,6 @@ struct InfoClothScreen: View {
         } catch {
             fatalError(error.localizedDescription)
         }
-        self.image = UIImage(data:cloth.image)!
     }
     
     init(image: UIImage, clothes: Binding<[Cloth]>) {
@@ -57,6 +59,22 @@ struct InfoClothScreen: View {
             imageNoBackground = try backgroundRemoval.removeBackground(image: image)
         } catch {
             fatalError(error.localizedDescription)
+        }
+        
+        let colors = ColorThief.getPalette(from: imageNoBackground, colorCount: 9, quality: 10, ignoreWhite: false)
+        
+        if let colors = colors {
+            self.cpColor1 = Color(colors[0].makeUIColor())
+            self.cpColor2 = Color(colors[1].makeUIColor())
+            self.cpColor3 = Color(colors[2].makeUIColor())
+            
+            let cloth = Cloth(image: image)
+            cloth.mainColor = ColorData(uiColor: colors[0].makeUIColor())
+            cloth.secondColor = ColorData(uiColor: colors[1].makeUIColor())
+            cloth.thirdColor = ColorData(uiColor: colors[2].makeUIColor())
+            
+            classifier.detect(uiImage: UIImage(data: cloth.image)!)
+            self.categoriaClassificata = classifier.imageClass
         }
     }
     
@@ -171,9 +189,6 @@ struct InfoClothScreen: View {
                 }
             }
         }
-        .onAppear {
-            extractColorsAndClassify()
-        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: {
@@ -187,29 +202,11 @@ struct InfoClothScreen: View {
         .navigationTitle("Advices")
     }
     
-    func extractColorsAndClassify() {
-        let colors = ColorThief.getPalette(from: imageNoBackground, colorCount: 9, quality: 10, ignoreWhite: false)
-        
-        if let colors = colors {
-            self.cpColor1 = Color(colors[0].makeUIColor())
-            self.cpColor2 = Color(colors[1].makeUIColor())
-            self.cpColor3 = Color(colors[2].makeUIColor())
-            
-            let cloth = Cloth(image: image)
-            cloth.mainColor = ColorData(uiColor: colors[0].makeUIColor())
-            cloth.secondColor = ColorData(uiColor: colors[1].makeUIColor())
-            cloth.thirdColor = ColorData(uiColor: colors[2].makeUIColor())
-            
-            classifier.detect(uiImage: UIImage(data: cloth.image)!)
-            self.categoriaClassificata = classifier.imageClass
-        }
-    }
-    
-    private func saveCloth() {
+    func saveCloth() {
         let newCloth = Cloth(image: image)
         newCloth.mainColor = ColorData(uiColor: UIColor(cpColor1))
         newCloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
-        newCloth.secondColor = ColorData(uiColor: UIColor(cpColor3))
+        newCloth.thirdColor = ColorData(uiColor: UIColor(cpColor3))
         newCloth.nome = nomeText
         newCloth.taglia = tagliaText
         newCloth.categoria = categoriaClassificata

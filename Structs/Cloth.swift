@@ -71,5 +71,9 @@ struct ColorData: Codable {
     }
 
     var uiColor: UIColor { UIColor(red: red, green: green, blue: blue, alpha: alpha) }
+    
+    func toColor() -> Color {
+        return Color(red: Double(red), green: Double(green), blue: Double(blue))
+    }
 }
 
