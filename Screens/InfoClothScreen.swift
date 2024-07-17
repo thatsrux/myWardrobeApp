@@ -208,7 +208,7 @@ struct InfoClothScreen: View {
     }
     
     func saveCloth() {
-        let newCloth = Cloth(image: image)
+        let newCloth = Cloth(image: imageNoBackground)
         
         newCloth.mainColor = ColorData(uiColor: UIColor(cpColor1))
         newCloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
