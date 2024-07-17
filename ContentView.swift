@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct ContentView: View {
-    @State var clothes : [Cloth] = ([Cloth(image: UIImage(named: "juve1")!),Cloth(image: UIImage(named: "gucci")!),Cloth(image: UIImage(named: "gucci2")!),Cloth(image: UIImage(named: "madrid")!)])
-    
+    @State var clothes : [Cloth] = ([])
     @State var selection = 0
+    let db = Firestore.firestore()
     
     var body: some View {
             TabView(selection: $selection) {
@@ -44,7 +45,57 @@ struct ContentView: View {
         }
 }
 
+extension UIImage{
+    func toPngString() -> String?{
+        let data = self.pngData()
+        return data?.base64EncodedString(options: .endLineWithLineFeed)
+    }
+    
+    func resized(withPercentage percentage: CGFloat) -> UIImage? {
+        let newSize = CGSize(width: size.width * percentage, height: size.height * percentage)
 
+        return self.preparingThumbnail(of: newSize)
+        }
+    
+    func compress(to kb: Int, allowedMargin: CGFloat = 0.2) -> Data? {
+            let bytes = kb * 1024
+            let threshold = Int(CGFloat(bytes) * (1 + allowedMargin))
+            var compression: CGFloat = 1.0
+            let step: CGFloat = 0.05
+            var holderImage = self
+            while let data = holderImage.pngData() {
+                let ratio = data.count / bytes
+                if data.count < threshold {
+                    return data
+                } else {
+                    let multiplier = CGFloat((ratio / 5) + 1)
+                    compression -= (step * multiplier)
+
+                    guard let newImage = self.resized(withPercentage: compression) else { break }
+                    holderImage = newImage
+                }
+            }
+
+            return nil
+        }
+}
+
+extension String{
+    func toImage() -> UIImage?{
+        if let data = Data(base64Encoded: self,options: .ignoreUnknownCharacters){
+            return UIImage(data: data)
+        }
+            return nil
+    }
+    
+    func CGFloatValue() -> CGFloat? {
+        guard let doubleValue = Double(self) else {
+          return nil
+        }
+
+        return CGFloat(doubleValue)
+      }
+}
 
 
 #Preview {

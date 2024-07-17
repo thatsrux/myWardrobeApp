@@ -6,7 +6,7 @@ import BackgroundRemoval
 class Cloth: Identifiable, Codable {
     var id = UUID()
     
-    var image: Data
+    var image: String?
     
     var mainColor: ColorData
     var secondColor: ColorData
@@ -15,23 +15,38 @@ class Cloth: Identifiable, Codable {
     var categoria: String = ""
     var nome: String = ""
     var taglia: String = ""
+    var data:Date
+    
+    init(id:UUID, image:String,mainColor:ColorData,secondColor:ColorData,thirdColor:ColorData,categoria:String,nome:String,taglia:String,data:Data){
+        self.id = id
+        self.image = image
+        self.mainColor = mainColor
+        self.secondColor = secondColor
+        self.thirdColor = thirdColor
+        self.categoria = categoria
+        self.nome = nome
+        self.taglia = taglia
+        self.data = Date.now
+    }
     
     init(image: UIImage){
-        self.image = image.pngData()!
+        self.image = image.toPngString()
         self.mainColor = ColorData(uiColor: .black)
         self.secondColor = ColorData(uiColor: .black)
         self.thirdColor = ColorData(uiColor: .black)
+        self.data = Date.now
     }
     
     init(nome: String, categoria: String) {
 
-        self.image = UIImage(imageLiteralResourceName: "juve1").pngData()!
+        self.image = UIImage(imageLiteralResourceName: "juve1").toPngString()!
         self.mainColor = ColorData(uiColor: .white)
         self.secondColor = ColorData(uiColor: .white)
         self.thirdColor = ColorData(uiColor: .white)
         self.categoria = categoria
         self.nome = nome
         self.taglia = ""
+        self.data = Date.now
     }
     
 }
@@ -72,8 +87,8 @@ struct ColorData: Codable {
 
     var uiColor: UIColor { UIColor(red: red, green: green, blue: blue, alpha: alpha) }
     
-    func toColor() -> Color {
-        return Color(red: Double(red), green: Double(green), blue: Double(blue))
+    var toString:String{
+        return String(format: "#%02x%02x%02x", Int(red * 255), Int(green * 255),Int(blue * 255),Int(alpha * 255))
     }
-}
 
+}
