@@ -36,27 +36,18 @@ struct ClothesScreen: View {
     
     var body: some View {
         NavigationStack {
-            
-            //            ScrollView(.horizontal,showsIndicators: false){
-            //                HStack(spacing:20){
-            //                    ForEach($clothes, id: \.id) { $cloth in
-            //                        NavigationLink(destination: InfoClothScreen(cloth: cloth, clothes: $clothes)){
-            //                            Image(uiImage: UIImage(data: cloth.image)!)
-            //                                .resizable()
-            //                                .frame(maxWidth: 200,maxHeight: 200)
-            //                        }
-            //
-            //                    }
-            //                }.padding()
-            //            }
+
             if selectedOption == "elenco" {
                 List {
                     ForEach(database.clothes, id: \.id) { cloth in
-                                NavigationLink(destination: InfoClothScreen(cloth: cloth, clothes: $clothes)) {
+                                NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
                                     HStack {
                                         Image(uiImage: (cloth.image?.toImage())!)
                                             .resizable()
-                                            .frame(width: 50, height: 50)
+                                            .scaledToFill()
+                                            .frame(width:100,height:100)
+                                            .clipped()
+                                            .cornerRadius(10)
                                     }
                                 }
                             }
@@ -65,12 +56,14 @@ struct ClothesScreen: View {
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
                                 ForEach(database.clothes, id: \.id) { cloth in
-                                    NavigationLink(destination: InfoClothScreen(cloth: cloth, clothes: $clothes)) {
+                                    NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
                                         VStack {
                                             Image(uiImage: (cloth.image?.toImage())!)
                                                 .resizable()
-                                                .aspectRatio(contentMode: .fit)
-                                                .frame(width: 150, height: 150)
+                                                .scaledToFill()
+                                                .frame(width:150,height:150)
+                                                .clipped()
+                                                .cornerRadius(10)
                                             
                                             Text(cloth.nome)
                                         }
@@ -125,7 +118,7 @@ struct ClothesScreen: View {
                             
                             Divider()
                             Button(action: {
-                                clothes.removeAll()
+                                database.clothes.removeAll()
                             }) {
                                 Text("Svuota")
                                 Image(systemName: "trash")

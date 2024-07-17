@@ -17,7 +17,6 @@ class Database:ObservableObject{
     
     func fetchClothes(){
         clothes.removeAll()
-        
         let db = Firestore.firestore()
         let ref = db.collection("Cloth")
         ref.getDocuments{ snapshot, error in

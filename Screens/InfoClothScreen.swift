@@ -8,8 +8,6 @@ struct InfoClothScreen: View {
     var image: UIImage
     
     var cloth:Cloth
-    @Binding var clothes: [Cloth]
-    
     @State var nomeText = ""
     @State var tagliaText = ""
     
@@ -27,6 +25,28 @@ struct InfoClothScreen: View {
 
     private var imageNoBackground: UIImage
     
+    init(cloth:Cloth){
+        self.cloth = cloth
+        self.cloth.mainColor = cloth.mainColor
+        self.cloth.secondColor = cloth.secondColor
+        self.cloth.thirdColor = cloth.thirdColor
+        self.cloth.image = cloth.image
+        self.cloth.categoria = cloth.categoria
+        self.cloth.nome = cloth.nome
+        self.cloth.taglia = cloth.taglia
+        self.nomeText = cloth.nome
+        self.tagliaText = cloth.taglia
+        
+        let backgroundRemoval = BackgroundRemoval()
+        do {
+            self.imageNoBackground = try backgroundRemoval.removeBackground(image: (cloth.image?.toImage())!)
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+        
+        self.image = (cloth.image?.toImage())!
+
+    }
     
     init(cloth: Cloth, clothes: Binding<[Cloth]>){
         self.cloth = cloth
@@ -38,7 +58,6 @@ struct InfoClothScreen: View {
         self.cloth.nome = cloth.nome
         self.cloth.taglia = cloth.taglia
         
-        _clothes = clothes
         let backgroundRemoval = BackgroundRemoval()
         do {
             self.imageNoBackground = try backgroundRemoval.removeBackground(image: (cloth.image?.toImage())!)
@@ -54,7 +73,6 @@ struct InfoClothScreen: View {
         
         self.cloth = Cloth(image: image)
         
-        _clothes = clothes
         let backgroundRemoval = BackgroundRemoval()
         
         do {
@@ -179,16 +197,22 @@ struct InfoClothScreen: View {
             extractColorsAndClassify()
         }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .topBarTrailing) {
                 Button(action: {
                     saveCloth()
                     dismiss()
                 }) {
                     Text("Salva")
                 }
+                Button(action: {
+                    editCloth(cloth: cloth)
+                    dismiss()
+                }) {
+                    Text("Salva modifiche")
+                }
             }
         }
-        .navigationTitle("Advices")
+        .navigationTitle(cloth.nome)
     }
     
     func extractColorsAndClassify() {
@@ -213,15 +237,30 @@ struct InfoClothScreen: View {
         let newCloth = Cloth(image: image)
         newCloth.mainColor = ColorData(uiColor: UIColor(cpColor1))
         newCloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
-        newCloth.secondColor = ColorData(uiColor: UIColor(cpColor3))
+        newCloth.thirdColor = ColorData(uiColor: UIColor(cpColor3))
         newCloth.nome = nomeText
         newCloth.taglia = tagliaText
         newCloth.categoria = categoriaClassificata
         
-        clothes.append(newCloth)
-        InfoClothScreen.save(clothes: clothes)
+        database.clothes.append(newCloth)
+        InfoClothScreen.save(clothes: database.clothes)
         print("Saved")
     }
+    
+    private func editCloth(cloth:Cloth){
+        cloth.nome = nomeText
+        cloth.taglia = tagliaText
+        cloth.categoria = categoriaClassificata
+        
+        cloth.mainColor = ColorData(uiColor:UIColor(cpColor1))
+        cloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
+        cloth.thirdColor = ColorData(uiColor: UIColor(cpColor3))
+        
+        database.clothes.append(cloth)
+        InfoClothScreen.save(clothes: database.clothes)
+        database.fetchClothes()
+    }
+    
     
     static func save(clothes: [Cloth]) {
         
@@ -269,5 +308,6 @@ struct InfoClothScreen: View {
                     }
                 }
             }
+        
     }
 }
