@@ -65,7 +65,7 @@ struct ClothesScreen: View {
                                                 .clipped()
                                                 .cornerRadius(10)
                                             
-                                            Text(cloth.nome)
+                                            Text("\(cloth.nome) - \(cloth.taglia)")
                                         }
                                         .background(Color.white)
                                         .cornerRadius(15)

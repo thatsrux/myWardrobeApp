@@ -22,7 +22,7 @@ struct InfoClothScreen: View {
     @Environment(\.dismiss) private var dismiss
     
     @EnvironmentObject var database:Database
-
+    
     private var imageNoBackground: UIImage
     
     init(cloth:Cloth){
@@ -45,7 +45,7 @@ struct InfoClothScreen: View {
         }
         
         self.image = (cloth.image?.toImage())!
-
+        
     }
     
     init(cloth: Cloth, clothes: Binding<[Cloth]>){
@@ -108,71 +108,71 @@ struct InfoClothScreen: View {
                 }
                 
                 HStack(alignment:.center) {
-                                    VStack(alignment:.center) {
-                                        Text("Colore principale").frame(
-                                            minWidth: 0,
-                                            maxWidth: 80,
-                                            minHeight: 0,
-                                            maxHeight: 50,
-                                            alignment: .center
-                                        ).multilineTextAlignment(.center)
-                                        RoundedRectangle(cornerRadius: 20)
-                                            .stroke(.black, lineWidth: 1)
-                                            .fill(Color(cpColor1))
-                                            .frame(width: 100, height: 50)
-                                            .overlay {
-                                                ColorPicker("", selection: $cpColor1)
-                                                    .opacity(0.015)
-                                                    .scaleEffect(x:3,y:3)
-                                                    .labelsHidden()
-                                            }
-                                    }
-                                    
-                                    VStack() {
-                                        Text("Secondo colore").frame(
-                                            minWidth: 0,
-                                            maxWidth: 80,
-                                            minHeight: 0,
-                                            maxHeight: 50,
-                                            alignment: .center
-                                        ).multilineTextAlignment(.center)
-                                        RoundedRectangle(cornerRadius: 20)
-                                            .stroke(.black, lineWidth: 1)
-                                            .fill(Color(cpColor2))
-                                            .frame(width: 100, height: 50)
-                                            .overlay {
-                                                ColorPicker("", selection: $cpColor2)
-                                                    .opacity(0.015)
-                                                    .scaleEffect(x:3,y:3)
-                                                    .labelsHidden()
-                                                
-                                            }
-                                    }
-                                    
-                                    
-                                    VStack() {
-                                        Text("Terzo colore").frame(
-                                            minWidth: 0,
-                                            maxWidth: 80,
-                                            minHeight: 0,
-                                            maxHeight: 50,
-                                            alignment: .center
-                                        ).multilineTextAlignment(.center)
-                                        RoundedRectangle(cornerRadius: 20)
-                                            .stroke(.black, lineWidth: 1)
-                                            .fill(Color(cpColor3))
-                                            .frame(width: 100, height: 50)
-                                            .overlay {
-                                                ColorPicker("", selection: $cpColor3)
-                                                    .opacity(0.015)
-                                                    .scaleEffect(x:3,y:3)
-                                                    .labelsHidden()
-                                                
-                                            }
-                                        
-                                    }
-                                }.padding(.bottom,20)
+                    VStack(alignment:.center) {
+                        Text("Colore principale").frame(
+                            minWidth: 0,
+                            maxWidth: 80,
+                            minHeight: 0,
+                            maxHeight: 50,
+                            alignment: .center
+                        ).multilineTextAlignment(.center)
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(.black, lineWidth: 1)
+                            .fill(Color(cpColor1))
+                            .frame(width: 100, height: 50)
+                            .overlay {
+                                ColorPicker("", selection: $cpColor1)
+                                    .opacity(0.015)
+                                    .scaleEffect(x:3,y:3)
+                                    .labelsHidden()
+                            }
+                    }
+                    
+                    VStack() {
+                        Text("Secondo colore").frame(
+                            minWidth: 0,
+                            maxWidth: 80,
+                            minHeight: 0,
+                            maxHeight: 50,
+                            alignment: .center
+                        ).multilineTextAlignment(.center)
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(.black, lineWidth: 1)
+                            .fill(Color(cpColor2))
+                            .frame(width: 100, height: 50)
+                            .overlay {
+                                ColorPicker("", selection: $cpColor2)
+                                    .opacity(0.015)
+                                    .scaleEffect(x:3,y:3)
+                                    .labelsHidden()
                                 
+                            }
+                    }
+                    
+                    
+                    VStack() {
+                        Text("Terzo colore").frame(
+                            minWidth: 0,
+                            maxWidth: 80,
+                            minHeight: 0,
+                            maxHeight: 50,
+                            alignment: .center
+                        ).multilineTextAlignment(.center)
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(.black, lineWidth: 1)
+                            .fill(Color(cpColor3))
+                            .frame(width: 100, height: 50)
+                            .overlay {
+                                ColorPicker("", selection: $cpColor3)
+                                    .opacity(0.015)
+                                    .scaleEffect(x:3,y:3)
+                                    .labelsHidden()
+                                
+                            }
+                        
+                    }
+                }.padding(.bottom,20)
+                
                 LabeledContent {
                     TextField("Categoria", text: $categoriaClassificata)
                 } label: {
@@ -208,7 +208,13 @@ struct InfoClothScreen: View {
                     editCloth(cloth: cloth)
                     dismiss()
                 }) {
-                    Text("Salva modifiche")
+                    Text("Salva mods")
+                }
+                Button(action: {
+                    deleteCloth(cloth: cloth)
+                    dismiss()
+                }) {
+                    Text("Elimina")
                 }
             }
         }
@@ -234,6 +240,7 @@ struct InfoClothScreen: View {
     }
     
     private func saveCloth() {
+        
         let newCloth = Cloth(image: image)
         newCloth.mainColor = ColorData(uiColor: UIColor(cpColor1))
         newCloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
@@ -245,6 +252,7 @@ struct InfoClothScreen: View {
         database.clothes.append(newCloth)
         InfoClothScreen.save(clothes: database.clothes)
         print("Saved")
+        
     }
     
     private func editCloth(cloth:Cloth){
@@ -261,6 +269,16 @@ struct InfoClothScreen: View {
         database.fetchClothes()
     }
     
+    private func deleteCloth(cloth:Cloth){
+        Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
+            if let err = err {
+                print("Error removing document: \(err)")
+            } else {
+                print("Document successfully removed!")
+            }
+        }
+        database.fetchClothes()
+    }
     
     static func save(clothes: [Cloth]) {
         
@@ -268,46 +286,46 @@ struct InfoClothScreen: View {
         
         
         for cloth in clothes{
-                
-                if let data = cloth.image?.toImage()!.compress(to: 100){
-                    img = UIImage(data: data)!
-                }
-                else{
-                    img = cloth.image?.toImage()!
-                }
-                
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
-                let dataString = dateFormatter.string(from: cloth.data)
-                
-                
-                let db = Firestore.firestore()
-                let ref = db.collection("Cloth").document(cloth.id.uuidString)
-                ref.setData(["foto": img!.toPngString()!,
-                             "id" : cloth.id.uuidString,
-                             "nome": cloth.nome,
-                             "categoria": cloth.categoria,
-                             "taglia": cloth.taglia,
-                             "color1a": cloth.mainColor.alpha.description,
-                             "color1r":cloth.mainColor.red.description,
-                             "color1g":cloth.mainColor.green.description,
-                             "color1b":cloth.mainColor.blue.description,
-                             "color2a": cloth.secondColor.alpha.description,
-                             "color2r": cloth.secondColor.red.description,
-                             "color2g": cloth.secondColor.green.description,
-                             "color2b": cloth.secondColor.blue.description,
-                             "color3a": cloth.thirdColor.alpha.description,
-                             "color3r": cloth.thirdColor.red.description,
-                             "color3g": cloth.thirdColor.green.description,
-                             "color3b": cloth.thirdColor.blue.description,
-                             "data":dataString
-                            ]){
-                    error in
-                    if let error = error {
-                        print(error.localizedDescription)
-                    }
+            
+            if let data = cloth.image?.toImage()!.compress(to: 100){
+                img = UIImage(data: data)!
+            }
+            else{
+                img = cloth.image?.toImage()!
+            }
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
+            let dataString = dateFormatter.string(from: cloth.data)
+            
+            
+            let db = Firestore.firestore()
+            let ref = db.collection("Cloth").document(cloth.id.uuidString)
+            ref.setData(["foto": img!.toPngString()!,
+                         "id" : cloth.id.uuidString,
+                         "nome": cloth.nome,
+                         "categoria": cloth.categoria,
+                         "taglia": cloth.taglia,
+                         "color1a": cloth.mainColor.alpha.description,
+                         "color1r":cloth.mainColor.red.description,
+                         "color1g":cloth.mainColor.green.description,
+                         "color1b":cloth.mainColor.blue.description,
+                         "color2a": cloth.secondColor.alpha.description,
+                         "color2r": cloth.secondColor.red.description,
+                         "color2g": cloth.secondColor.green.description,
+                         "color2b": cloth.secondColor.blue.description,
+                         "color3a": cloth.thirdColor.alpha.description,
+                         "color3r": cloth.thirdColor.red.description,
+                         "color3g": cloth.thirdColor.green.description,
+                         "color3b": cloth.thirdColor.blue.description,
+                         "data":dataString
+                        ]){
+                error in
+                if let error = error {
+                    print(error.localizedDescription)
                 }
             }
+        }
         
     }
 }
