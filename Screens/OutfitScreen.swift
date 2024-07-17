@@ -33,19 +33,11 @@ struct OutfitScreen: View {
         self.index = 0
         self.range1 = 0..<self.outfits1.count
         self.range2 = 0..<self.outfits2.count
-        print("nOutfit1:\(self.outfits1.count)\(self.outfits1)")
-        print("nOutfit2:\(self.outfits2.count)\(self.outfits2)")
-
     }
-    
-    
-    
     
     var body: some View {
         
-        
-        
-        NavigationStack {
+    NavigationStack {
             ScrollView{
                 VStack{
                     Text("Outfit che non indossi da un po'")
@@ -111,26 +103,18 @@ struct OutfitScreen: View {
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
-                        isAddOutfitScreenActive = true
-                        print("A")
-                    }
+                        isAddOutfitScreenActive = true                    }
                     
                 label: {
                     Image(systemName: "plus.circle")
                 }
                     Button {
                         isEditOutfitScreenActive = true
-                        print("B")
                     }
                 label: {
                     Image(systemName: "ellipsis.circle")
                 }
                 }
-            }.navigationDestination(isPresented: $isAddOutfitScreenActive){
-                AddOutfitScreen()
-            }
-            .navigationDestination(isPresented: $isEditOutfitScreenActive){
-                EditOutfitScreen()
             }
             .navigationDestination(isPresented: $isInfoOutfitScreenActive){
                 if outfits.isEmpty == false{
@@ -144,6 +128,8 @@ struct OutfitScreen: View {
         }
     }
 }
+
 #Preview {
     OutfitScreen(outfits:[Outfit(shirt: Cloth(nome: "", categoria: ""), trousers: Cloth(nome: "", categoria: ""), shoes: Cloth(nome: "", categoria: ""))])
 }
+

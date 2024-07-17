@@ -54,16 +54,6 @@ struct AddOutfitScreen: View {
             }
         }
         .navigationTitle("Componi Outfit")
-        .navigationDestination(isPresented: $isAddShirtScreenActive){
-            AddShirtToOutfitScreen()
-        }
-        .navigationDestination(isPresented: $isAddTrousersScreenActive){
-            AddTrousersToOutfitScreen()
-        }
-        .navigationDestination(isPresented: $isAddShoesScreenActive){
-            AddShoesToOutfitScreen()
-        }
-
     }
     
 }

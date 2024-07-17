@@ -6,49 +6,51 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct ClothesScreen: View {
     @State var isPresenting: Bool = false
     @State var uiImage: UIImage?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
-    //@ObservedObject var classifier = ImageClassifier()
-    
-    @State private var isAddClothScreenActive = false
+    @State private var isInfoClothScreenActive = false
     @State private var isEditClothScreenActive = false
     
     @State private var searchText = ""
     @State private var searchIsActive = false
     
-    let layout = [
-        GridItem(.adaptive(minimum: 150, maximum: 300)),
-    ]
+    @Binding var clothes : [Cloth]
     
-    private var itemsNum = 10
+    @EnvironmentObject var database:Database
+        
+    func deleteCloth(at offsets: IndexSet){
+        clothes.remove(atOffsets: offsets)
+        InfoClothScreen.save(clothes: clothes)
+    }
+    
+    
     
     var body: some View {
         NavigationStack {
-            VStack{
-                ScrollView {
-                    LazyVGrid(columns: layout) {
-                        ForEach(0...itemsNum, id: \.self) {_ in
-                            Text("I tuoi capi")
-                                .frame(width: 150, height: 60)
-                                .padding(EdgeInsets(top: 120, leading: 0, bottom: 0, trailing: 0))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 20)
-                                    .stroke(lineWidth: 3)
-                                    .frame(width: 150, height: 180)
-                                )
+            Text("T-Shirt")
+            ScrollView(.horizontal,showsIndicators: false){
+                HStack(spacing:20){
+                    ForEach(database.clothes, id: \.id) { cloth in
+                        NavigationLink(destination: InfoClothScreen(cloth: cloth,clothes: $clothes)){
+                            Image(uiImage: (cloth.image?.toImage())!)
+                                .resizable()
+                                .frame(maxWidth: 200,maxHeight: 200)
                         }
                     }
-                }
-                Spacer()
+                }.padding()
+                    .onAppear{
+                        database.fetchClothes()
+                    }
             }
+            Spacer()
             .navigationTitle("My Wardrobe")
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    
                     Menu() {
                         Button(action: {
                             isPresenting = true
@@ -57,6 +59,7 @@ struct ClothesScreen: View {
                             Text("Scegli foto")
                             Image(systemName: "photo.on.rectangle")
                         }
+                
                         Button(action: {
                             isPresenting = true
                             sourceType = .camera
@@ -68,39 +71,39 @@ struct ClothesScreen: View {
                 label:{
                     Image(systemName: "camera")
                 }
-                    Button {
-                        isAddClothScreenActive = true
-                        print("A")
+                Button {
+                        isInfoClothScreenActive = true
+                    print(clothes[0].mainColor.red.description)
+                    print(clothes[0].mainColor.red.description.CGFloatValue()!)
                     }
                     
                 label: {
                     Image(systemName: "plus.circle")
                 }
-                    Button {
+                
+                Button {
                         isEditClothScreenActive = true
-                        print("B")
-                    }
+                        clothes.removeAll()
+                }
                 label: {
                     Image(systemName: "ellipsis.circle")
                     
-                    }
+                }
                     
                 }
             }
-            
             .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
             .sheet(isPresented: $isPresenting){
                 ImagePicker(uiImage: $uiImage, isPresenting:  $isPresenting, sourceType: $sourceType)
                     .onDisappear{
-                        isAddClothScreenActive = true
+                        isInfoClothScreenActive = true
                     }
                 
             }
             
-            .navigationDestination(isPresented: $isAddClothScreenActive){
+            .navigationDestination(isPresented: $isInfoClothScreenActive){
                 if uiImage != nil {
-                    
-                    AddClothScreen(cloth: Cloth(image: uiImage!))
+                    InfoClothScreen(image: uiImage!, clothes: $clothes)
                 }
             }
             .navigationDestination(isPresented: $isEditClothScreenActive){
@@ -111,5 +114,5 @@ struct ClothesScreen: View {
 }
 
 #Preview {
-    ClothesScreen()
+    ClothesScreen(clothes: .constant([Cloth(image: UIImage(named: "juve1")!),Cloth(image: UIImage(named: "gucci")!),Cloth(image: UIImage(named: "gucci2")!),Cloth(image: UIImage(named: "madrid")!)]))
 }
