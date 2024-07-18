@@ -44,10 +44,9 @@ struct ClothesScreen: View {
                                     HStack {
                                         Image(uiImage: (cloth.image?.toImage())!)
                                             .resizable()
-                                            .scaledToFill()
                                             .frame(width:100,height:100)
-                                            .clipped()
-                                            .cornerRadius(10)
+                                        Spacer().frame(width: 30, height: 100)
+                                        Text("\(cloth.nome) - \(cloth.taglia)")
                                     }
                                 }
                             }
@@ -60,17 +59,15 @@ struct ClothesScreen: View {
                                         VStack {
                                             Image(uiImage: (cloth.image?.toImage())!)
                                                 .resizable()
-                                                .scaledToFill()
                                                 .frame(width:150,height:150)
-                                                .clipped()
-                                                .cornerRadius(10)
                                             
                                             Text("\(cloth.nome) - \(cloth.taglia)")
                                         }
-                                        .background(Color.white)
-                                        .cornerRadius(15)
-                                        .shadow(radius: 5)
-                                        .padding(.bottom, 10)
+                                        .contextMenu(menuItems: {
+                                            Button("Elimina", role: .destructive, action: {
+                                                
+                                            })
+                                        })
                                     }
                                 }
                             }

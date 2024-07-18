@@ -103,8 +103,8 @@ struct OutfitScreen: View {
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
-                        isAddOutfitScreenActive = true                    }
-                    
+                        isAddOutfitScreenActive = true
+                    }
                 label: {
                     Image(systemName: "plus.circle")
                 }
