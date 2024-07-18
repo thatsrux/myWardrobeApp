@@ -46,6 +46,7 @@ struct ClothesScreen: View {
                                             .resizable()
                                             .frame(width:100,height:100)
                                         Spacer().frame(width: 30, height: 100)
+
                                         Text("\(cloth.nome) - \(cloth.taglia)")
                                     }
                                 }
