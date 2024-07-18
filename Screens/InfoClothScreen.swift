@@ -288,6 +288,7 @@ struct InfoClothScreen: View {
             newCloth.nome = nomeText
             newCloth.taglia = tagliaText
             newCloth.categoria = categoriaClassificata
+            newCloth.stile = stileText
             
             database.clothes.append(newCloth)
             InfoClothScreen.save(clothes: database.clothes)
@@ -300,13 +301,13 @@ struct InfoClothScreen: View {
         cloth.nome = nomeText
         cloth.taglia = tagliaText
         cloth.categoria = categoriaClassificata
-        
+        cloth.stile = stileText
+
         cloth.mainColor = ColorData(uiColor: UIColor(cpColor1))
         print(cpColor1)
         print(cloth.mainColor)
         cloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
         cloth.thirdColor = ColorData(uiColor: UIColor(cpColor3))
-        
         database.clothes.append(cloth)
         InfoClothScreen.save(clothes: database.clothes)
     }
@@ -360,6 +361,7 @@ struct InfoClothScreen: View {
                          "color3r": cloth.thirdColor.red.description,
                          "color3g": cloth.thirdColor.green.description,
                          "color3b": cloth.thirdColor.blue.description,
+                         "stile": cloth.stile,
                          "data":dataString
                         ]){
                 error in
