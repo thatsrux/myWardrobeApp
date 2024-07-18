@@ -30,32 +30,41 @@ struct ClothesScreen: View {
         InfoClothScreen.save(clothes: clothes)
     }
     
-    var groupedClothes: [String: [Cloth]] {
-                    Dictionary(grouping: clothes, by: { $0.categoria })
-                }
+    
     
     var body: some View {
+        
         NavigationStack {
-
+            
             if selectedOption == "elenco" {
                 List {
-                    ForEach(database.clothes, id: \.id) { cloth in
+                    ForEach(database.categorie.keys.sorted(), id: \.self){ category in
+                        Section(header: Text(category).font(.headline)){
+                            ForEach(database.categorie[category]!, id: \.id) { cloth in
                                 NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
                                     HStack {
                                         Image(uiImage: (cloth.image?.toImage())!)
                                             .resizable()
                                             .frame(width:100,height:100)
                                         Spacer().frame(width: 30, height: 100)
-
+                                        
                                         Text("\(cloth.nome) - \(cloth.taglia)")
                                     }
                                 }
-                            }
+                           }
+                        }
+                        
+                        
+                        
                     }
+                    
+                }
             } else {
                 ScrollView {
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
-                                ForEach(database.clothes, id: \.id) { cloth in
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                        ForEach(database.categorie.keys.sorted(), id: \.self){ category in
+                            Section(header: Text(category).font(.headline)){
+                                ForEach(database.categorie[category]!, id: \.id) { cloth in
                                     NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
                                         VStack {
                                             Image(uiImage: (cloth.image?.toImage())!)
@@ -72,6 +81,8 @@ struct ClothesScreen: View {
                                     }
                                 }
                             }
+                        }
+                    }
                     .padding()
                 }
             }
@@ -157,6 +168,6 @@ struct ClothesScreen: View {
     }
 }
 
-#Preview {
-    ClothesScreen(clothes: .constant([Cloth(image: UIImage(named: "juve1")!),Cloth(image: UIImage(named: "gucci")!),Cloth(image: UIImage(named: "gucci2")!),Cloth(image: UIImage(named: "madrid")!)]))
-}
+//#Preview {
+//    ClothesScreen(clothes: .constant([Cloth(image: UIImage(named: "juve1")!),Cloth(image: UIImage(named: "gucci")!),Cloth(image: UIImage(named: "gucci2")!),Cloth(image: UIImage(named: "madrid")!)]))
+//}
