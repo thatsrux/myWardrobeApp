@@ -3,9 +3,10 @@ import SwiftUI
 import UIImageColors
 import BackgroundRemoval
 
-class Cloth: Identifiable, Codable {
-    var id = UUID()
+class Cloth: Identifiable, Codable, Hashable{
     
+    var id = UUID()
+
     var image: String?
     
     var mainColor: ColorData
@@ -16,7 +17,17 @@ class Cloth: Identifiable, Codable {
     var nome: String = ""
     var taglia: String = ""
     var stile: String = ""
+    
     var data:Date
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func ==(lhs: Cloth, rhs: Cloth) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
     
     init(id:UUID, image:String,mainColor:ColorData,secondColor:ColorData,thirdColor:ColorData,categoria:String,nome:String,taglia:String,stile:String,data:Data){
         self.id = id

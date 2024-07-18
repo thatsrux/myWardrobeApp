@@ -303,7 +303,7 @@ struct InfoClothScreen: View {
         InfoClothScreen.save(clothes: database.clothes)
     }
     
-    private func deleteCloth(cloth:Cloth){
+     func deleteCloth(cloth:Cloth){
         Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
             if let err = err {
                 print("Error removing document: \(err)")

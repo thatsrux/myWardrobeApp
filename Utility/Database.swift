@@ -1,6 +1,7 @@
 import Firebase
 import FirebaseFirestore
 
+
 class Database:ObservableObject{
     
     @Published var clothes:[Cloth]
@@ -63,7 +64,7 @@ class Database:ObservableObject{
     }
     
     func fetchCategorie(){
-        clothes.removeAll()
+        categorie.removeAll()
         let db = Firestore.firestore()
         let ref = db.collection("Cloth")
         ref.getDocuments{ snapshot, error in
@@ -102,21 +103,23 @@ class Database:ObservableObject{
                     let dataAgg = data["data"] as? String ?? ""
                     
                     let cloth = Cloth(id: UUID(uuidString: id)!, image: image, mainColor: ColorData(red: color1r.CGFloatValue()! , green: color1g.CGFloatValue()!, blue: color1b.CGFloatValue()!, alpha: color1a.CGFloatValue()!), secondColor: ColorData(red: color2r.CGFloatValue()!, green: color2g.CGFloatValue()!, blue: color2b.CGFloatValue()!, alpha: color2a.CGFloatValue()!), thirdColor: ColorData(red: color3r.CGFloatValue()!, green: color3g.CGFloatValue()!, blue: color3b.CGFloatValue()!, alpha: color3a.CGFloatValue()!), categoria: categoria, nome: nome, taglia: taglia,stile: stile, data: dataAgg.data(using: .utf8)!)
-
+                    
+                    
                     if self.categorie[cloth.categoria] == nil {
                         self.categorie[cloth.categoria] = [cloth]
                     } else {
                         self.categorie[cloth.categoria]?.append(cloth)
                     }
                     
+                    self.categorie = self.categorie.mapValues { $0.sorted { $0.nome < $1.nome } }
+                        
                 }
             }
         }
+        
     }
-
-    }
-
-
-
+    
+    
+}
 
 

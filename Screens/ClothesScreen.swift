@@ -25,11 +25,43 @@ struct ClothesScreen: View {
     
     @State private var selectedOption = "icone"
     
-    func deleteCloth(at offsets: IndexSet){
-        clothes.remove(atOffsets: offsets)
-        InfoClothScreen.save(clothes: clothes)
-    }
     
+    func deleteCloth(cloth:Cloth){
+       Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
+           if let err = err {
+               print("Error removing document: \(err)")
+           } else {
+               print("Document successfully removed!")
+           }
+       }
+       database.fetchClothes()
+       database.fetchCategorie()
+   }
+    
+    func deleteClothSwipe(at offsets:IndexSet){
+        
+        guard let index = offsets.first else {
+                print("No index available to delete")
+                return
+            }
+            
+        guard index >= 0 && index < database.clothes.count else {
+                print("Index \(index) out of range")
+                return
+            }
+        
+        let clothToDelete = database.clothes[index+1]
+        
+       Firestore.firestore().collection("Cloth").document(clothToDelete.id.uuidString).delete() { err in
+           if let err = err {
+               print("Error removing document: \(err)")
+           } else {
+               print("Document successfully removed!")
+           }
+       }
+       database.fetchClothes()
+       database.fetchCategorie()
+   }
     
     
     var body: some View {
@@ -40,7 +72,7 @@ struct ClothesScreen: View {
                 List {
                     ForEach(database.categorie.keys.sorted(), id: \.self){ category in
                         Section(header: Text(category).font(.headline)){
-                            ForEach(database.categorie[category]!, id: \.id) { cloth in
+                            ForEach(database.categorie[category]!) { cloth in
                                 NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
                                     HStack {
                                         Image(uiImage: (cloth.image?.toImage())!)
@@ -53,7 +85,7 @@ struct ClothesScreen: View {
                                         Text("\(cloth.nome) - \(cloth.taglia)")
                                     }
                                 }
-                           }
+                            }.onDelete(perform: deleteClothSwipe)
                         }
                         
                         
@@ -63,23 +95,25 @@ struct ClothesScreen: View {
                 }
             } else {
                 ScrollView {
-                    LazyVGrid(columns: [GridItem(.flexible(),alignment: .top), GridItem(.flexible(),alignment: .top)], spacing: 10) {
+                    LazyVGrid(columns: [GridItem(.flexible(), alignment: .top), GridItem(.flexible(), alignment: .top)], spacing: 10) {
                         ForEach(database.categorie.keys.sorted(), id: \.self){ category in
                             Section(header: Text(category).font(.headline)){
-                                ForEach(database.categorie[category]!, id: \.id) { cloth in
+                                ForEach(database.categorie[category]!, id: \.self) { cloth in
                                     NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
                                         VStack {
                                             Image(uiImage: (cloth.image?.toImage())!)
                                                 .resizable()
                                                 .scaledToFit()
                                                 .clipped()
-                                                .frame(width:150,height:150)
+                                                .cornerRadius(10)
                                             
                                             Text("\(cloth.nome) - \(cloth.taglia)")
                                         }
+                                        .frame(width: 150, height: 150)
+                                        .shadow(radius: 5)
                                         .contextMenu(menuItems: {
                                             Button("Elimina", role: .destructive, action: {
-                                                
+                                                deleteCloth(cloth: cloth)
                                             })
                                         })
                                     }
@@ -89,6 +123,7 @@ struct ClothesScreen: View {
                     }
                     .padding()
                 }
+                
             }
             
             Spacer()
@@ -173,5 +208,7 @@ struct ClothesScreen: View {
 }
 
 //#Preview {
-//    ClothesScreen(clothes: .constant([Cloth(image: UIImage(named: "juve1")!),Cloth(image: UIImage(named: "gucci")!),Cloth(image: UIImage(named: "gucci2")!),Cloth(image: UIImage(named: "madrid")!)]))
+//    @EnvironmentObject var database:Database
+//    ClothesScreen(clothes: $database.clothes)
 //}
+
