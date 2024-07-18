@@ -140,14 +140,12 @@ struct ClothesScreen: View {
             
                 .navigationDestination(isPresented: $isInfoClothScreenActive){
                     if uiImage != nil {
-                        InfoClothScreen(image: uiImage!, clothes: $clothes)
+                        InfoClothScreen(image: uiImage!)
                     }
                 }
                 .navigationDestination(isPresented: $isEditClothScreenActive){
                     EditClothScreen()
                 }
-        }.onAppear{
-            database.fetchClothes()
         }
     }
 }

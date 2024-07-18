@@ -1,10 +1,4 @@
-
-import Foundation
 import Firebase
-
-
-
-
 
 class Database:ObservableObject{
     
@@ -50,6 +44,7 @@ class Database:ObservableObject{
                     let color3r = data["color3r"] as? String ?? ""
                     let color3g = data["color3g"] as? String ?? ""
                     let color3b = data["color3b"] as? String ?? ""
+                    
                     let dataAgg = data["data"] as? String ?? ""
 
                     let cloth = Cloth(id: UUID(uuidString: id)!, image: image, mainColor: ColorData(red: color1r.CGFloatValue()! , green: color1g.CGFloatValue()!, blue: color1b.CGFloatValue()!, alpha: color1a.CGFloatValue()!), secondColor: ColorData(red: color2r.CGFloatValue()!, green: color2g.CGFloatValue()!, blue: color2b.CGFloatValue()!, alpha: color2a.CGFloatValue()!), thirdColor: ColorData(red: color3r.CGFloatValue()!, green: color3g.CGFloatValue()!, blue: color3b.CGFloatValue()!, alpha: color3a.CGFloatValue()!), categoria: categoria, nome: nome, taglia: taglia,data: dataAgg.data(using: .utf8)!)
