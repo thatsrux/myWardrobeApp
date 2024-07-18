@@ -118,7 +118,16 @@ struct ClothesScreen: View {
                             
                             Divider()
                             Button(action: {
-                                database.clothes.removeAll()
+                                for cloth in database.clothes{
+                                    Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
+                                        if let err = err {
+                                            print("Error removing document: \(err)")
+                                        } else {
+                                            print("Document successfully removed!")
+                                        }
+                                    }
+                                }
+                                database.fetchClothes()
                             }) {
                                 Text("Svuota")
                                 Image(systemName: "trash")
