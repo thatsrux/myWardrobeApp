@@ -32,6 +32,7 @@ struct InfoClothScreen: View {
         
         self.nomeText = cloth.nome
         self.tagliaText = cloth.taglia
+        self.categoriaClassificata = cloth.categoria
         self.stileText = cloth.stile
         
         let backgroundRemoval = BackgroundRemoval()
@@ -42,6 +43,7 @@ struct InfoClothScreen: View {
         }
         
         self.image = (cloth.image?.toImage())!
+        
         edit = true
     }
     
@@ -61,7 +63,6 @@ struct InfoClothScreen: View {
         }
         
         cloth.stile = stileText
-        self.stileText = classifier.styleClass
         
     }
     
