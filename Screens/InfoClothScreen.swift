@@ -2,7 +2,7 @@ import SwiftUI
 import UIImageColors
 import BackgroundRemoval
 import ColorThiefSwift
-import Firebase
+import FirebaseFirestore
 
 struct InfoClothScreen: View {
     var image: UIImage
@@ -34,7 +34,7 @@ struct InfoClothScreen: View {
         
         let backgroundRemoval = BackgroundRemoval()
         do {
-            self.imageNoBackground = try backgroundRemoval.removeBackground(image: (cloth.image?.toImage())!)
+            self.imageNoBackground = try backgroundRemoval.removeBackground(image: (cloth.image?.toImage())!).croppedToBoundingBox()!
         } catch {
             fatalError(error.localizedDescription)
         }
@@ -68,17 +68,33 @@ struct InfoClothScreen: View {
                     .frame(width: 150, height: 200)
                 
                 Group {
-                    if classifier.imageConfidence > 0 {
+                    if classifier.typeConfidence > 0.5 {
                         HStack {
-                            Text("Image categories:")
+                            Text("Capo di abbiagliamento:")
                                 .font(.caption)
-                            Text(classifier.imageClass)
+                            Text(classifier.typeClass)
                                 .bold()
-                            Text("(\(classifier.imageConfidence))")
+                            Text("(\(classifier.typeConfidence))")
                         }
                     } else {
                         HStack {
-                            Text("Image categories: NA")
+                            Text("Capo di abbiagliamento: NA")
+                                .font(.caption)
+                        }
+                    }
+                }
+                Group {
+                    if classifier.styleConfidence > 0 {
+                        HStack {
+                            Text("Stile:")
+                                .font(.caption)
+                            Text(classifier.styleClass)
+                                .bold()
+                            Text("(\(classifier.styleConfidence))")
+                        }
+                    } else {
+                        HStack {
+                            Text("Stile: NA")
                                 .font(.caption)
                         }
                     }
@@ -194,7 +210,18 @@ struct InfoClothScreen: View {
     }
     
     func extractColorsAndClassify() {
-        let colors = ColorThief.getPalette(from: imageNoBackground, colorCount: 9, quality: 10, ignoreWhite: false)
+        var colors = ColorThief.getPalette(from: imageNoBackground.withBackground(color: UIColor.white), colorCount: 3, quality: 1, ignoreWhite: true)
+        
+        let testSingleColor = ColorThief.getPalette(from: imageNoBackground, colorCount: 9, quality: 1, ignoreWhite: false)
+        
+        let diff1 = testSingleColor![0].makeUIColor().difference(from: testSingleColor![1].makeUIColor())
+        
+        let diff2 = testSingleColor![1].makeUIColor().difference(from: UIColor.black)
+        
+        if diff1 < .near(20) || diff2 < .close(2) {
+            colors![1]=colors![0]
+            colors![2]=colors![0]
+        }
         
         if let colors = colors {
             if edit {
@@ -213,7 +240,7 @@ struct InfoClothScreen: View {
             cloth.thirdColor = ColorData(uiColor: colors[2].makeUIColor())
             
             classifier.detect(uiImage: (cloth.image?.toImage())!)
-            self.categoriaClassificata = classifier.imageClass
+            self.categoriaClassificata = classifier.typeClass
         }
     }
     

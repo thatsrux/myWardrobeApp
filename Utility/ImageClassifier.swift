@@ -11,21 +11,37 @@ class ImageClassifier: ObservableObject {
     
     @Published private var classifier = Classifier()
     
-     var imageClass: String {
+     var typeClass: String {
         var res = ""
-        if classifier.confidence != nil {
-                res = classifier.results!
+        if classifier.typeConfidence != nil {
+                res = classifier.type!
         }
         return res
     }
     
-    var imageConfidence: Float {
+    var typeConfidence: Float {
         var ret: Float = 0
-        if let conf = classifier.confidence {
+        if let conf = classifier.typeConfidence {
                 ret = conf
         }
         return ret
     }
+    
+    var styleClass: String {
+       var res = ""
+       if classifier.styleConfidence != nil {
+               res = classifier.style!
+       }
+       return res
+   }
+   
+   var styleConfidence: Float {
+       var ret: Float = 0
+       if let conf = classifier.styleConfidence {
+               ret = conf
+       }
+       return ret
+   }
         
     // MARK: Intent(s)
     func detect(uiImage: UIImage) {
