@@ -11,29 +11,52 @@ import CoreImage
 
 struct Classifier {
     
-    private(set) var results: String?
-    private(set) var confidence: Float?
+    private(set) var type: String?
+    private(set) var typeConfidence: Float?
+    
+    private(set) var style: String?
+    private(set) var styleConfidence: Float?
     
     mutating func detect(ciImage: CIImage) {
         
-        guard let model = try? VNCoreMLModel(for: ClothesClassifierDEMO(configuration: MLModelConfiguration()).model)
+        guard let typeModel = try? VNCoreMLModel(for: ClothesClassifierDEMO(configuration: MLModelConfiguration()).model)
         else {
             return
         }
 
-        let request = VNCoreMLRequest(model: model)
+        let typeRequest = VNCoreMLRequest(model: typeModel)
         
-        let handler = VNImageRequestHandler(ciImage: ciImage, options: [:])
+        let typeHandler = VNImageRequestHandler(ciImage: ciImage, options: [:])
         
-        try? handler.perform([request])
+        try? typeHandler.perform([typeRequest])
         
-        guard let results = request.results as? [VNClassificationObservation] else {
+        guard let typeResults = typeRequest.results as? [VNClassificationObservation] else {
             return
-        } 
+        }
         
-        if let firstResult = results.first {
-            self.results = firstResult.identifier
-            self.confidence = firstResult.confidence
+        if let firstResult = typeResults.first {
+            self.type = firstResult.identifier
+            self.typeConfidence = firstResult.confidence
+        }
+        
+        guard let styleModel = try? VNCoreMLModel(for: StyleClassificatorTEST_4(configuration: MLModelConfiguration()).model)
+        else {
+            return
+        }
+
+        let styleRequest = VNCoreMLRequest(model: styleModel)
+        
+        let styleHandler = VNImageRequestHandler(ciImage: ciImage, options: [:])
+        
+        try? styleHandler.perform([styleRequest])
+        
+        guard let styleResults = styleRequest.results as? [VNClassificationObservation] else {
+            return
+        }
+        
+        if let firstResult = styleResults.first {
+            self.style = firstResult.identifier
+            self.styleConfidence = firstResult.confidence
         }
         
     }
