@@ -285,6 +285,7 @@ struct InfoClothScreen: View {
         }
         
         database.fetchClothes()
+        database.fetchCategorie()
     }
     
     private func editCloth(){
@@ -311,6 +312,7 @@ struct InfoClothScreen: View {
             }
         }
         database.fetchClothes()
+        database.fetchCategorie()
     }
     
     static func save(clothes: [Cloth]) {

@@ -45,6 +45,8 @@ struct ClothesScreen: View {
                                     HStack {
                                         Image(uiImage: (cloth.image?.toImage())!)
                                             .resizable()
+                                            .scaledToFit()
+                                            .clipped()
                                             .frame(width:100,height:100)
                                         Spacer().frame(width: 30, height: 100)
                                         
@@ -61,7 +63,7 @@ struct ClothesScreen: View {
                 }
             } else {
                 ScrollView {
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                    LazyVGrid(columns: [GridItem(.flexible(),alignment: .top), GridItem(.flexible(),alignment: .top)], spacing: 10) {
                         ForEach(database.categorie.keys.sorted(), id: \.self){ category in
                             Section(header: Text(category).font(.headline)){
                                 ForEach(database.categorie[category]!, id: \.id) { cloth in
@@ -69,6 +71,8 @@ struct ClothesScreen: View {
                                         VStack {
                                             Image(uiImage: (cloth.image?.toImage())!)
                                                 .resizable()
+                                                .scaledToFit()
+                                                .clipped()
                                                 .frame(width:150,height:150)
                                             
                                             Text("\(cloth.nome) - \(cloth.taglia)")
