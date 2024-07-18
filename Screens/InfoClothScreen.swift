@@ -40,6 +40,7 @@ struct InfoClothScreen: View {
             self.imageNoBackground = try backgroundRemoval.removeBackground(image: (cloth.image?.toImage())!).croppedToBoundingBox()!
         } catch {
             fatalError(error.localizedDescription)
+            
         }
         
         self.image = (cloth.image?.toImage())!
@@ -127,6 +128,7 @@ struct InfoClothScreen: View {
                                     .scaleEffect(x:3,y:3)
                                     .labelsHidden()
                             }
+                        Text(closestColor(to: UIColor(cpColor1)))
                     }
                     
                     VStack() {
@@ -146,8 +148,8 @@ struct InfoClothScreen: View {
                                     .opacity(0.015)
                                     .scaleEffect(x:3,y:3)
                                     .labelsHidden()
-                                
                             }
+                        Text(closestColor(to: UIColor(cpColor2)))
                     }
                     
                     
@@ -168,9 +170,8 @@ struct InfoClothScreen: View {
                                     .opacity(0.015)
                                     .scaleEffect(x:3,y:3)
                                     .labelsHidden()
-                                
                             }
-                        
+                        Text(closestColor(to: UIColor(cpColor3)))
                     }
                 }.padding(.bottom,20)
                 
@@ -235,11 +236,14 @@ struct InfoClothScreen: View {
         
         let testSingleColor = ColorThief.getPalette(from: imageNoBackground, colorCount: 9, quality: 1, ignoreWhite: false)
         
-        let diff1 = testSingleColor![0].makeUIColor().difference(from: testSingleColor![1].makeUIColor())
+        //let diff1 = testSingleColor![0].makeUIColor().difference(from: testSingleColor![1].makeUIColor())
+        let diff1 = testSingleColor![0].makeUIColor().CIE94(compare: testSingleColor![1].makeUIColor())
         
-        let diff2 = testSingleColor![1].makeUIColor().difference(from: UIColor.black)
+        //let diff2 = testSingleColor![1].makeUIColor().difference(from: UIColor.black)
         
-        if diff1 < .near(20) || diff2 < .close(1) {
+        let diff2 = testSingleColor![1].makeUIColor().CIE94(compare: UIColor.black)
+        
+        if diff1 < 20 || diff2 < 1 {
             colors![1]=colors![0]
             colors![2]=colors![0]
         }
