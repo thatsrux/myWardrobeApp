@@ -48,6 +48,8 @@ struct ClothesScreen: View {
                                             .frame(width:100,height:100)
                                             .clipped()
                                             .cornerRadius(10)
+                                        Spacer().frame(width:30,height:100)
+                                        Text("\(cloth.nome) - \(cloth.taglia)")
                                     }
                                 }
                             }
