@@ -19,7 +19,7 @@ struct Classifier {
     
     mutating func detect(ciImage: CIImage) {
         
-        guard let typeModel = try? VNCoreMLModel(for: ClothesClassifierDEMO(configuration: MLModelConfiguration()).model)
+        guard let typeModel = try? VNCoreMLModel(for: ClothesTypeClassifier(configuration: MLModelConfiguration()).model)
         else {
             return
         }
@@ -39,7 +39,7 @@ struct Classifier {
             self.typeConfidence = firstResult.confidence
         }
         
-        guard let styleModel = try? VNCoreMLModel(for: StyleClassificatorTEST_5(configuration: MLModelConfiguration()).model)
+        guard let styleModel = try? VNCoreMLModel(for: ClothesStyleClassifier(configuration: MLModelConfiguration()).model)
         else {
             return
         }

@@ -2,7 +2,7 @@ import SwiftUI
 import UIImageColors
 import BackgroundRemoval
 import ColorThiefSwift
-import FirebaseFirestore
+import Firebase
 
 struct InfoClothScreen: View {
     var image: UIImage
