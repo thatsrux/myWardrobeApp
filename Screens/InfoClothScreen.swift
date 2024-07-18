@@ -11,7 +11,7 @@ struct InfoClothScreen: View {
     @State var nomeText = ""
     @State var tagliaText = ""
     @State var categoriaClassificata = ""
-    @State var stileText = ""
+    @State var stileClassificato = ""
     
     @State var cpColor1: Color = .clear
     @State var cpColor2: Color = .clear
@@ -33,7 +33,7 @@ struct InfoClothScreen: View {
         self.nomeText = cloth.nome
         self.tagliaText = cloth.taglia
         self.categoriaClassificata = cloth.categoria
-        self.stileText = cloth.stile
+        self.stileClassificato = cloth.stile
         
         let backgroundRemoval = BackgroundRemoval()
         do {
@@ -62,7 +62,7 @@ struct InfoClothScreen: View {
             fatalError(error.localizedDescription)
         }
         
-        cloth.stile = stileText
+        cloth.stile = stileClassificato
         
     }
     
@@ -105,21 +105,6 @@ struct InfoClothScreen: View {
                                     .font(.caption)
                             }
                         }
-                    }
-                } else {
-                    Group {
-                        HStack {
-                            Text("Capo di abbiagliamento:")
-                                .font(.caption)
-                            Text(cloth.categoria)
-                                .bold()
-                        }
-                    }
-                    HStack {
-                        Text("Stile:")
-                            .font(.caption)
-                        //Text(classifier.styleClass)
-                            .bold()
                     }
                 }
                 
@@ -209,7 +194,7 @@ struct InfoClothScreen: View {
                 }.padding(.leading, 20)
                 
                 LabeledContent {
-                    TextField("Stile", text: $stileText)
+                    TextField("Stile", text: $stileClassificato)
                 } label: {
                     Text("Stile: ")
                 }.padding(.leading, 20)
@@ -271,6 +256,7 @@ struct InfoClothScreen: View {
             
             classifier.detect(uiImage: (cloth.image?.toImage())!)
             self.categoriaClassificata = classifier.typeClass
+            self.stileClassificato = classifier.styleClass
         }
     }
     
@@ -288,7 +274,7 @@ struct InfoClothScreen: View {
             newCloth.nome = nomeText
             newCloth.taglia = tagliaText
             newCloth.categoria = categoriaClassificata
-            newCloth.stile = stileText
+            newCloth.stile = stileClassificato
             
             database.clothes.append(newCloth)
             InfoClothScreen.save(clothes: database.clothes)
@@ -301,8 +287,8 @@ struct InfoClothScreen: View {
         cloth.nome = nomeText
         cloth.taglia = tagliaText
         cloth.categoria = categoriaClassificata
-        cloth.stile = stileText
-
+        cloth.stile = stileClassificato
+        
         cloth.mainColor = ColorData(uiColor: UIColor(cpColor1))
         print(cpColor1)
         print(cloth.mainColor)
