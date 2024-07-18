@@ -11,6 +11,7 @@ struct InfoClothScreen: View {
     @State var nomeText = ""
     @State var tagliaText = ""
     @State var categoriaClassificata = ""
+    @State var stileText = ""
     
     @State var cpColor1: Color = .clear
     @State var cpColor2: Color = .clear
@@ -31,6 +32,8 @@ struct InfoClothScreen: View {
         
         self.nomeText = cloth.nome
         self.tagliaText = cloth.taglia
+        self.categoriaClassificata = cloth.categoria
+        self.stileText = cloth.stile
         
         let backgroundRemoval = BackgroundRemoval()
         do {
@@ -40,6 +43,7 @@ struct InfoClothScreen: View {
         }
         
         self.image = (cloth.image?.toImage())!
+        
         edit = true
     }
     
@@ -49,6 +53,7 @@ struct InfoClothScreen: View {
         
         self.cloth = Cloth(image: image)
         
+        
         let backgroundRemoval = BackgroundRemoval()
         
         do {
@@ -56,6 +61,8 @@ struct InfoClothScreen: View {
         } catch {
             fatalError(error.localizedDescription)
         }
+        
+        cloth.stile = stileText
         
     }
     
@@ -193,13 +200,19 @@ struct InfoClothScreen: View {
                     TextField("Nome articolo", text: $nomeText)
                 } label: {
                     Text("Nome articolo: ")
-                }
+                }.padding(.leading, 20)
                 
                 LabeledContent {
                     TextField("Taglia", text: $tagliaText)
                 } label: {
                     Text("Taglia: ")
-                }
+                }.padding(.leading, 20)
+                
+                LabeledContent {
+                    TextField("Stile", text: $stileText)
+                } label: {
+                    Text("Stile: ")
+                }.padding(.leading, 20)
             }
         }
         .onAppear {
@@ -275,6 +288,7 @@ struct InfoClothScreen: View {
             newCloth.nome = nomeText
             newCloth.taglia = tagliaText
             newCloth.categoria = categoriaClassificata
+            newCloth.stile = stileText
             
             database.clothes.append(newCloth)
             InfoClothScreen.save(clothes: database.clothes)
@@ -287,13 +301,13 @@ struct InfoClothScreen: View {
         cloth.nome = nomeText
         cloth.taglia = tagliaText
         cloth.categoria = categoriaClassificata
-        
+        cloth.stile = stileText
+
         cloth.mainColor = ColorData(uiColor: UIColor(cpColor1))
         print(cpColor1)
         print(cloth.mainColor)
         cloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
         cloth.thirdColor = ColorData(uiColor: UIColor(cpColor3))
-        
         database.clothes.append(cloth)
         InfoClothScreen.save(clothes: database.clothes)
     }
@@ -347,6 +361,7 @@ struct InfoClothScreen: View {
                          "color3r": cloth.thirdColor.red.description,
                          "color3g": cloth.thirdColor.green.description,
                          "color3b": cloth.thirdColor.blue.description,
+                         "stile": cloth.stile,
                          "data":dataString
                         ]){
                 error in
