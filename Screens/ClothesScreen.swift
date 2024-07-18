@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Firebase
-import FirebaseFirestore
 
 struct ClothesScreen: View {
     @State var isPresenting: Bool = false
