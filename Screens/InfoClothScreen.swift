@@ -172,6 +172,9 @@ struct InfoClothScreen: View {
         }
         .onAppear {
             extractColorsAndClassify()
+            cpColor1 = cloth.mainColor.toColor()
+            cpColor2 = cloth.secondColor.toColor()
+            cpColor3 = cloth.thirdColor.toColor()
         }
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
@@ -197,9 +200,6 @@ struct InfoClothScreen: View {
         let colors = ColorThief.getPalette(from: imageNoBackground, colorCount: 9, quality: 10, ignoreWhite: false)
         
         if let colors = colors {
-            self.cpColor1 = Color(colors[0].makeUIColor())
-            self.cpColor2 = Color(colors[1].makeUIColor())
-            self.cpColor3 = Color(colors[2].makeUIColor())
             
             let cloth = Cloth(image: image)
             cloth.mainColor = ColorData(uiColor: colors[0].makeUIColor())
