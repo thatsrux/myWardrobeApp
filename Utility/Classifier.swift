@@ -39,7 +39,7 @@ struct Classifier {
             self.typeConfidence = firstResult.confidence
         }
         
-        guard let styleModel = try? VNCoreMLModel(for: StyleClassificatorTEST_4(configuration: MLModelConfiguration()).model)
+        guard let styleModel = try? VNCoreMLModel(for: StyleClassificatorTEST_5(configuration: MLModelConfiguration()).model)
         else {
             return
         }

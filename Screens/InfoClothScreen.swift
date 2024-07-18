@@ -52,7 +52,7 @@ struct InfoClothScreen: View {
         let backgroundRemoval = BackgroundRemoval()
         
         do {
-            imageNoBackground = try backgroundRemoval.removeBackground(image: image)
+            imageNoBackground = try backgroundRemoval.removeBackground(image: image).croppedToBoundingBox()!
         } catch {
             fatalError(error.localizedDescription)
         }
@@ -66,37 +66,53 @@ struct InfoClothScreen: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 150, height: 200)
-                
-                Group {
-                    if classifier.typeConfidence > 0.5 {
+                if !edit {
+                    Group {
+                        if classifier.typeConfidence > 0.5 {
+                            HStack {
+                                Text("Capo di abbiagliamento:")
+                                    .font(.caption)
+                                Text(classifier.typeClass)
+                                    .bold()
+                                Text("(\(classifier.typeConfidence))")
+                            }
+                        } else {
+                            HStack {
+                                Text("Capo di abbiagliamento: NA")
+                                    .font(.caption)
+                            }
+                        }
+                    }
+                    Group {
+                        if classifier.styleConfidence > 0 {
+                            HStack {
+                                Text("Stile:")
+                                    .font(.caption)
+                                Text(classifier.styleClass)
+                                    .bold()
+                                Text("(\(classifier.styleConfidence))")
+                            }
+                        } else {
+                            HStack {
+                                Text("Stile: NA")
+                                    .font(.caption)
+                            }
+                        }
+                    }
+                } else {
+                    Group {
                         HStack {
                             Text("Capo di abbiagliamento:")
                                 .font(.caption)
-                            Text(classifier.typeClass)
+                            Text(cloth.categoria)
                                 .bold()
-                            Text("(\(classifier.typeConfidence))")
-                        }
-                    } else {
-                        HStack {
-                            Text("Capo di abbiagliamento: NA")
-                                .font(.caption)
                         }
                     }
-                }
-                Group {
-                    if classifier.styleConfidence > 0 {
-                        HStack {
-                            Text("Stile:")
-                                .font(.caption)
-                            Text(classifier.styleClass)
-                                .bold()
-                            Text("(\(classifier.styleConfidence))")
-                        }
-                    } else {
-                        HStack {
-                            Text("Stile: NA")
-                                .font(.caption)
-                        }
+                    HStack {
+                        Text("Stile:")
+                            .font(.caption)
+                        //Text(classifier.styleClass)
+                            .bold()
                     }
                 }
                 
@@ -187,7 +203,14 @@ struct InfoClothScreen: View {
             }
         }
         .onAppear {
-            extractColorsAndClassify()
+            if !edit {
+                extractColorsAndClassify()
+            }
+            else {
+                self.cpColor1 = cloth.mainColor.toColor()
+                self.cpColor2 = cloth.secondColor.toColor()
+                self.cpColor3 = cloth.thirdColor.toColor()
+            }
         }
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
@@ -218,21 +241,15 @@ struct InfoClothScreen: View {
         
         let diff2 = testSingleColor![1].makeUIColor().difference(from: UIColor.black)
         
-        if diff1 < .near(20) || diff2 < .close(2) {
+        if diff1 < .near(20) || diff2 < .close(1) {
             colors![1]=colors![0]
             colors![2]=colors![0]
         }
         
         if let colors = colors {
-            if edit {
-                self.cpColor1 = cloth.mainColor.toColor()
-                self.cpColor2 = cloth.secondColor.toColor()
-                self.cpColor3 = cloth.thirdColor.toColor()
-            } else {
-                self.cpColor1 = Color(colors[0].makeUIColor())
-                self.cpColor2 = Color(colors[1].makeUIColor())
-                self.cpColor3 = Color(colors[2].makeUIColor())
-            }
+            self.cpColor1 = Color(colors[0].makeUIColor())
+            self.cpColor2 = Color(colors[1].makeUIColor())
+            self.cpColor3 = Color(colors[2].makeUIColor())
             
             let cloth = Cloth(image: image)
             cloth.mainColor = ColorData(uiColor: colors[0].makeUIColor())
