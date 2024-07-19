@@ -27,41 +27,41 @@ struct ClothesScreen: View {
     
     
     func deleteCloth(cloth:Cloth){
-       Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
-           if let err = err {
-               print("Error removing document: \(err)")
-           } else {
-               print("Document successfully removed!")
-           }
-       }
-       database.fetchClothes()
-       database.fetchCategorie()
-   }
+        Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
+            if let err = err {
+                print("Error removing document: \(err)")
+            } else {
+                print("Document successfully removed!")
+            }
+        }
+        database.fetchClothes()
+        database.fetchCategorie()
+    }
     
     func deleteClothSwipe(at offsets:IndexSet){
         
         guard let index = offsets.first else {
-                print("No index available to delete")
-                return
-            }
-            
+            print("No index available to delete")
+            return
+        }
+        
         guard index >= 0 && index < database.clothes.count else {
-                print("Index \(index) out of range")
-                return
-            }
+            print("Index \(index) out of range")
+            return
+        }
         
         let clothToDelete = database.clothes[index+1]
         
-       Firestore.firestore().collection("Cloth").document(clothToDelete.id.uuidString).delete() { err in
-           if let err = err {
-               print("Error removing document: \(err)")
-           } else {
-               print("Document successfully removed!")
-           }
-       }
-       database.fetchClothes()
-       database.fetchCategorie()
-   }
+        Firestore.firestore().collection("Cloth").document(clothToDelete.id.uuidString).delete() { err in
+            if let err = err {
+                print("Error removing document: \(err)")
+            } else {
+                print("Document successfully removed!")
+            }
+        }
+        database.fetchClothes()
+        database.fetchCategorie()
+    }
     
     
     var body: some View {
@@ -75,24 +75,32 @@ struct ClothesScreen: View {
                             ForEach(database.categorie[category]!) { cloth in
                                 NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
                                     HStack {
-                                        Image(uiImage: (cloth.image?.toImage())!)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .clipped()
-                                            .frame(width:100,height:100)
+                                        VStack{
+                                            Image(uiImage: (cloth.image?.toImage())!)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .clipped()
+                                                .frame(width:100,height:100)
+                                            HStack{
+                                                Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20)
+                                                Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20)
+                                                Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20)
+                                            }.padding(.bottom,10)
+                                        }
+                                        
                                         Spacer().frame(width: 30, height: 100)
                                         
                                         Text("\(cloth.nome) - \(cloth.taglia)")
                                     }
                                 }
                             }.onDelete(perform: deleteClothSwipe)
+                            
                         }
-                        
-                        
-                        
                     }
-                    
                 }
+                
+                
+                
             } else {
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.flexible(), alignment: .top), GridItem(.flexible(), alignment: .top)], spacing: 10) {
@@ -100,24 +108,34 @@ struct ClothesScreen: View {
                             Section(header: Text(category).font(.headline)){
                                 ForEach(database.categorie[category]!, id: \.self) { cloth in
                                     NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                        VStack {
-                                            Image(uiImage: (cloth.image?.toImage())!)
-                                                .resizable()
-                                                .scaledToFit()
-                                                .clipped()
-                                                .cornerRadius(10)
+                                        VStack{
+                                            VStack {
+                                                Image(uiImage: (cloth.image?.toImage())!)
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .clipped()
+                                                    .cornerRadius(10)
+                                                HStack{
+                                                    Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20)
+                                                    Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20)
+                                                    Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20)
+                                                }
+                                                Text("\(cloth.nome) - \(cloth.taglia)").padding(.bottom,10)
+                                            }
                                             
-                                            Text("\(cloth.nome) - \(cloth.taglia)")
-                                        }
-                                        .frame(width: 150, height: 150)
-                                        .shadow(radius: 5)
-                                        .contextMenu(menuItems: {
-                                            Button("Elimina", role: .destructive, action: {
-                                                deleteCloth(cloth: cloth)
+                                            .contextMenu(menuItems: {
+                                                Button("Elimina", role: .destructive, action: {
+                                                    deleteCloth(cloth: cloth)
+                                                })
                                             })
-                                        })
+                                        }.frame(width: 150, height: 200)
+                                            .background(Color.white)
+                                            .cornerRadius(10)
+                                            .shadow(radius: 5)
+                                        
                                     }
                                 }
+                                
                             }
                         }
                     }
