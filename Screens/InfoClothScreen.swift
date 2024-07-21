@@ -249,28 +249,36 @@ struct InfoClothScreen: View {
     }
     
     func extractColorsAndClassify() {
-        var colors = ColorThief.getPalette(from: imageNoBackground.withBackground(color: UIColor.white), colorCount: 3, quality: 1, ignoreWhite: true)
+        // Estrazione dei tre colori principali, ignorando il bianco puro, inserendo uno sfondo bianco all'immagine semitrasparente.
+        // Questo metodo fornisce più accurati
+        let colors = ColorThief.getPalette(from: imageNoBackground.withBackground(color: UIColor.white), colorCount: 3, quality: 1, ignoreWhite: true)
         
+        // Estrazione dei nove colori principali, lasciando il bianco puro, sull'immagine semitrasparente.
+        // Questo metodo fornisce i risultati migliori per capire se l'immagine è monocolore
         let testSingleColor = ColorThief.getPalette(from: imageNoBackground, colorCount: 9, quality: 1, ignoreWhite: false)
         
+        // Si verifica la differenza tra il primo e il secondo colore.
         let diff1 = testSingleColor![0].makeUIColor().CIE94(compare: testSingleColor![1].makeUIColor())
         
+        // Si verifica la differenza tra il secondo colore (preso dal test per il monocolore) e il nero puro, siccome viene restituito erroneamente quando il capo è monocolore.
         let diff2 = testSingleColor![1].makeUIColor().CIE94(compare: UIColor.black)
         
-        let diff3 = testSingleColor![2].makeUIColor().CIE94(compare: testSingleColor![0].makeUIColor())
+        // Si verifica la differenza tra il primo e il terzo colore.
+        let diff3 = colors![2].makeUIColor().CIE94(compare: colors![0].makeUIColor())
         
-        let diff4 = testSingleColor![2].makeUIColor().CIE94(compare: testSingleColor![1].makeUIColor())
+        // Si verifica la differenza tra il secondo e il terzo colore.
+        let diff4 = colors![2].makeUIColor().CIE94(compare: colors![1].makeUIColor())
         
+        // Si verifica la differenza tra il terzo colore (preso dal test per il monocolore) e il nero puro, siccome viene restituito erroneamente quando il capo è monocolore.
         let diff5 = testSingleColor![2].makeUIColor().CIE94(compare: UIColor.black)
         
+        // Se il terzo colore è poco differente dal primo e dal secondo, o se quando viene preso dal primo test è molto simile al nero puro, il capo ha 2 colori.
         if diff3 < 30 || diff4 < 30 || diff5 < 1 {
-            colors![2]=colors![0]
             colorsNum = 2
         }
         
+        // Se il secondo colore è poco differente dal primo, o se quando viene preso dal primo test è molto simile al nero puro, il capo ha 2 colori.
         if diff1 < 20 || diff2 < 1 {
-            colors![1]=colors![0]
-            colors![2]=colors![0]
             colorsNum = 1
         }
         

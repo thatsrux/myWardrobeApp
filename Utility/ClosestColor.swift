@@ -1,6 +1,8 @@
 import UIKit
 import ColorKit
 
+// Assegnazione di nomi ai colori
+// Per i colori più scuri sono presenti più variazioni
 let colorMap: [String: UIColor] = [
     "Rosso": UIColor.red,
     "Rosso scuro": UIColor(red: 0.33, green: 0.07, blue: 0.03, alpha: 1.0),
@@ -14,25 +16,47 @@ let colorMap: [String: UIColor] = [
     "Verde foglia": UIColor(red: 0.23, green: 0.53, blue: 0.22, alpha: 1.0),
     "Verde scuro": UIColor(red: 0.1, green: 0.28, blue: 0.13, alpha: 1.0),
     "Oliva": UIColor(red: 0.5, green: 0.5, blue: 0.0, alpha: 1.0),
-    "Celeste scuro": UIColor(red: 0.11, green: 0.3, blue: 0.38, alpha: 1.0),
-    "Celeste scuro2": UIColor(red: 0.33, green: 0.43, blue: 0.62, alpha: 1.0),
-    //"Turchese": UIColor(red: 0.0, green: 1.0, blue: 1.0, alpha: 1.0),
     "Celeste": UIColor(red: 0.43, green: 0.6, blue: 0.75, alpha: 1.0),
+    "Celeste scuro": UIColor(red: 0.33, green: 0.43, blue: 0.62, alpha: 1.0),
+    // Variazioni del celeste scuro
+    "Celeste scuro2": UIColor(red: 0.33, green: 0.43, blue: 0.62, alpha: 1.0),
+    "Celeste scuro3": UIColor(red: 0.11, green: 0.3, blue: 0.38, alpha: 1.0),
     "Lavanda": UIColor(red: 0.67, green: 0.55, blue: 0.97, alpha: 1.0),
     "Blu": UIColor.blue,
+    // Variazioni del blu
+    "Blu2": UIColor(red: 0.063, green: 0.18, blue: 0.46, alpha: 1.0),
     "Blu marino": UIColor(red: 0.03, green: 0.11, blue: 0.33, alpha: 1.0),
+    // Variazioni del blu marino
+    "Blu marino2": UIColor(red: 0.16, green: 0.04, blue: 0.44, alpha: 1.0),
+    "Blu scuro": UIColor(red: 0.13, green: 0.13, blue: 0.25, alpha: 1.0),
+    // Variazioni del blu scuro
+    "Blu scuro2": UIColor(red: 0.06, green: 0.02, blue: 0.2, alpha: 1.0),
     "Viola": UIColor.purple,
-    "Viola scuro": UIColor(red: 0.2, green: 0.1, blue: 0.3, alpha: 1.0),
+    // Variazioni del viola
+    "Viola2": UIColor(red: 0.2, green: 0.1, blue: 0.3, alpha: 1.0),
+    "Viola3": UIColor(red: 0.25, green: 0.18, blue: 0.25, alpha: 1.0),
+    "Viola4": UIColor(red: 0.25, green: 0.07, blue: 0.34, alpha: 1.0),
+    "Viola5": UIColor(red: 0.165, green: 0, blue: 0.23, alpha: 1.0),
+    "Viola6": UIColor(red: 0.27, green: 0.22, blue: 0.4, alpha: 1.0),
+    "Viola7": UIColor(red: 0.27, green: 0, blue: 0.4, alpha: 1.0),
+    "Viola8": UIColor(red: 0.4, green: 0, blue: 0.4, alpha: 1.0),
     "Magenta": UIColor.magenta,
     "Fucsia": UIColor(red: 0.8, green: 0.3, blue: 0.5, alpha: 1.0),
+    // Variazioni del fucsia
+    "Fucsia2": UIColor(red: 0.44, green: 0.2, blue: 0.4, alpha: 1.0),
     "Beige": UIColor(red: 0.96, green: 0.96, blue: 0.86, alpha: 1.0),
     "Cammello": UIColor(red: 0.6, green: 0.5, blue: 0.4, alpha: 1.0),
     "Marrone": UIColor.brown,
+    // Variazioni del marrone
     "Marrone2": UIColor(red: 0.675, green: 0.475, blue: 0.3, alpha: 1.0),
     "Marrone scuro": UIColor(red: 0.32, green: 0.2, blue: 0.05, alpha: 1.0),
     "Grigio": UIColor.gray,
     "Nero": UIColor.black,
     "Bianco": UIColor.white
+    
+    // COLORI RIMOSSI
+    
+    //"Turchese": UIColor(red: 0.0, green: 1.0, blue: 1.0, alpha: 1.0),
     //"Celeste": UIColor(red: 0.0, green: 0.5, blue: 0.5, alpha: 1.0),
     //"Porpora": UIColor(red: 0.3, green: 0.08, blue: 0.16, alpha: 1.0),
     //"Blu scuro": UIColor(red: 0.2, green: 0.18, blue: 0.25, alpha: 1.0),
@@ -65,6 +89,8 @@ func closestColor(to color: UIColor) -> String {
     var closestColorName: String?
     var smallestDifference = CGFloat.infinity
 
+    // Si valuta la differenza dei colori presi in esame con tutti i colori presenti nella mappa.
+    // Viene restituito il colore con la differenza minore
     for (name, testColor) in colorMap {
         let diff = color.CIE94(compare: testColor)
         if diff < smallestDifference {
@@ -72,19 +98,52 @@ func closestColor(to color: UIColor) -> String {
             closestColorName = name
         }
     }
-    if closestColorName == "Viola scuro" {
-        closestColorName = "Viola"
+    
+    // I colori che hanno variazioni vengono raggruppati
+    closestColorName = groupColors(closestColorName: closestColorName!)
+    
+    // Se il colore è scuro, viene utilizzato l'algoritmo CIEDE2000, che risulta più preciso per i colori scuri
+    if closestColorName == "Blu scuro" || closestColorName == "Blu marino" || closestColorName == "Viola" || closestColorName == "Nero" {
+        for (name, testColor) in colorMap {
+            let diff = color.CIEDE2000(compare: testColor)
+            if diff < smallestDifference {
+                smallestDifference = diff
+                closestColorName = name
+            }
+        }
     }
-    if closestColorName == "Marrone2" {
-        closestColorName = "Marrone"
-    }
-    if closestColorName == "Lavanda" {
-        closestColorName = "Celeste"
-    }
-    if closestColorName == "Celeste scuro2" {
-        closestColorName = "Celeste scuro"
-    }
-
+    
+    // I colori vengono raggruppati nuovamente
+    closestColorName = groupColors(closestColorName: closestColorName!)
 
     return closestColorName ?? "NA"
+}
+
+func groupColors(closestColorName: String) -> String {
+    // I colori che hanno variazioni vengono raggruppati
+    if closestColorName.contains("Marrone2") || closestColorName == "Cammello" {
+        return "Marrone"
+    }
+    if closestColorName.contains("Blu marino") {
+        return "Blu marino"
+    }
+    else if closestColorName.contains("Blu scuro") {
+        return "Blu scuro"
+    }
+    else if closestColorName.contains("Blu") {
+        return "Blu"
+    }
+    if closestColorName.contains("Viola") {
+        return "Viola"
+    }
+    if closestColorName.contains("Fucsia") {
+        return "Fucsia"
+    }
+    if closestColorName.contains("Celeste scuro") {
+        return "Celeste scuro"
+    }
+    else if closestColorName.contains("Celeste") || closestColorName == "Lavanda" {
+        return "Celeste"
+    }
+    return closestColorName
 }
