@@ -110,7 +110,8 @@ struct InfoClothScreen: View {
                         }
                     }
                 }
-                        
+               
+                    VStack{
                         HStack(alignment:.center) {
                             
                             VStack(alignment:.center) {
@@ -118,9 +119,9 @@ struct InfoClothScreen: View {
                                     Label("", systemImage: "minus")
                                 }.disabled(colorsNum == 1)
                                     .padding(.leading,20)
-                                
+                                    .padding(.top,15)
                             }
-                            Spacer()
+                            
                             VStack(alignment:.center) {
                                 Text("Colore principale").frame(
                                     minWidth: 0,
@@ -198,47 +199,53 @@ struct InfoClothScreen: View {
                                 }
                                 
                             }
-                            Spacer()
+                            
                             VStack(alignment:.center) {
                                 Button(action: addColor) {
                                     Label("", systemImage: "plus")
                                 }.disabled(colorsNum == 3)
                                     .padding(.trailing, 20)
+                                    .padding(.top,15)
                             }
                             
                         }.padding(.bottom,20)
-                    
-            }
-                    
-                VStack{
-                    LabeledContent {
-                        TextField("Categoria", text: $categoriaClassificata)
-                    } label: {
-                        Text("Categoria: ")
+                        
+                        VStack{
+                        LabeledContent {
+                            TextField("Categoria", text: $categoriaClassificata)
+                        } label: {
+                            Text("Categoria: ")
+                        }
+                        
+                        LabeledContent {
+                            TextField("Nome articolo", text: $nomeText)
+                        } label: {
+                            Text("Nome articolo: ")
+                        }
+                        
+                        LabeledContent {
+                            TextField("Taglia", text: $tagliaText)
+                        } label: {
+                            Text("Taglia: ")
+                        }
+                        
+                        LabeledContent {
+                            TextField("Stile", text: $stileClassificato)
+                        } label: {
+                            Text("Stile: ")
+                        }
                     }
-                    
-                    LabeledContent {
-                        TextField("Nome articolo", text: $nomeText)
-                    } label: {
-                        Text("Nome articolo: ")
-                    }
-                    
-                    LabeledContent {
-                        TextField("Taglia", text: $tagliaText)
-                    } label: {
-                        Text("Taglia: ")
-                    }
-                    
-                    LabeledContent {
-                        TextField("Stile", text: $stileClassificato)
-                    } label: {
-                        Text("Stile: ")
+                    .padding(.leading,40)
+                        
                     }
                 }
-                .padding(.horizontal,20)
-                
             
         }
+        
+            
+        
+            
+            
         .onAppear {
             if !edit {
                 extractColorsAndClassify()
@@ -418,14 +425,10 @@ struct InfoClothScreen: View {
     }
     
     func removeColor() {
-        if colorsNum > 1 {
-            colorsNum -= 1
-        }
+        colorsNum -= 1
     }
     
     func addColor() {
-        if colorsNum < 3 {
-            colorsNum += 1
-        }
+        colorsNum += 1
     }
 }
