@@ -22,6 +22,19 @@ class Cloth: Identifiable, Codable, Hashable{
     
     var data:Date
     
+    enum stile {
+        case casual, formale, sportivo
+    }
+    
+    enum categoria {
+        case camicia, canotta, cappello, giacca, giubbino, felpa, maglione, pantaloncini, pantalone, scarpe, tshirt
+    }
+    
+    enum colore {
+        case rosso, rossoscuro, rosa, arancione, oro, giallo, crema, lime, verde, verdefoglia, verdescuro, oliva, celeste, celestescuro, blu,
+             blumarino, bluscuro, viola, magenta, fucsia, beige, marrone, marronescuro, grigio, nero, bianco
+    }
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
