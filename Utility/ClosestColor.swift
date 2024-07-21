@@ -5,6 +5,7 @@ import ColorKit
 // Per i colori più scuri sono presenti più variazioni
 let colorMap: [String: UIColor] = [
     "Rosso": UIColor.red,
+    "Rosso2": UIColor(red: 0.57, green: 0.24, blue: 0.24, alpha: 1.0),
     "Rosso scuro": UIColor(red: 0.33, green: 0.07, blue: 0.03, alpha: 1.0),
     "Rosa": UIColor(red: 1.0, green: 0.75, blue: 0.8, alpha: 1.0),
     "Arancione": UIColor(red: 0.76, green: 0.4, blue: 0.2, alpha: 1.0),
@@ -34,11 +35,11 @@ let colorMap: [String: UIColor] = [
     "Viola": UIColor.purple,
     // Variazioni del viola
     "Viola2": UIColor(red: 0.2, green: 0.1, blue: 0.3, alpha: 1.0),
-    "Viola3": UIColor(red: 0.25, green: 0.18, blue: 0.25, alpha: 1.0),
+    //"Viola3": UIColor(red: 0.25, green: 0.18, blue: 0.25, alpha: 1.0),
     "Viola4": UIColor(red: 0.25, green: 0.07, blue: 0.34, alpha: 1.0),
     "Viola5": UIColor(red: 0.165, green: 0, blue: 0.23, alpha: 1.0),
     "Viola6": UIColor(red: 0.27, green: 0.22, blue: 0.4, alpha: 1.0),
-    "Viola7": UIColor(red: 0.27, green: 0, blue: 0.4, alpha: 1.0),
+    //"Viola7": UIColor(red: 0.27, green: 0, blue: 0.4, alpha: 1.0),
     "Viola8": UIColor(red: 0.4, green: 0, blue: 0.4, alpha: 1.0),
     "Magenta": UIColor.magenta,
     "Fucsia": UIColor(red: 0.8, green: 0.3, blue: 0.5, alpha: 1.0),
@@ -121,6 +122,9 @@ func closestColor(to color: UIColor) -> String {
 
 func groupColors(closestColorName: String) -> String {
     // I colori che hanno variazioni vengono raggruppati
+    if closestColorName.contains("Rosso") && !closestColorName.contains("scuro") {
+        return "Rosso"
+    }
     if closestColorName.contains("Marrone2") || closestColorName == "Cammello" {
         return "Marrone"
     }
