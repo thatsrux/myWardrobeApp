@@ -206,38 +206,47 @@ struct InfoClothScreen: View {
                             .padding(.trailing, 20)
                             .padding(.top,15)
                     }
-                }.padding(.bottom,20)
+                }.padding(.bottom,30)
             }
                     
                     
-                VStack{
+                VStack(spacing: 30){
                         
-                        LabeledContent {
-                            TextField("Categoria", text: $categoriaClassificata)
-                        } label: {
-                            Text("Categoria: ")
-                        }
-                        
-                        LabeledContent {
-                            TextField("Nome articolo", text: $nomeText)
-                        } label: {
-                            Text("Nome articolo: ")
-                        }
-                        
-                        LabeledContent {
-                            TextField("Taglia", text: $tagliaText)
-                        } label: {
-                            Text("Taglia: ")
-                        }
-                        
-                        LabeledContent {
-                            TextField("Stile", text: $stileClassificato)
-                        } label: {
-                            Text("Stile: ")
-                        }
+                    LabeledContent {
+                        TextField("Categoria", text: $categoriaClassificata)
+                            .font(.system(size: 18))
+                    } label: {
+                        Text("Categoria: ")
+                            .font(.system(size: 18, weight: .bold))
+                    }
+
+                    LabeledContent {
+                        TextField("Nome articolo", text: $nomeText)
+                            .font(.system(size: 18))
+                    } label: {
+                        Text("Nome articolo: ")
+                            .font(.system(size: 18, weight: .bold))
+                    }
+
+                    LabeledContent {
+                        TextField("Taglia", text: $tagliaText)
+                            .font(.system(size: 18))
+                    } label: {
+                        Text("Taglia: ")
+                            .font(.system(size: 18, weight: .bold))
+                    }
+
+                    LabeledContent {
+                        TextField("Stile", text: $stileClassificato)
+                            .font(.system(size: 18))
+                    } label: {
+                        Text("Stile: ")
+                            .font(.system(size: 18, weight: .bold))
+                    }
+
                         
                 }
-                    .padding(.leading,40)
+                    .padding(.leading,35)
                     
             }
             
