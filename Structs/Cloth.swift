@@ -13,6 +13,8 @@ class Cloth: Identifiable, Codable, Hashable{
     var secondColor: ColorData
     var thirdColor: ColorData
     
+    var colorsNum: Int
+    
     var categoria: String = ""
     var nome: String = ""
     var taglia: String = ""
@@ -29,12 +31,13 @@ class Cloth: Identifiable, Codable, Hashable{
     }
     
     
-    init(id:UUID, image:String,mainColor:ColorData,secondColor:ColorData,thirdColor:ColorData,categoria:String,nome:String,taglia:String,stile:String,data:Data){
+    init(id:UUID, image:String,mainColor:ColorData,secondColor:ColorData,thirdColor:ColorData,colorsNum:Int, categoria:String,nome:String,taglia:String,stile:String,data:Data){
         self.id = id
         self.image = image
         self.mainColor = mainColor
         self.secondColor = secondColor
         self.thirdColor = thirdColor
+        self.colorsNum = colorsNum
         self.categoria = categoria
         self.nome = nome
         self.taglia = taglia
@@ -47,6 +50,7 @@ class Cloth: Identifiable, Codable, Hashable{
         self.mainColor = ColorData(uiColor: .black)
         self.secondColor = ColorData(uiColor: .black)
         self.thirdColor = ColorData(uiColor: .black)
+        self.colorsNum = 3
         self.data = Date.now
     }
     
@@ -56,6 +60,7 @@ class Cloth: Identifiable, Codable, Hashable{
         self.mainColor = ColorData(uiColor: .white)
         self.secondColor = ColorData(uiColor: .white)
         self.thirdColor = ColorData(uiColor: .white)
+        self.colorsNum = 3
         self.categoria = categoria
         self.nome = nome
         self.taglia = ""

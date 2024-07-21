@@ -3,7 +3,7 @@ import ColorKit
 
 let colorMap: [String: UIColor] = [
     "Rosso": UIColor.red,
-    "Granata": UIColor(red: 0.33, green: 0.07, blue: 0.03, alpha: 1.0),
+    "Rosso scuro": UIColor(red: 0.33, green: 0.07, blue: 0.03, alpha: 1.0),
     "Rosa": UIColor(red: 1.0, green: 0.75, blue: 0.8, alpha: 1.0),
     "Arancione": UIColor(red: 0.76, green: 0.4, blue: 0.2, alpha: 1.0),
     "Oro": UIColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 1.0),
@@ -15,7 +15,8 @@ let colorMap: [String: UIColor] = [
     "Verde scuro": UIColor(red: 0.1, green: 0.28, blue: 0.13, alpha: 1.0),
     "Oliva": UIColor(red: 0.5, green: 0.5, blue: 0.0, alpha: 1.0),
     "Celeste scuro": UIColor(red: 0.11, green: 0.3, blue: 0.38, alpha: 1.0),
-    "Turchese": UIColor(red: 0.0, green: 1.0, blue: 1.0, alpha: 1.0),
+    "Celeste scuro2": UIColor(red: 0.33, green: 0.43, blue: 0.62, alpha: 1.0),
+    //"Turchese": UIColor(red: 0.0, green: 1.0, blue: 1.0, alpha: 1.0),
     "Celeste": UIColor(red: 0.43, green: 0.6, blue: 0.75, alpha: 1.0),
     "Lavanda": UIColor(red: 0.67, green: 0.55, blue: 0.97, alpha: 1.0),
     "Blu": UIColor.blue,
@@ -27,6 +28,7 @@ let colorMap: [String: UIColor] = [
     "Beige": UIColor(red: 0.96, green: 0.96, blue: 0.86, alpha: 1.0),
     "Cammello": UIColor(red: 0.6, green: 0.5, blue: 0.4, alpha: 1.0),
     "Marrone": UIColor.brown,
+    "Marrone2": UIColor(red: 0.675, green: 0.475, blue: 0.3, alpha: 1.0),
     "Marrone scuro": UIColor(red: 0.32, green: 0.2, blue: 0.05, alpha: 1.0),
     "Grigio": UIColor.gray,
     "Nero": UIColor.black,
@@ -70,6 +72,19 @@ func closestColor(to color: UIColor) -> String {
             closestColorName = name
         }
     }
+    if closestColorName == "Viola scuro" {
+        closestColorName = "Viola"
+    }
+    if closestColorName == "Marrone2" {
+        closestColorName = "Marrone"
+    }
+    if closestColorName == "Lavanda" {
+        closestColorName = "Celeste"
+    }
+    if closestColorName == "Celeste scuro2" {
+        closestColorName = "Celeste scuro"
+    }
+
 
     return closestColorName ?? "NA"
 }

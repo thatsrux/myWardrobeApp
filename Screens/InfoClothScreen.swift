@@ -25,6 +25,8 @@ struct InfoClothScreen: View {
     
     private var imageNoBackground: UIImage
     
+    @State var colorsNum = 3
+    
     var edit: Bool = false
     
     init(cloth: Cloth){
@@ -111,6 +113,11 @@ struct InfoClothScreen: View {
                 
                 HStack(alignment:.center) {
                     VStack(alignment:.center) {
+                        Button(action: removeColor) {
+                            Label("", systemImage: "minus")
+                        }
+                    }
+                    VStack(alignment:.center) {
                         Text("Colore principale").frame(
                             minWidth: 0,
                             maxWidth: 80,
@@ -131,47 +138,56 @@ struct InfoClothScreen: View {
                         Text(closestColor(to: UIColor(cpColor1)))
                     }
                     
-                    VStack() {
-                        Text("Secondo colore").frame(
-                            minWidth: 0,
-                            maxWidth: 80,
-                            minHeight: 0,
-                            maxHeight: 50,
-                            alignment: .center
-                        ).multilineTextAlignment(.center)
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(.black, lineWidth: 1)
-                            .fill(Color(cpColor2))
-                            .frame(width: 100, height: 50)
-                            .overlay {
-                                ColorPicker("", selection: $cpColor2)
-                                    .opacity(0.015)
-                                    .scaleEffect(x:3,y:3)
-                                    .labelsHidden()
-                            }
-                        Text(closestColor(to: UIColor(cpColor2)))
+                    if colorsNum > 1 {
+                        VStack() {
+                            Text("Secondo colore").frame(
+                                minWidth: 0,
+                                maxWidth: 80,
+                                minHeight: 0,
+                                maxHeight: 50,
+                                alignment: .center
+                            ).multilineTextAlignment(.center)
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(.black, lineWidth: 1)
+                                .fill(Color(cpColor2))
+                                .frame(width: 100, height: 50)
+                                .overlay {
+                                    ColorPicker("", selection: $cpColor2)
+                                        .opacity(0.015)
+                                        .scaleEffect(x:3,y:3)
+                                        .labelsHidden()
+                                }
+                            Text(closestColor(to: UIColor(cpColor2)))
+                        }
                     }
                     
+                    if colorsNum > 2 {
+                        VStack() {
+                            Text("Terzo colore").frame(
+                                minWidth: 0,
+                                maxWidth: 80,
+                                minHeight: 0,
+                                maxHeight: 50,
+                                alignment: .center
+                            ).multilineTextAlignment(.center)
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(.black, lineWidth: 1)
+                                .fill(Color(cpColor3))
+                                .frame(width: 100, height: 50)
+                                .overlay {
+                                    ColorPicker("", selection: $cpColor3)
+                                        .opacity(0.015)
+                                        .scaleEffect(x:3,y:3)
+                                        .labelsHidden()
+                                }
+                            Text(closestColor(to: UIColor(cpColor3)))
+                        }
+                    }
                     
-                    VStack() {
-                        Text("Terzo colore").frame(
-                            minWidth: 0,
-                            maxWidth: 80,
-                            minHeight: 0,
-                            maxHeight: 50,
-                            alignment: .center
-                        ).multilineTextAlignment(.center)
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(.black, lineWidth: 1)
-                            .fill(Color(cpColor3))
-                            .frame(width: 100, height: 50)
-                            .overlay {
-                                ColorPicker("", selection: $cpColor3)
-                                    .opacity(0.015)
-                                    .scaleEffect(x:3,y:3)
-                                    .labelsHidden()
-                            }
-                        Text(closestColor(to: UIColor(cpColor3)))
+                    VStack(alignment:.center) {
+                        Button(action: addColor) {
+                            Label("", systemImage: "plus")
+                        }
                     }
                 }.padding(.bottom,20)
                 
@@ -209,6 +225,7 @@ struct InfoClothScreen: View {
                 self.cpColor1 = cloth.mainColor.toColor()
                 self.cpColor2 = cloth.secondColor.toColor()
                 self.cpColor3 = cloth.thirdColor.toColor()
+                colorsNum = cloth.colorsNum
             }
         }
         .toolbar {
@@ -236,16 +253,25 @@ struct InfoClothScreen: View {
         
         let testSingleColor = ColorThief.getPalette(from: imageNoBackground, colorCount: 9, quality: 1, ignoreWhite: false)
         
-        //let diff1 = testSingleColor![0].makeUIColor().difference(from: testSingleColor![1].makeUIColor())
         let diff1 = testSingleColor![0].makeUIColor().CIE94(compare: testSingleColor![1].makeUIColor())
         
-        //let diff2 = testSingleColor![1].makeUIColor().difference(from: UIColor.black)
-        
         let diff2 = testSingleColor![1].makeUIColor().CIE94(compare: UIColor.black)
+        
+        let diff3 = testSingleColor![2].makeUIColor().CIE94(compare: testSingleColor![0].makeUIColor())
+        
+        let diff4 = testSingleColor![2].makeUIColor().CIE94(compare: testSingleColor![1].makeUIColor())
+        
+        let diff5 = testSingleColor![2].makeUIColor().CIE94(compare: UIColor.black)
+        
+        if diff3 < 30 || diff4 < 30 || diff5 < 1 {
+            colors![2]=colors![0]
+            colorsNum = 2
+        }
         
         if diff1 < 20 || diff2 < 1 {
             colors![1]=colors![0]
             colors![2]=colors![0]
+            colorsNum = 1
         }
         
         if let colors = colors {
@@ -255,9 +281,12 @@ struct InfoClothScreen: View {
             
             let cloth = Cloth(image: image)
             cloth.mainColor = ColorData(uiColor: colors[0].makeUIColor())
-            cloth.secondColor = ColorData(uiColor: colors[1].makeUIColor())
-            cloth.thirdColor = ColorData(uiColor: colors[2].makeUIColor())
-            
+            if colors[1].makeUIColor() == colors[0].makeUIColor() {
+                cloth.secondColor = ColorData(uiColor: colors[1].makeUIColor())
+            }
+            if colors[2].makeUIColor() == colors[0].makeUIColor() || colors[2].makeUIColor() == colors[1].makeUIColor() {
+                cloth.thirdColor = ColorData(uiColor: colors[2].makeUIColor())
+            }
             classifier.detect(uiImage: (cloth.image?.toImage())!)
             self.categoriaClassificata = classifier.typeClass
             self.stileClassificato = classifier.styleClass
@@ -280,6 +309,8 @@ struct InfoClothScreen: View {
             newCloth.categoria = categoriaClassificata
             newCloth.stile = stileClassificato
             
+            newCloth.colorsNum = colorsNum
+            
             database.clothes.append(newCloth)
             InfoClothScreen.save(clothes: database.clothes)
         }
@@ -299,11 +330,12 @@ struct InfoClothScreen: View {
         print(cloth.mainColor)
         cloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
         cloth.thirdColor = ColorData(uiColor: UIColor(cpColor3))
+        cloth.colorsNum = colorsNum
         database.clothes.append(cloth)
         InfoClothScreen.save(clothes: database.clothes)
     }
     
-     func deleteCloth(cloth:Cloth){
+    func deleteCloth(cloth:Cloth){
         Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
             if let err = err {
                 print("Error removing document: \(err)")
@@ -353,6 +385,7 @@ struct InfoClothScreen: View {
                          "color3r": cloth.thirdColor.red.description,
                          "color3g": cloth.thirdColor.green.description,
                          "color3b": cloth.thirdColor.blue.description,
+                         "colorsnum" : cloth.colorsNum,
                          "stile": cloth.stile,
                          "data":dataString
                         ]){
@@ -361,6 +394,18 @@ struct InfoClothScreen: View {
                     print(error.localizedDescription)
                 }
             }
+        }
+    }
+    
+    func removeColor() {
+        if colorsNum > 1 {
+            colorsNum -= 1
+        }
+    }
+    
+    func addColor() {
+        if colorsNum < 3 {
+            colorsNum += 1
         }
     }
 }

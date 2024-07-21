@@ -117,8 +117,12 @@ struct ClothesScreen: View {
                                                     .cornerRadius(10)
                                                 HStack{
                                                     Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20)
-                                                    Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20)
-                                                    Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20)
+                                                    if cloth.colorsNum > 1 {
+                                                        Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20)
+                                                        if cloth.colorsNum > 2 {
+                                                            Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20)
+                                                        }
+                                                    }
                                                 }
                                                 Text("\(cloth.nome) - \(cloth.taglia)").padding(.bottom,10)
                                             }
