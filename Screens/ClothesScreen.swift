@@ -116,11 +116,11 @@ struct ClothesScreen: View {
                                                     .clipped()
                                                     .cornerRadius(10)
                                                 HStack{
-                                                    Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20)
+                                                    Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
                                                     if cloth.colorsNum > 1 {
-                                                        Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20)
+                                                        Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
                                                         if cloth.colorsNum > 2 {
-                                                            Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20)
+                                                            Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
                                                         }
                                                     }
                                                 }
