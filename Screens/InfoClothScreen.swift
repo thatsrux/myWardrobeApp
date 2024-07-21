@@ -64,7 +64,7 @@ struct InfoClothScreen: View {
         } catch {
             fatalError(error.localizedDescription)
         }
-        
+        cloth.image = imageNoBackground.toPngString()
         cloth.stile = stileClassificato
         
     }
@@ -112,11 +112,13 @@ struct InfoClothScreen: View {
                 }
                 
                 HStack(alignment:.center) {
+                    Spacer(minLength: 40)
                     VStack(alignment:.center) {
                         Button(action: removeColor) {
                             Label("", systemImage: "minus")
-                        }
+                        }.disabled(colorsNum == 1)
                     }
+                    Spacer() // Flexible space to push items towards the center
                     VStack(alignment:.center) {
                         Text("Colore principale").frame(
                             minWidth: 0,
@@ -136,6 +138,8 @@ struct InfoClothScreen: View {
                                     .labelsHidden()
                             }
                         Text(closestColor(to: UIColor(cpColor1)))
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity, alignment: .center)
                     }
                     
                     if colorsNum > 1 {
@@ -158,37 +162,47 @@ struct InfoClothScreen: View {
                                         .labelsHidden()
                                 }
                             Text(closestColor(to: UIColor(cpColor2)))
+                                .multilineTextAlignment(.center)
+                                .frame(maxWidth: .infinity, alignment: .center)
                         }
                     }
                     
                     if colorsNum > 2 {
-                        VStack() {
-                            Text("Terzo colore").frame(
-                                minWidth: 0,
-                                maxWidth: 80,
-                                minHeight: 0,
-                                maxHeight: 50,
-                                alignment: .center
-                            ).multilineTextAlignment(.center)
+                        VStack(alignment: .center) {
+                            Text("Terzo colore")
+                                .frame(
+                                    minWidth: 0,
+                                    maxWidth: 80,
+                                    minHeight: 0,
+                                    maxHeight: 50,
+                                    alignment: .center
+                                )
+                                .multilineTextAlignment(.center)
+                            
                             RoundedRectangle(cornerRadius: 20)
-                                .stroke(.black, lineWidth: 1)
+                                .stroke(Color.black, lineWidth: 1)
                                 .fill(Color(cpColor3))
                                 .frame(width: 100, height: 50)
-                                .overlay {
+                                .overlay(
                                     ColorPicker("", selection: $cpColor3)
                                         .opacity(0.015)
-                                        .scaleEffect(x:3,y:3)
+                                        .scaleEffect(x: 3, y: 3)
                                         .labelsHidden()
-                                }
+                                )
+                            
                             Text(closestColor(to: UIColor(cpColor3)))
+                                .multilineTextAlignment(.center)
+                                .frame(maxWidth: .infinity, alignment: .center)
                         }
+
                     }
-                    
+                    Spacer()
                     VStack(alignment:.center) {
                         Button(action: addColor) {
                             Label("", systemImage: "plus")
-                        }
+                        }.disabled(colorsNum == 3)
                     }
+                    Spacer(minLength: 40)
                 }.padding(.bottom,20)
                 
                 LabeledContent {
@@ -334,8 +348,6 @@ struct InfoClothScreen: View {
         cloth.stile = stileClassificato
         
         cloth.mainColor = ColorData(uiColor: UIColor(cpColor1))
-        print(cpColor1)
-        print(cloth.mainColor)
         cloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
         cloth.thirdColor = ColorData(uiColor: UIColor(cpColor3))
         cloth.colorsNum = colorsNum
