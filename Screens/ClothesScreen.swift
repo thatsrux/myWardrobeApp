@@ -141,7 +141,7 @@ struct ClothesScreen: View {
                                 }
                                 
                             }
-                        }
+                        }.padding(.bottom,20)
                     }
                     .padding()
                 }
