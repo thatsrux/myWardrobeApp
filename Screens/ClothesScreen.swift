@@ -198,6 +198,7 @@ struct ClothesScreen: View {
                                     }
                                 }
                                 database.fetchClothes()
+                                database.fetchCategorie()
                             }) {
                                 Text("Svuota")
                                 Image(systemName: "trash")
