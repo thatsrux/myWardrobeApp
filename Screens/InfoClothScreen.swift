@@ -110,126 +110,134 @@ struct InfoClothScreen: View {
                         }
                     }
                 }
-                
-                HStack(alignment:.center) {
-                    Spacer(minLength: 40)
-                    VStack(alignment:.center) {
-                        Button(action: removeColor) {
-                            Label("", systemImage: "minus")
-                        }.disabled(colorsNum == 1)
-                    }
-                    Spacer() // Flexible space to push items towards the center
-                    VStack(alignment:.center) {
-                        Text("Colore principale").frame(
-                            minWidth: 0,
-                            maxWidth: 80,
-                            minHeight: 0,
-                            maxHeight: 50,
-                            alignment: .center
-                        ).multilineTextAlignment(.center)
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(.black, lineWidth: 1)
-                            .fill(Color(cpColor1))
-                            .frame(width: 100, height: 50)
-                            .overlay {
-                                ColorPicker("", selection: $cpColor1)
-                                    .opacity(0.015)
-                                    .scaleEffect(x:3,y:3)
-                                    .labelsHidden()
+                        
+                        HStack(alignment:.center) {
+                            
+                            VStack(alignment:.center) {
+                                Button(action: removeColor) {
+                                    Label("", systemImage: "minus")
+                                }.disabled(colorsNum == 1)
+                                    .padding(.leading,20)
+                                
                             }
-                        Text(closestColor(to: UIColor(cpColor1)))
-                            .multilineTextAlignment(.center)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                    
-                    if colorsNum > 1 {
-                        VStack() {
-                            Text("Secondo colore").frame(
-                                minWidth: 0,
-                                maxWidth: 80,
-                                minHeight: 0,
-                                maxHeight: 50,
-                                alignment: .center
-                            ).multilineTextAlignment(.center)
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(.black, lineWidth: 1)
-                                .fill(Color(cpColor2))
-                                .frame(width: 100, height: 50)
-                                .overlay {
-                                    ColorPicker("", selection: $cpColor2)
-                                        .opacity(0.015)
-                                        .scaleEffect(x:3,y:3)
-                                        .labelsHidden()
-                                }
-                            Text(closestColor(to: UIColor(cpColor2)))
-                                .multilineTextAlignment(.center)
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        }
-                    }
-                    
-                    if colorsNum > 2 {
-                        VStack(alignment: .center) {
-                            Text("Terzo colore")
-                                .frame(
+                            Spacer()
+                            VStack(alignment:.center) {
+                                Text("Colore principale").frame(
                                     minWidth: 0,
                                     maxWidth: 80,
                                     minHeight: 0,
                                     maxHeight: 50,
                                     alignment: .center
-                                )
-                                .multilineTextAlignment(.center)
+                                ).multilineTextAlignment(.center)
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(.black, lineWidth: 1)
+                                    .fill(Color(cpColor1))
+                                    .frame(width: 100, height: 50)
+                                    .overlay {
+                                        ColorPicker("", selection: $cpColor1)
+                                            .opacity(0.015)
+                                            .scaleEffect(x:3,y:3)
+                                            .labelsHidden()
+                                    }
+                                Text(closestColor(to: UIColor(cpColor1)))
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                            }
                             
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.black, lineWidth: 1)
-                                .fill(Color(cpColor3))
-                                .frame(width: 100, height: 50)
-                                .overlay(
-                                    ColorPicker("", selection: $cpColor3)
-                                        .opacity(0.015)
-                                        .scaleEffect(x: 3, y: 3)
-                                        .labelsHidden()
-                                )
+                            if colorsNum > 1 {
+                                VStack() {
+                                    Text("Secondo colore").frame(
+                                        minWidth: 0,
+                                        maxWidth: 80,
+                                        minHeight: 0,
+                                        maxHeight: 50,
+                                        alignment: .center
+                                    ).multilineTextAlignment(.center)
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .stroke(.black, lineWidth: 1)
+                                        .fill(Color(cpColor2))
+                                        .frame(width: 100, height: 50)
+                                        .overlay {
+                                            ColorPicker("", selection: $cpColor2)
+                                                .opacity(0.015)
+                                                .scaleEffect(x:3,y:3)
+                                                .labelsHidden()
+                                        }
+                                    Text(closestColor(to: UIColor(cpColor2)))
+                                        .multilineTextAlignment(.center)
+                                        .frame(maxWidth: .infinity, alignment: .center)
+                                }
+                            }
                             
-                            Text(closestColor(to: UIColor(cpColor3)))
-                                .multilineTextAlignment(.center)
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        }
-
-                    }
-                    Spacer()
-                    VStack(alignment:.center) {
-                        Button(action: addColor) {
-                            Label("", systemImage: "plus")
-                        }.disabled(colorsNum == 3)
-                    }
-                    Spacer(minLength: 40)
-                }.padding(.bottom,20)
-                
-                LabeledContent {
-                    TextField("Categoria", text: $categoriaClassificata)
-                } label: {
-                    Text("Categoria: ")
-                }
-                .padding(.leading, 20)
-                
-                LabeledContent {
-                    TextField("Nome articolo", text: $nomeText)
-                } label: {
-                    Text("Nome articolo: ")
-                }.padding(.leading, 20)
-                
-                LabeledContent {
-                    TextField("Taglia", text: $tagliaText)
-                } label: {
-                    Text("Taglia: ")
-                }.padding(.leading, 20)
-                
-                LabeledContent {
-                    TextField("Stile", text: $stileClassificato)
-                } label: {
-                    Text("Stile: ")
-                }.padding(.leading, 20)
+                            if colorsNum > 2 {
+                                VStack(alignment: .center) {
+                                    Text("Terzo colore")
+                                        .frame(
+                                            minWidth: 0,
+                                            maxWidth: 80,
+                                            minHeight: 0,
+                                            maxHeight: 50,
+                                            alignment: .center
+                                        )
+                                        .multilineTextAlignment(.center)
+                                    
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .stroke(Color.black, lineWidth: 1)
+                                        .fill(Color(cpColor3))
+                                        .frame(width: 100, height: 50)
+                                        .overlay(
+                                            ColorPicker("", selection: $cpColor3)
+                                                .opacity(0.015)
+                                                .scaleEffect(x: 3, y: 3)
+                                                .labelsHidden()
+                                        )
+                                    
+                                    Text(closestColor(to: UIColor(cpColor3)))
+                                        .multilineTextAlignment(.center)
+                                        .frame(maxWidth: .infinity, alignment: .center)
+                                }
+                                
+                            }
+                            Spacer()
+                            VStack(alignment:.center) {
+                                Button(action: addColor) {
+                                    Label("", systemImage: "plus")
+                                }.disabled(colorsNum == 3)
+                                    .padding(.trailing, 20)
+                            }
+                            
+                        }.padding(.bottom,20)
+                    
             }
+                    
+                VStack{
+                    LabeledContent {
+                        TextField("Categoria", text: $categoriaClassificata)
+                    } label: {
+                        Text("Categoria: ")
+                    }
+                    
+                    LabeledContent {
+                        TextField("Nome articolo", text: $nomeText)
+                    } label: {
+                        Text("Nome articolo: ")
+                    }
+                    
+                    LabeledContent {
+                        TextField("Taglia", text: $tagliaText)
+                    } label: {
+                        Text("Taglia: ")
+                    }
+                    
+                    LabeledContent {
+                        TextField("Stile", text: $stileClassificato)
+                    } label: {
+                        Text("Stile: ")
+                    }
+                }
+                .padding(.horizontal,20)
+                
+            
         }
         .onAppear {
             if !edit {
