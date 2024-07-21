@@ -82,15 +82,23 @@ struct ClothesScreen: View {
                                                 .clipped()
                                                 .frame(width:100,height:100)
                                             HStack{
-                                                Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20)
-                                                Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20)
-                                                Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20)
+                                                Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                                                if cloth.colorsNum > 1 {
+                                                    Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                                                    if cloth.colorsNum > 2 {
+                                                        Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                                                    }
+                                                }
                                             }.padding(.bottom,10)
                                         }
                                         
                                         Spacer().frame(width: 30, height: 100)
                                         
-                                        Text("\(cloth.nome) - \(cloth.taglia)")
+                                        VStack(spacing:5){
+                                            Text(cloth.nome).frame(maxWidth: .infinity, alignment: .leading)
+                                            Text(cloth.taglia).frame(maxWidth: .infinity, alignment: .leading)
+                                        }
+                                        
                                     }
                                 }
                             }.onDelete(perform: deleteClothSwipe)
@@ -124,7 +132,8 @@ struct ClothesScreen: View {
                                                         }
                                                     }
                                                 }
-                                                Text("\(cloth.nome) - \(cloth.taglia)").padding(.bottom,10)
+                                                Text(cloth.nome)
+                                                Text(cloth.taglia)
                                             }
                                             
                                             .contextMenu(menuItems: {
