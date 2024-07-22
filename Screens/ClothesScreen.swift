@@ -70,7 +70,7 @@ struct ClothesScreen: View {
             if searchIsActive {
                 List {
                     ForEach(database.clothes) { cloth in
-                        if cloth.nome.contains(searchText) {
+                        if cloth.nome.lowercased().contains(searchText.lowercased()) {
                             NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
                                 HStack {
                                     VStack{
