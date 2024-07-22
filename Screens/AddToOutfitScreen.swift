@@ -14,6 +14,10 @@ struct AddToOutfitScreen: View {
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     private var category: Categoria
     
+    let columns = [
+            GridItem(.adaptive(minimum: 160))
+        ]
+    
     @State private var isInfoClothScreenActive = false
     @State private var isEditClothScreenActive = false
     
@@ -153,7 +157,7 @@ struct AddToOutfitScreen: View {
                     
                 } else {
                     ScrollView {
-                        LazyVGrid(columns: [GridItem(.flexible(), alignment: .top), GridItem(.flexible(), alignment: .top)], spacing: 10) {
+                        LazyVGrid(columns: columns, spacing: 10) {
                             ForEach(database.categorie[category.rawValue]!) { cloth in
                                             VStack{
                                                 VStack {

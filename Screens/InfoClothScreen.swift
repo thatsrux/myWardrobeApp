@@ -59,7 +59,7 @@ struct InfoClothScreen: View {
         } catch {
             fatalError(error.localizedDescription)
         }
-      
+        
         self.cloth = Cloth(image: image)
         cloth.image = cloth.image?.toImage()!.resized(withPercentage: 0.2)?.toPngString()
         
@@ -72,7 +72,7 @@ struct InfoClothScreen: View {
                 Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 150, height: 200)
+                    .frame(minWidth: 150, maxWidth: 187.5, minHeight: 200, maxHeight: 250, alignment: .center)
                 if !edit {
                     Group {
                         if classifier.typeConfidence > 0.5 {
@@ -138,7 +138,7 @@ struct InfoClothScreen: View {
                                 }
                             Text(closestColor(to: UIColor(cpColor1)))
                                 .multilineTextAlignment(.center)
-                                .frame(maxWidth: .infinity, alignment: .center)
+                                .frame(minWidth: 140, alignment: .center)
                         }
                         
                         if colorsNum > 1 {
@@ -162,7 +162,7 @@ struct InfoClothScreen: View {
                                     }
                                 Text(closestColor(to: UIColor(cpColor2)))
                                     .multilineTextAlignment(.center)
-                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .frame(minWidth: 140, alignment: .center)
                             }
                         }
                         
@@ -191,7 +191,7 @@ struct InfoClothScreen: View {
                                 
                                 Text(closestColor(to: UIColor(cpColor3)))
                                     .multilineTextAlignment(.center)
-                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .frame(minWidth: 140, alignment: .center)
                             }
                             
                         }
