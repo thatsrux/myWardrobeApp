@@ -29,6 +29,9 @@ struct InfoClothScreen: View {
     
     var edit: Bool = false
     
+    @State var categorie : [Categoria] = []
+    @State var stili : [Stile] = []
+    
     init(cloth: Cloth){
         self.cloth = cloth
         
@@ -214,8 +217,8 @@ struct InfoClothScreen: View {
                         
                     LabeledContent {
                         Picker("", selection: $categoriaClassificata){
-                            ForEach(Categoria.allCases, id:\.self){ c in
-                                Text(c.rawValue)
+                            ForEach(categorie, id:\.self){ c in
+                                Text(c.rawValue).tag(c)
                             }
                         }
                         
@@ -242,7 +245,7 @@ struct InfoClothScreen: View {
 
                     LabeledContent {
                         Picker("", selection: $stileClassificato){
-                            ForEach(Stile.allCases, id:\.self){ s in
+                            ForEach(stili, id:\.self){ s in
                                 Text(s.rawValue)
                             }
                         }
@@ -259,6 +262,9 @@ struct InfoClothScreen: View {
             
         }
         .onAppear {
+            categorie.append(contentsOf: Categoria.allCases)
+            stili.append(contentsOf: Stile.allCases)
+            
             if !edit {
                 extractColorsAndClassify()
             }
