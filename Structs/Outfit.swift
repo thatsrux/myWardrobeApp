@@ -1,7 +1,9 @@
+import SwiftUI
+
 class Outfit{
-    var shirt = Cloth(nome: "", categoria: Categoria.NA)
-    var trousers = Cloth(nome: "", categoria: Categoria.NA)
-    var shoes:Cloth = Cloth(nome: "", categoria: Categoria.NA)
+    var shirt = Cloth(image: UIImage())
+    var trousers = Cloth(image: UIImage())
+    var shoes:Cloth = Cloth(image: UIImage())
     
     init(shirt: Cloth, trousers: Cloth, shoes: Cloth) {
         self.shirt = shirt
@@ -23,9 +25,9 @@ class Outfit{
     }
     
     init(){
-        self.shirt = Cloth(nome: "", categoria: Categoria.NA)
-        self.trousers = Cloth(nome: "", categoria: Categoria.NA)
-        self.shoes = Cloth(nome: "", categoria: Categoria.NA)
+        self.shirt = Cloth(image: UIImage())
+        self.trousers = Cloth(image: UIImage())
+        self.shoes = Cloth(image: UIImage())
     }
     
     init(cloth:Cloth){

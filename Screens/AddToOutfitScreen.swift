@@ -16,6 +16,9 @@ struct AddToOutfitScreen: View {
     
     @State private var isInfoClothScreenActive = false
     @State private var isEditClothScreenActive = false
+    @State private var returnCloth = false
+    
+    @State var clothToAdd:Cloth
     
     @State private var searchText = ""
     @State private var searchIsActive = false
@@ -99,8 +102,8 @@ struct AddToOutfitScreen: View {
                                     }
                                     
                                 }.onTapGesture {
-                                    //var outfit = Outfit(cloth)
-                                    print(cloth.nome)
+                                    returnCloth = true
+                                    AddOutfitScreen(cloth:cloth)
                                 }
                             
                         }
@@ -138,11 +141,8 @@ struct AddToOutfitScreen: View {
                                             }
                                             
                                         }.onTapGesture {
-                                            let outfit = Outfit(cloth:cloth)
-                                            print(cloth.nome)
-                                            database.outfits.append(outfit)
-                                            
-                                            print(database.outfits.count)
+                                            clothToAdd = cloth
+                                            returnCloth = true
                                         }
                                     
                                 }.onDelete(perform: deleteClothSwipe)
@@ -185,8 +185,8 @@ struct AddToOutfitScreen: View {
                                                 .cornerRadius(10)
                                                 .shadow(radius: 5)
                                                 .onTapGesture {
-                                                    //var outfit = Outfit(cloth)
-                                                    print(cloth.nome)
+                                                    clothToAdd = cloth
+                                                    returnCloth = true
                                                 }
                                         
                                     }
@@ -230,20 +230,13 @@ struct AddToOutfitScreen: View {
                     
                 }
             
-                .navigationDestination(isPresented: $isInfoClothScreenActive){
-                    if uiImage != nil {
-                        InfoClothScreen(image: uiImage!)
-                    }
+                .navigationDestination(isPresented: $returnCloth){
+                    AddOutfitScreen(cloth:clothToAdd)
                 }
-                .navigationDestination(isPresented: $isEditClothScreenActive){
-                    EditClothScreen()
-                }
+                
         }
     }
     
-    static func save(outfits: [Outfit]){
-        
-    }
 }
 
 //#Preview {
