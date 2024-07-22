@@ -6,7 +6,7 @@ enum Categoria: String, Codable, CaseIterable {
          giubbino = "Giubbino",
          felpa = "Felpa",
          maglione = "Maglione",
-         pantaloncini = "Pantaloncini",
+         pantaloncini = "Pantaloncino",
          pantalone = "Pantalone",
          scarpe = "Scarpe",
          tshirt = "T-Shirt",

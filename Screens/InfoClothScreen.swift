@@ -23,7 +23,7 @@ struct InfoClothScreen: View {
     
     @EnvironmentObject var database:Database
     
-    private var imageNoBackground: UIImage
+    private var imageNoBackground: UIImage?
     
     @State var colorsNum = 3
     
@@ -38,18 +38,16 @@ struct InfoClothScreen: View {
         self.stileClassificato = cloth.stile
         
         self.image = (cloth.image?.toImage())!
-        self.imageNoBackground = (cloth.image?.toImage())!
         
         edit = true
     }
     
     init(image: UIImage) {
-        
         let backgroundRemoval = BackgroundRemoval()
         
         do {
-            imageNoBackground = try backgroundRemoval.removeBackground(image: image).croppedToBoundingBox()!
-            self.image = imageNoBackground
+            imageNoBackground = try backgroundRemoval.removeBackground(image: image)
+            self.image = imageNoBackground!.croppedToBoundingBox()!
         } catch {
             fatalError(error.localizedDescription)
         }
@@ -64,7 +62,7 @@ struct InfoClothScreen: View {
     var body: some View {
         ScrollView {
             VStack {
-                Image(uiImage: imageNoBackground)
+                Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 150, height: 200)
@@ -328,7 +326,8 @@ struct InfoClothScreen: View {
             if colors[2].makeUIColor() == colors[0].makeUIColor() || colors[2].makeUIColor() == colors[1].makeUIColor() {
                 cloth.thirdColor = ColorData(uiColor: colors[2].makeUIColor())
             }
-            classifier.detect(uiImage: (cloth.image?.toImage())!)
+            // Il classificatore ha l'immagine senza sfondo ma non tagliata, così che possa tenere conto delle dimensioni del capo
+            classifier.detect(uiImage: imageNoBackground!)
             self.categoriaClassificata = Categoria(fromRawValue: classifier.typeClass)
             self.stileClassificato = Stile(fromRawValue: classifier.styleClass)
         }
