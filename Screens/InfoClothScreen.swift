@@ -138,7 +138,7 @@ struct InfoClothScreen: View {
                                 }
                             Text(closestColor(to: UIColor(cpColor1)))
                                 .multilineTextAlignment(.center)
-                                .frame(maxWidth: 150, maxHeight: .infinity, alignment: .top)
+                                .frame(maxWidth: 140, minHeight: 50 ,alignment: .top)
                         }
                         
                         if colorsNum > 1 {
@@ -162,7 +162,7 @@ struct InfoClothScreen: View {
                                     }
                                 Text(closestColor(to: UIColor(cpColor2)))
                                     .multilineTextAlignment(.center)
-                                    .frame(maxWidth: 150, maxHeight: .infinity, alignment: .top)
+                                    .frame(maxWidth: 140, minHeight: 50 ,alignment: .top)
                             }
                         }
                         
@@ -191,7 +191,7 @@ struct InfoClothScreen: View {
                                 
                                 Text(closestColor(to: UIColor(cpColor3)))
                                     .multilineTextAlignment(.center)
-                                    .frame(maxWidth: 150, maxHeight: .infinity, alignment: .top)
+                                    .frame(maxWidth: 140, minHeight: 50 ,alignment: .top)
                             }
                             
                         }
