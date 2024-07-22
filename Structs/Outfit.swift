@@ -1,9 +1,18 @@
 import SwiftUI
 
-class Outfit{
-    var shirt = Cloth(image: UIImage())
-    var trousers = Cloth(image: UIImage())
-    var shoes:Cloth = Cloth(image: UIImage())
+class Outfit: Identifiable, Hashable{
+    var id = UUID()
+    var shirt:Cloth?
+    var trousers:Cloth?
+    var shoes:Cloth?
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func ==(lhs: Outfit, rhs: Outfit) -> Bool {
+        return lhs.id == rhs.id
+    }
     
     init(shirt: Cloth, trousers: Cloth, shoes: Cloth) {
         self.shirt = shirt
