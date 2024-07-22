@@ -18,7 +18,11 @@ struct AddToOutfitScreen: View {
     @State private var isEditClothScreenActive = false
     @State private var returnCloth = false
     
+<<<<<<< Updated upstream
     @State var clothToAdd:Cloth
+=======
+    @State var clothToAdd:Cloth?
+>>>>>>> Stashed changes
     
     @State private var searchText = ""
     @State private var searchIsActive = false
@@ -72,6 +76,7 @@ struct AddToOutfitScreen: View {
     var body: some View {
         
         NavigationStack {
+<<<<<<< Updated upstream
             if searchIsActive {
                 List {
                     ForEach(database.categorie[category.rawValue]!) { cloth in
@@ -112,6 +117,9 @@ struct AddToOutfitScreen: View {
                 }
             }
             else {
+=======
+            
+>>>>>>> Stashed changes
                 if selectedOption == "elenco" {
                     List {
                         ForEach(database.categorie[category.rawValue]!) { cloth in
@@ -221,6 +229,7 @@ struct AddToOutfitScreen: View {
                     }
                     }
                 }
+<<<<<<< Updated upstream
                 .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
                 .sheet(isPresented: $isPresenting){
                     ImagePicker(uiImage: $uiImage, isPresenting:  $isPresenting, sourceType: $sourceType)
@@ -232,12 +241,21 @@ struct AddToOutfitScreen: View {
             
                 .navigationDestination(isPresented: $returnCloth){
                     AddOutfitScreen(cloth:clothToAdd)
+=======
+                
+                .navigationDestination(isPresented: $returnCloth){
+                    AddOutfitScreen(cloth:clothToAdd!)
+>>>>>>> Stashed changes
                 }
                 
         }
     }
+<<<<<<< Updated upstream
     
 }
+=======
+
+>>>>>>> Stashed changes
 
 //#Preview {
 //    @EnvironmentObject var database:Database
