@@ -440,7 +440,7 @@ struct InfoClothScreen: View {
                          "id" : cloth.id.uuidString,
                          "nome": cloth.nome,
                          "categoria": cloth.categoria.rawValue,
-                         "taglia": cloth.taglia,
+                         "taglia": cloth.taglia.rawValue,
                          "color1a": cloth.mainColor.alpha.description,
                          "color1r": cloth.mainColor.red.description,
                          "color1g": cloth.mainColor.green.description,
