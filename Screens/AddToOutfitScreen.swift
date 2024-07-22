@@ -200,7 +200,7 @@ struct AddToOutfitScreen: View {
                         }
             }
             Spacer()
-                .navigationTitle("My Wardrobe")
+                .navigationTitle(category.rawValue)
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         
