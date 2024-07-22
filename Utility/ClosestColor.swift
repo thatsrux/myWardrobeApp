@@ -5,6 +5,7 @@ import ColorKit
 // Per i colori più scuri sono presenti più variazioni
 let colorMap: [String: UIColor] = [
     "Rosso": UIColor.red,
+    // Variazioni del rosso
     "Rosso2": UIColor(red: 0.57, green: 0.24, blue: 0.24, alpha: 1.0),
     "Rosso scuro": UIColor(red: 0.33, green: 0.07, blue: 0.03, alpha: 1.0),
     "Rosa": UIColor(red: 1.0, green: 0.75, blue: 0.8, alpha: 1.0),
