@@ -23,7 +23,7 @@ struct InfoClothScreen: View {
     
     @EnvironmentObject var database:Database
     
-    private var imageNoBackground: UIImage
+    private var imageNoBackground: UIImage?
     
     @State var colorsNum = 3
     
@@ -40,34 +40,27 @@ struct InfoClothScreen: View {
         self.categoriaClassificata = cloth.categoria
         self.stileClassificato = cloth.stile
         
-        let backgroundRemoval = BackgroundRemoval()
-        do {
-            self.imageNoBackground = try backgroundRemoval.removeBackground(image: (cloth.image?.toImage())!).croppedToBoundingBox()!
-        } catch {
-            fatalError(error.localizedDescription)
-            
-        }
-        
         self.image = (cloth.image?.toImage())!
         
         edit = true
     }
     
     init(image: UIImage) {
-        
-        self.image = image
-        
-        self.cloth = Cloth(image: image)
-        
-        
         let backgroundRemoval = BackgroundRemoval()
         
         do {
-            imageNoBackground = try backgroundRemoval.removeBackground(image: image).croppedToBoundingBox()!
+            imageNoBackground = try backgroundRemoval.removeBackground(image: image)
+            self.image = imageNoBackground!.croppedToBoundingBox()!
         } catch {
             fatalError(error.localizedDescription)
         }
-        cloth.image = cloth.image?.toImage()!.resized(withPercentage: 0.5)?.toPngString()
+      
+        self.cloth = Cloth(image: image)
+        cloth.image = cloth.image?.toImage()!.resized(withPercentage: 0.2)?.toPngString()
+        
+        
+        
+   
         
         cloth.stile = stileClassificato
     }
@@ -75,7 +68,7 @@ struct InfoClothScreen: View {
     var body: some View {
         ScrollView {
             VStack {
-                Image(uiImage: imageNoBackground)
+                Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 150, height: 200)
@@ -97,7 +90,7 @@ struct InfoClothScreen: View {
                         }
                     }
                     Group {
-                        if classifier.styleConfidence > 0 {
+                        if classifier.styleConfidence > 0.5 {
                             HStack {
                                 Text("Stile:")
                                     .font(.caption)
@@ -115,41 +108,17 @@ struct InfoClothScreen: View {
                 }
                 
                 VStack{
-                HStack(alignment:.center) {
-                    VStack(alignment:.center) {
-                        Button(action: removeColor) {
-                            Label("", systemImage: "minus")
-                        }.disabled(colorsNum == 1)
-                            .padding(.leading,20)
-                            .padding(.top,15)
-                    }
-                    
-                    VStack(alignment:.center) {
-                        Text("Colore principale").frame(
-                            minWidth: 0,
-                            maxWidth: 80,
-                            minHeight: 0,
-                            maxHeight: 50,
-                            alignment: .center
-                        ).multilineTextAlignment(.center)
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(.black, lineWidth: 1)
-                            .fill(Color(cpColor1))
-                            .frame(width: 85, height: 50)
-                            .overlay {
-                                ColorPicker("", selection: $cpColor1)
-                                    .opacity(0.015)
-                                    .scaleEffect(x:3,y:3)
-                                    .labelsHidden()
-                            }
-                        Text(closestColor(to: UIColor(cpColor1)))
-                            .multilineTextAlignment(.center)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                    
-                    if colorsNum > 1 {
-                        VStack() {
-                            Text("Secondo colore").frame(
+                    HStack(alignment:.center) {
+                        VStack(alignment:.center) {
+                            Button(action: removeColor) {
+                                Label("", systemImage: "minus")
+                            }.disabled(colorsNum == 1)
+                                .padding(.leading,20)
+                                .padding(.top,15)
+                        }
+                        
+                        VStack(alignment:.center) {
+                            Text("Colore principale").frame(
                                 minWidth: 0,
                                 maxWidth: 80,
                                 minHeight: 0,
@@ -158,63 +127,87 @@ struct InfoClothScreen: View {
                             ).multilineTextAlignment(.center)
                             RoundedRectangle(cornerRadius: 20)
                                 .stroke(.black, lineWidth: 1)
-                                .fill(Color(cpColor2))
+                                .fill(Color(cpColor1))
                                 .frame(width: 85, height: 50)
                                 .overlay {
-                                    ColorPicker("", selection: $cpColor2)
+                                    ColorPicker("", selection: $cpColor1)
                                         .opacity(0.015)
                                         .scaleEffect(x:3,y:3)
                                         .labelsHidden()
                                 }
-                            Text(closestColor(to: UIColor(cpColor2)))
+                            Text(closestColor(to: UIColor(cpColor1)))
                                 .multilineTextAlignment(.center)
                                 .frame(maxWidth: .infinity, alignment: .center)
                         }
-                    }
-                    
-                    if colorsNum > 2 {
-                        VStack(alignment: .center) {
-                            Text("Terzo colore")
-                                .frame(
+                        
+                        if colorsNum > 1 {
+                            VStack() {
+                                Text("Secondo colore").frame(
                                     minWidth: 0,
                                     maxWidth: 80,
                                     minHeight: 0,
                                     maxHeight: 50,
                                     alignment: .center
-                                )
-                                .multilineTextAlignment(.center)
-                            
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.black, lineWidth: 1)
-                                .fill(Color(cpColor3))
-                                .frame(width: 85, height: 50)
-                                .overlay(
-                                    ColorPicker("", selection: $cpColor3)
-                                        .opacity(0.015)
-                                        .scaleEffect(x: 3, y: 3)
-                                        .labelsHidden()
-                                )
-                            
-                            Text(closestColor(to: UIColor(cpColor3)))
-                                .multilineTextAlignment(.center)
-                                .frame(maxWidth: .infinity, alignment: .center)
+                                ).multilineTextAlignment(.center)
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(.black, lineWidth: 1)
+                                    .fill(Color(cpColor2))
+                                    .frame(width: 85, height: 50)
+                                    .overlay {
+                                        ColorPicker("", selection: $cpColor2)
+                                            .opacity(0.015)
+                                            .scaleEffect(x:3,y:3)
+                                            .labelsHidden()
+                                    }
+                                Text(closestColor(to: UIColor(cpColor2)))
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                            }
                         }
                         
-                    }
-                    
-                    VStack(alignment:.center) {
-                        Button(action: addColor) {
-                            Label("", systemImage: "plus")
-                        }.disabled(colorsNum == 3)
-                            .padding(.trailing, 20)
-                            .padding(.top,15)
-                    }
-                }.padding(.bottom,30)
-            }
-                    
-                    
-                VStack(spacing: 30){
+                        if colorsNum > 2 {
+                            VStack(alignment: .center) {
+                                Text("Terzo colore")
+                                    .frame(
+                                        minWidth: 0,
+                                        maxWidth: 80,
+                                        minHeight: 0,
+                                        maxHeight: 50,
+                                        alignment: .center
+                                    )
+                                    .multilineTextAlignment(.center)
+                                
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.black, lineWidth: 1)
+                                    .fill(Color(cpColor3))
+                                    .frame(width: 85, height: 50)
+                                    .overlay(
+                                        ColorPicker("", selection: $cpColor3)
+                                            .opacity(0.015)
+                                            .scaleEffect(x: 3, y: 3)
+                                            .labelsHidden()
+                                    )
+                                
+                                Text(closestColor(to: UIColor(cpColor3)))
+                                    .multilineTextAlignment(.center)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                            }
+                            
+                        }
                         
+                        VStack(alignment:.center) {
+                            Button(action: addColor) {
+                                Label("", systemImage: "plus")
+                            }.disabled(colorsNum == 3)
+                                .padding(.trailing, 20)
+                                .padding(.top,15)
+                        }
+                    }.padding(.bottom,30)
+                }
+                
+                
+                VStack(spacing: 30){
+                    
                     LabeledContent {
                         Picker("", selection: $categoriaClassificata){
                             ForEach(categorie, id:\.self){ c in
@@ -226,7 +219,7 @@ struct InfoClothScreen: View {
                         Text("Categoria: ")
                             .font(.system(size: 18, weight: .bold))
                     }
-
+                    
                     LabeledContent {
                         TextField("Nome articolo", text: $nomeText)
                             .font(.system(size: 18))
@@ -234,7 +227,7 @@ struct InfoClothScreen: View {
                         Text("Nome articolo: ")
                             .font(.system(size: 18, weight: .bold))
                     }
-
+                    
                     LabeledContent {
                         TextField("Taglia", text: $tagliaText)
                             .font(.system(size: 18))
@@ -242,7 +235,7 @@ struct InfoClothScreen: View {
                         Text("Taglia: ")
                             .font(.system(size: 18, weight: .bold))
                     }
-
+                    
                     LabeledContent {
                         Picker("", selection: $stileClassificato){
                             ForEach(stili, id:\.self){ s in
@@ -253,11 +246,11 @@ struct InfoClothScreen: View {
                         Text("Stile: ")
                             .font(.system(size: 18, weight: .bold))
                     }
-
-                        
-                }
-                    .padding(.leading,35)
                     
+                    
+                }
+                .padding(.leading,35)
+                
             }
             
         }
@@ -298,11 +291,11 @@ struct InfoClothScreen: View {
     func extractColorsAndClassify() {
         // Estrazione dei tre colori principali, ignorando il bianco puro, inserendo uno sfondo bianco all'immagine semitrasparente.
         // Questo metodo fornisce più accurati
-        let colors = ColorThief.getPalette(from: imageNoBackground.withBackground(color: UIColor.white), colorCount: 3, quality: 1, ignoreWhite: true)
+        let colors = ColorThief.getPalette(from: image.withBackground(color: UIColor.white), colorCount: 3, quality: 1, ignoreWhite: true)
         
         // Estrazione dei nove colori principali, lasciando il bianco puro, sull'immagine semitrasparente.
         // Questo metodo fornisce i risultati migliori per capire se l'immagine è monocolore
-        let testSingleColor = ColorThief.getPalette(from: imageNoBackground, colorCount: 9, quality: 1, ignoreWhite: false)
+        let testSingleColor = ColorThief.getPalette(from: image, colorCount: 9, quality: 1, ignoreWhite: false)
         
         // Si verifica la differenza tra il primo e il secondo colore.
         let diff1 = testSingleColor![0].makeUIColor().CIE94(compare: testSingleColor![1].makeUIColor())
@@ -342,7 +335,8 @@ struct InfoClothScreen: View {
             if colors[2].makeUIColor() == colors[0].makeUIColor() || colors[2].makeUIColor() == colors[1].makeUIColor() {
                 cloth.thirdColor = ColorData(uiColor: colors[2].makeUIColor())
             }
-            classifier.detect(uiImage: (cloth.image?.toImage())!)
+            // Il classificatore ha l'immagine senza sfondo ma non tagliata, così che possa tenere conto delle dimensioni del capo
+            classifier.detect(uiImage: imageNoBackground!)
             self.categoriaClassificata = Categoria(fromRawValue: classifier.typeClass)
             self.stileClassificato = Stile(fromRawValue: classifier.styleClass)
         }
@@ -353,7 +347,13 @@ struct InfoClothScreen: View {
             editCloth()
         }
         else {
-            let newCloth = Cloth(image: image)
+            let coreImage = image.cgImage
+            UIGraphicsBeginImageContext(CGSize(width: coreImage!.width, height: coreImage!.height))
+            image.draw(in: CGRect(x: Int(0.0), y: Int(0.0), width: coreImage!.width, height: coreImage!.height))
+            let resultImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            let newCloth = Cloth(image: resultImage!)
             
             newCloth.mainColor = ColorData(uiColor: UIColor(cpColor1))
             newCloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
