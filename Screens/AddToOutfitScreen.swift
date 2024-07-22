@@ -27,7 +27,10 @@ struct AddToOutfitScreen: View {
     @Environment(\.dismiss) private var dismiss
     var onDismiss: ((_ model: Cloth) -> Void)?
     @Binding var category: Categoria
-    @Binding var clothToAdd:Cloth?
+    @Binding var shirtToAdd:Cloth?
+    @Binding var trousersToAdd:Cloth?
+    @Binding var shoesToAdd:Cloth?
+
     
     @State private var selectedOption = "icone"
     
@@ -105,8 +108,19 @@ struct AddToOutfitScreen: View {
                             }
                             
                         }.onTapGesture {
-                            clothToAdd = cloth
-                            onDismiss?(clothToAdd!)
+                            if cloth.categoria == .tshirt{
+                                shirtToAdd = cloth
+                                onDismiss?(shirtToAdd!)
+                            }
+                            else if cloth.categoria == .pantalone{
+                                trousersToAdd = cloth
+                                onDismiss?(trousersToAdd!)
+                            }
+                            else if cloth.categoria == .scarpe{
+                                shoesToAdd = cloth
+                                onDismiss?(shoesToAdd!)
+                            }
+                           
                             dismiss()
                         }
                         
@@ -145,8 +159,19 @@ struct AddToOutfitScreen: View {
                                 .cornerRadius(10)
                                 .shadow(radius: 5)
                                 .onTapGesture {
-                                    clothToAdd = cloth
-                                    onDismiss?(clothToAdd!)
+                                    if cloth.categoria == .tshirt{
+                                        shirtToAdd = cloth
+                                        onDismiss?(shirtToAdd!)
+                                    }
+                                    else if cloth.categoria == .pantalone{
+                                        trousersToAdd = cloth
+                                        onDismiss?(trousersToAdd!)
+                                    }
+                                    else if cloth.categoria == .scarpe{
+                                        shoesToAdd = cloth
+                                        onDismiss?(shoesToAdd!)
+                                    }
+                                   
                                     dismiss()
                                 }
                             
@@ -182,14 +207,14 @@ struct AddToOutfitScreen: View {
                 }
                 }
             }
-            .navigationDestination(isPresented: $returnCloth){
-                if let clothToAdd = clothToAdd{
-                    AddOutfitScreen(cloth:clothToAdd)
-                }
-                else{
-                    
-                }
-            }
+//            .navigationDestination(isPresented: $returnCloth){
+//                if let clothToAdd = clothToAdd{
+//                    AddOutfitScreen(cloth:clothToAdd)
+//                }
+//                else{
+//                    
+//                }
+//            }
     }
 }
 //#Preview {

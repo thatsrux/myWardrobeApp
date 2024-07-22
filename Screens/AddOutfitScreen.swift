@@ -6,52 +6,56 @@ struct AddOutfitScreen: View {
     @EnvironmentObject var database:Database
     
     
-    var upperCloth:Cloth?
-    var lowerCloth:Cloth?
-    var shoesCloth:Cloth?
+//    var upperCloth:Cloth?
+//    var lowerCloth:Cloth?
+//    var shoesCloth:Cloth?
     
     @State private var categoria: Categoria = .NA
-    @State var cloth:Cloth?
+    @State var shirt:Cloth?
+    @State var trousers:Cloth?
+    @State var shoes:Cloth?
     
-    init(cloth:Cloth){
-        self.cloth = cloth
-        
-        switch cloth.categoria {
-        case .tshirt:
-            self.upperCloth = cloth
-        case .camicia:
-            self.upperCloth = cloth
-        case .canotta:
-            self.upperCloth = cloth
-        case .cappello:
-            self.upperCloth = cloth
-        case .giacca:
-            self.upperCloth = cloth
-        case .giubbino:
-            self.upperCloth = cloth
-        case .felpa:
-            self.upperCloth = cloth
-        case .maglione:
-            self.upperCloth = cloth
-            
-        case .pantaloncini:
-            self.lowerCloth = cloth
-        case .pantalone:
-            self.lowerCloth = cloth
-            
-        case .scarpe:
-            self.shoesCloth = cloth
-        
-        case .NA:
-            self.upperCloth = cloth
-            self.lowerCloth = cloth
-            self.shoesCloth = cloth
-            
-        }
-            
+//    init(cloth:Cloth){
+//        self.cloth = cloth
+//        
+//        switch cloth.categoria {
+//        case .tshirt:
+//            self.upperCloth = cloth
+//        case .camicia:
+//            self.upperCloth = cloth
+//        case .canotta:
+//            self.upperCloth = cloth
+//        case .cappello:
+//            self.upperCloth = cloth
+//        case .giacca:
+//            self.upperCloth = cloth
+//        case .giubbino:
+//            self.upperCloth = cloth
+//        case .felpa:
+//            self.upperCloth = cloth
+//        case .maglione:
+//            self.upperCloth = cloth
+//            
+//        case .pantaloncini:
+//            self.lowerCloth = cloth
+//        case .pantalone:
+//            self.lowerCloth = cloth
+//            
+//        case .scarpe:
+//            self.shoesCloth = cloth
+//        
+//        case .NA:
+//            self.upperCloth = cloth
+//            self.lowerCloth = cloth
+//            self.shoesCloth = cloth
+//            
+//        }
+//            
+//        
+//    }
+    func fetchOutfit(){
         
     }
-    
     
     
     init(){
@@ -68,7 +72,7 @@ struct AddOutfitScreen: View {
                         isAddToOutfitScreenActive = true
                         categoria = .tshirt
                         }) {
-                            if let upperCloth = upperCloth, let image = upperCloth.image?.toImage() {
+                            if let shirt = shirt, let image = shirt.image?.toImage() {
                                     Image(uiImage: image)
                                         .resizable()
                                 } else {
@@ -80,7 +84,7 @@ struct AddOutfitScreen: View {
                         isAddToOutfitScreenActive = true
                         categoria = .pantalone
                         }) {
-                            if let lowerCloth = lowerCloth, let image = lowerCloth.image?.toImage() {
+                            if let trousers = trousers, let image = trousers.image?.toImage() {
                                     Image(uiImage: image)
                                         .resizable()
                                 } else {
@@ -92,7 +96,7 @@ struct AddOutfitScreen: View {
                         isAddToOutfitScreenActive = true
                         categoria = .scarpe
                         }) {
-                            if let shoesCloth = shoesCloth, let image = shoesCloth.image?.toImage() {
+                            if let shoes = shoes, let image = shoes.image?.toImage() {
                                     Image(uiImage: image)
                                         .resizable()
                                 } else {
@@ -105,13 +109,12 @@ struct AddOutfitScreen: View {
                 }.frame(width:150, height: 300,alignment: Alignment.center)
                     .border(Color.black)
                 
-                
-                
             }
+            
         }
         .navigationTitle("Componi Outfit")
         .navigationDestination(isPresented: $isAddToOutfitScreenActive){
-            AddToOutfitScreen(category: $categoria,clothToAdd: $cloth)
+            AddToOutfitScreen(category: $categoria,shirtToAdd: $shirt,trousersToAdd:$trousers,shoesToAdd:$shoes)
         }
         
     }
