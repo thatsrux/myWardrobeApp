@@ -1,4 +1,3 @@
 enum Colore: String, Codable, CaseIterable {
-    case rosso, rossoscuro, rosa, arancione, oro, giallo, crema, lime, verde, verdefoglia, verdescuro, oliva, celeste, celestescuro, blu,
-         blumarino, bluscuro, viola, magenta, fucsia, beige, marrone, marronescuro, grigio, nero, bianco
+    case rosso, bordeaux, arancione, gialloUovo, giallo, crema, lime, verdeFluo, verdeFoglia, verdeScuro, verdeOliva, avio, avioScuro, celeste, celesteScuro, blu, bluNavy, bluNotte, viola, lilla, fuxiaFluo, fuxia, rosa, marrone, marroneScuro, beige, grigio, nero, bianco
 }
