@@ -10,7 +10,7 @@ enum Categoria: String, Codable, CaseIterable {
          pantalone = "Pantalone",
          scarpe = "Scarpe",
          tshirt = "T-Shirt",
-         NA = "NA"
+         NA = "N/A"
     
     init(fromRawValue: String){
         self = Categoria(rawValue: fromRawValue) ?? .NA

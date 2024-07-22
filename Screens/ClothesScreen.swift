@@ -94,7 +94,7 @@ struct ClothesScreen: View {
                                     
                                     VStack(spacing:5){
                                         Text(cloth.nome).frame(maxWidth: .infinity, alignment: .leading)
-                                        Text(cloth.taglia).frame(maxWidth: .infinity, alignment: .leading)
+                                        Text(cloth.taglia.rawValue).frame(maxWidth: .infinity, alignment: .leading)
                                     }
                                     
                                 }
@@ -133,7 +133,7 @@ struct ClothesScreen: View {
                                             
                                             VStack(spacing:5){
                                                 Text(cloth.nome).frame(maxWidth: .infinity, alignment: .leading)
-                                                Text(cloth.taglia).frame(maxWidth: .infinity, alignment: .leading)
+                                                Text(cloth.taglia.rawValue).frame(maxWidth: .infinity, alignment: .leading)
                                             }
                                             
                                         }
@@ -170,7 +170,7 @@ struct ClothesScreen: View {
                                                         }
                                                     }
                                                     Text(cloth.nome)
-                                                    Text(cloth.taglia)
+                                                    Text(cloth.taglia.rawValue)
                                                 }
                                                 
                                                 .contextMenu(menuItems: {

@@ -9,7 +9,7 @@ struct InfoClothScreen: View {
     
     var cloth:Cloth
     @State var nomeText = ""
-    @State var tagliaText = ""
+    @State var tagliaText = Taglia.NA
     @State var categoriaClassificata = Categoria.NA
     @State var stileClassificato = Stile.NA
     
@@ -29,8 +29,13 @@ struct InfoClothScreen: View {
     
     var edit: Bool = false
     
-    @State var categorie : [Categoria] = []
-    @State var stili : [Stile] = []
+    var upper = [Categoria.camicia, Categoria.canotta, Categoria.felpa, Categoria.giacca, Categoria.giubbino, Categoria.tshirt]
+    var lower = [Categoria.pantalone, Categoria.pantaloncini]
+    var shoes = [Categoria.scarpe]
+    
+    var tagliaUpper = [Taglia.NA, Taglia.tgXS, Taglia.tgS, Taglia.tgM, Taglia.tgL, Taglia.tgXL, Taglia.tgXXL]
+    var tagliaLower = [Taglia.NA, Taglia.tg42, Taglia.tg44, Taglia.tg46, Taglia.tg48, Taglia.tg50, Taglia.tg52, Taglia.tg54]
+    var tagliaShoes = [Taglia.NA, Taglia.tg38, Taglia.tg39, Taglia.tg40, Taglia.tg41, Taglia.tg42, Taglia.tg43, Taglia.tg44, Taglia.tg45]
     
     init(cloth: Cloth){
         self.cloth = cloth
@@ -57,10 +62,6 @@ struct InfoClothScreen: View {
       
         self.cloth = Cloth(image: image)
         cloth.image = cloth.image?.toImage()!.resized(withPercentage: 0.2)?.toPngString()
-        
-        
-        
-   
         
         cloth.stile = stileClassificato
     }
@@ -210,8 +211,8 @@ struct InfoClothScreen: View {
                     
                     LabeledContent {
                         Picker("", selection: $categoriaClassificata){
-                            ForEach(categorie, id:\.self){ c in
-                                Text(c.rawValue).tag(c)
+                            ForEach(Categoria.allCases, id:\.self){ c in
+                                Text(c.rawValue)
                             }
                         }
                         
@@ -229,8 +230,25 @@ struct InfoClothScreen: View {
                     }
                     
                     LabeledContent {
-                        TextField("Taglia", text: $tagliaText)
-                            .font(.system(size: 18))
+                        Picker("", selection: $tagliaText){
+                            if(upper.contains(categoriaClassificata)){
+                                ForEach(tagliaUpper, id:\.self){ t in
+                                    Text(t.rawValue)
+                                }
+                            } else if(lower.contains(categoriaClassificata)){
+                                ForEach(tagliaLower, id:\.self){ t in
+                                    Text(t.rawValue)
+                                }
+                            } else if(shoes.contains(categoriaClassificata)){
+                                ForEach(tagliaShoes, id:\.self){ t in
+                                    Text(t.rawValue)
+                                }
+                            } else {
+                                ForEach(Taglia.allCases, id:\.self){ t in
+                                    Text(t.rawValue)
+                                }
+                            }
+                        }
                     } label: {
                         Text("Taglia: ")
                             .font(.system(size: 18, weight: .bold))
@@ -238,7 +256,7 @@ struct InfoClothScreen: View {
                     
                     LabeledContent {
                         Picker("", selection: $stileClassificato){
-                            ForEach(stili, id:\.self){ s in
+                            ForEach(Stile.allCases, id:\.self){ s in
                                 Text(s.rawValue)
                             }
                         }
@@ -255,9 +273,6 @@ struct InfoClothScreen: View {
             
         }
         .onAppear {
-            categorie.append(contentsOf: Categoria.allCases)
-            stili.append(contentsOf: Stile.allCases)
-            
             if !edit {
                 extractColorsAndClassify()
             }
