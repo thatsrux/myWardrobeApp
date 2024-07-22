@@ -12,24 +12,28 @@ struct AddToOutfitScreen: View {
     @State var isPresenting: Bool = false
     @State var uiImage: UIImage?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
-    private var category: Categoria
+    
     
     @State private var isInfoClothScreenActive = false
     @State private var isEditClothScreenActive = false
     @State private var returnCloth = false
     
-    @State var clothToAdd:Cloth?
+    
     
     @State private var searchText = ""
     @State private var searchIsActive = false
     
     @EnvironmentObject var database:Database
+    @Environment(\.dismiss) private var dismiss
+    var onDismiss: ((_ model: Cloth) -> Void)?
+    @Binding var category: Categoria
+    @Binding var clothToAdd:Cloth?
     
     @State private var selectedOption = "icone"
     
-    init(category: Categoria) {
-        self.category = category
-    }
+//    init(category: Categoria) {
+//        self.category = category
+//    }
     
     func deleteCloth(cloth:Cloth){
         Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
@@ -102,7 +106,8 @@ struct AddToOutfitScreen: View {
                             
                         }.onTapGesture {
                             clothToAdd = cloth
-                            returnCloth = true
+                            onDismiss?(clothToAdd!)
+                            dismiss()
                         }
                         
                     }.onDelete(perform: deleteClothSwipe)
@@ -141,7 +146,8 @@ struct AddToOutfitScreen: View {
                                 .shadow(radius: 5)
                                 .onTapGesture {
                                     clothToAdd = cloth
-                                    returnCloth = true
+                                    onDismiss?(clothToAdd!)
+                                    dismiss()
                                 }
                             
                         }

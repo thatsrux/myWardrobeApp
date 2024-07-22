@@ -4,13 +4,14 @@ import Firebase
 struct AddOutfitScreen: View {
     @State private var isAddToOutfitScreenActive = false
     @EnvironmentObject var database:Database
-    var cloth:Cloth?
+    
     
     var upperCloth:Cloth?
     var lowerCloth:Cloth?
     var shoesCloth:Cloth?
     
     @State private var categoria: Categoria = .NA
+    @State var cloth:Cloth?
     
     init(cloth:Cloth){
         self.cloth = cloth
@@ -105,28 +106,12 @@ struct AddOutfitScreen: View {
                     .border(Color.black)
                 
                 
-                Spacer().frame(height: 50)
                 
-                Text("Outfit già composti")
-                
-                Spacer().frame(height: 20)
-                
-                ScrollView(.horizontal){
-                    HStack(spacing:20){
-                        ForEach(0..<10) {
-                            Text("Outfit \($0)")
-                                .foregroundStyle(.white)
-                                .font(.largeTitle)
-                                .frame(width: 200, height: 350)
-                                .background(.red)
-                        }
-                    }
-                }
             }
         }
         .navigationTitle("Componi Outfit")
         .navigationDestination(isPresented: $isAddToOutfitScreenActive){
-            AddToOutfitScreen(category: categoria)
+            AddToOutfitScreen(category: $categoria,clothToAdd: $cloth)
         }
         
     }
