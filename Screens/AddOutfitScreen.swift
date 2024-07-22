@@ -1,17 +1,13 @@
-//
-//  AddOutfitScreen.swift
-//  myWardrobe
-//
-//  Created by Studente on 02/07/24.
-//
-
 import SwiftUI
+import Firebase
 
 struct AddOutfitScreen: View {
     @State private var isAddShirtScreenActive = false
     @State private var isAddTrousersScreenActive = false
     @State private var isAddShoesScreenActive = false
-
+    @EnvironmentObject var database:Database
+    var outfit:[Outfit]
+    
     var body: some View {
         NavigationStack {
             ScrollView{
@@ -54,6 +50,15 @@ struct AddOutfitScreen: View {
             }
         }
         .navigationTitle("Componi Outfit")
+        .navigationDestination(isPresented: $isAddShirtScreenActive){
+            AddShirtScreen()
+        }
+        .navigationDestination(isPresented: $isAddTrousersScreenActive){
+            AddTrousersScreen()
+        }
+        .navigationDestination(isPresented: $isAddShoesScreenActive){
+            AddShoesScreen()
+        }
     }
     
 }

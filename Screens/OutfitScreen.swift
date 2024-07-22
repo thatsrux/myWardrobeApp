@@ -124,6 +124,9 @@ struct OutfitScreen: View {
                         }
         
                     }
+                    .navigationDestination(isPresented: $isAddOutfitScreenActive){
+                        AddOutfitScreen()
+                    }
                 }
             }
     }
