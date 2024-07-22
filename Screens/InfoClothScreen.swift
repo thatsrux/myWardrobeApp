@@ -64,7 +64,7 @@ struct InfoClothScreen: View {
         } catch {
             fatalError(error.localizedDescription)
         }
-        cloth.image = cloth.image?.toImage()!.resized(withPercentage: 0.5)?.toPngString()
+        cloth.image = cloth.image?.toImage()!.resized(withPercentage: 0.2)?.toPngString()
         
         cloth.stile = stileClassificato
     }
