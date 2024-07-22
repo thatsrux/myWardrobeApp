@@ -1,5 +1,16 @@
 enum Categoria: String, Codable, CaseIterable {
-    case camicia, canotta, cappello, giacca, giubbino, felpa, maglione, pantaloncini, pantalone, scarpe, tshirt, NA
+    case camicia = "Camicia",
+         canotta = "Canotta",
+         cappello = "Cappello",
+         giacca = "Giacca",
+         giubbino = "Giubbino",
+         felpa = "Felpa",
+         maglione = "Maglione",
+         pantaloncini = "Pantaloncini",
+         pantalone = "Pantalone",
+         scarpe = "Scarpe",
+         tshirt = "T-Shirt",
+         NA = "NA"
     
     init(fromRawValue: String){
         self = Categoria(rawValue: fromRawValue) ?? .NA

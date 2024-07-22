@@ -213,7 +213,7 @@ struct InfoClothScreen: View {
                 VStack(spacing: 30){
                         
                     LabeledContent {
-                        Picker("qlcs", selection: $categoriaClassificata){
+                        Picker("", selection: $categoriaClassificata){
                             ForEach(Categoria.allCases, id:\.self){ c in
                                 Text(c.rawValue)
                             }
@@ -241,7 +241,7 @@ struct InfoClothScreen: View {
                     }
 
                     LabeledContent {
-                        Picker("qlcs", selection: $stileClassificato){
+                        Picker("", selection: $stileClassificato){
                             ForEach(Stile.allCases, id:\.self){ s in
                                 Text(s.rawValue)
                             }
@@ -418,7 +418,7 @@ struct InfoClothScreen: View {
             ref.setData(["foto": img!.toPngString()!,
                          "id" : cloth.id.uuidString,
                          "nome": cloth.nome,
-                         "categoria": cloth.categoria,
+                         "categoria": cloth.categoria.rawValue,
                          "taglia": cloth.taglia,
                          "color1a": cloth.mainColor.alpha.description,
                          "color1r": cloth.mainColor.red.description,
@@ -433,7 +433,7 @@ struct InfoClothScreen: View {
                          "color3g": cloth.thirdColor.green.description,
                          "color3b": cloth.thirdColor.blue.description,
                          "colorsnum" : cloth.colorsNum,
-                         "stile": cloth.stile,
+                         "stile": cloth.stile.rawValue,
                          "data":dataString
                         ]){
                 error in

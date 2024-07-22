@@ -1,5 +1,8 @@
 enum Stile: String, Codable, CaseIterable {
-    case casual, formale, sportivo, NA
+    case casual = "Casual",
+         formale = "Formale",
+         sportivo = "Sportivo",
+         NA = "NA"
     
     init(fromRawValue: String){
         self = Stile(rawValue: fromRawValue) ?? .NA
