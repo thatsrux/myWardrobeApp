@@ -15,25 +15,12 @@ class Cloth: Identifiable, Codable, Hashable{
     
     var colorsNum: Int
     
-    var categoria: String = ""
+    var categoria: Categoria = Categoria.NA
     var nome: String = ""
     var taglia: String = ""
-    var stile: String = ""
+    var stile: Stile = Stile.NA
     
     var data:Date
-    
-    enum stile {
-        case casual, formale, sportivo
-    }
-    
-    enum categoria {
-        case camicia, canotta, cappello, giacca, giubbino, felpa, maglione, pantaloncini, pantalone, scarpe, tshirt
-    }
-    
-    enum colore {
-        case rosso, rossoscuro, rosa, arancione, oro, giallo, crema, lime, verde, verdefoglia, verdescuro, oliva, celeste, celestescuro, blu,
-             blumarino, bluscuro, viola, magenta, fucsia, beige, marrone, marronescuro, grigio, nero, bianco
-    }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
@@ -44,7 +31,7 @@ class Cloth: Identifiable, Codable, Hashable{
     }
     
     
-    init(id:UUID, image:String,mainColor:ColorData,secondColor:ColorData,thirdColor:ColorData,colorsNum:Int, categoria:String,nome:String,taglia:String,stile:String,data:Data){
+    init(id:UUID, image:String,mainColor:ColorData,secondColor:ColorData,thirdColor:ColorData,colorsNum:Int, categoria:Categoria,nome:String,taglia:String,stile:Stile,data:Data){
         self.id = id
         self.image = image
         self.mainColor = mainColor
@@ -67,7 +54,7 @@ class Cloth: Identifiable, Codable, Hashable{
         self.data = Date.now
     }
     
-    init(nome: String, categoria: String) {
+    init(nome: String, categoria: Categoria) {
 
         self.image = UIImage(imageLiteralResourceName: "juve1").toPngString()!
         self.mainColor = ColorData(uiColor: .white)

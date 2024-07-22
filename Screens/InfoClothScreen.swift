@@ -10,8 +10,8 @@ struct InfoClothScreen: View {
     var cloth:Cloth
     @State var nomeText = ""
     @State var tagliaText = ""
-    @State var categoriaClassificata = ""
-    @State var stileClassificato = ""
+    @State var categoriaClassificata = Categoria.NA
+    @State var stileClassificato = Stile.NA
     
     @State var cpColor1: Color = .clear
     @State var cpColor2: Color = .clear
@@ -213,8 +213,12 @@ struct InfoClothScreen: View {
                 VStack(spacing: 30){
                         
                     LabeledContent {
-                        TextField("Categoria", text: $categoriaClassificata)
-                            .font(.system(size: 18))
+                        Picker("qlcs", selection: $categoriaClassificata){
+                            ForEach(Categoria.allCases, id:\.self){ c in
+                                Text(c.rawValue)
+                            }
+                        }
+                        
                     } label: {
                         Text("Categoria: ")
                             .font(.system(size: 18, weight: .bold))
@@ -237,8 +241,11 @@ struct InfoClothScreen: View {
                     }
 
                     LabeledContent {
-                        TextField("Stile", text: $stileClassificato)
-                            .font(.system(size: 18))
+                        Picker("qlcs", selection: $stileClassificato){
+                            ForEach(Stile.allCases, id:\.self){ s in
+                                Text(s.rawValue)
+                            }
+                        }
                     } label: {
                         Text("Stile: ")
                             .font(.system(size: 18, weight: .bold))
@@ -330,8 +337,8 @@ struct InfoClothScreen: View {
                 cloth.thirdColor = ColorData(uiColor: colors[2].makeUIColor())
             }
             classifier.detect(uiImage: (cloth.image?.toImage())!)
-            self.categoriaClassificata = classifier.typeClass
-            self.stileClassificato = classifier.styleClass
+            self.categoriaClassificata = Categoria(fromRawValue: classifier.typeClass)
+            self.stileClassificato = Stile(fromRawValue: classifier.styleClass)
         }
     }
     
