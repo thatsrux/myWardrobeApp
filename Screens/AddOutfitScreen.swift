@@ -71,8 +71,8 @@ struct AddOutfitScreen: View {
                                     Image(uiImage: image)
                                         .resizable()
                                 } else {
-                                    // Handle the case where the image is nil
-                                    Text("No Image")
+                                    Image(uiImage: UIImage(imageLiteralResourceName: "test6"))
+                                        .resizable()
                                 }
                         }
                     Button(action: {
@@ -83,8 +83,8 @@ struct AddOutfitScreen: View {
                                     Image(uiImage: image)
                                         .resizable()
                                 } else {
-                                    // Handle the case where the image is nil
-                                    Text("No Image")
+                                    Image(uiImage: UIImage(imageLiteralResourceName: "test1"))
+                                        .resizable()
                                 }
                         }
                     Button(action: {
@@ -95,8 +95,8 @@ struct AddOutfitScreen: View {
                                     Image(uiImage: image)
                                         .resizable()
                                 } else {
-                                    // Handle the case where the image is nil
-                                    Image(uiImage: UIImage(imageLiteralResourceName: "juve1"))
+                                    
+                                    Image(uiImage: UIImage(imageLiteralResourceName: "paperino"))
                                         .resizable()
                                 }
                         }

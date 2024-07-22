@@ -135,11 +135,6 @@ struct AddToOutfitScreen: View {
                                     Text(cloth.taglia.rawValue)
                                 }
                                 
-                                .contextMenu(menuItems: {
-                                    Button("Elimina", role: .destructive, action: {
-                                        deleteCloth(cloth: cloth)
-                                    })
-                                })
                             }.frame(width: 150, height: 200)
                                 .background(Color.white)
                                 .cornerRadius(10)
@@ -182,7 +177,12 @@ struct AddToOutfitScreen: View {
                 }
             }
             .navigationDestination(isPresented: $returnCloth){
-                AddOutfitScreen(cloth:clothToAdd!)
+                if let clothToAdd = clothToAdd{
+                    AddOutfitScreen(cloth:clothToAdd)
+                }
+                else{
+                    
+                }
             }
     }
 }
