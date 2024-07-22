@@ -96,7 +96,8 @@ struct AddOutfitScreen: View {
                                         .resizable()
                                 } else {
                                     // Handle the case where the image is nil
-                                    Text("No Image")
+                                    Image(uiImage: UIImage(imageLiteralResourceName: "juve1"))
+                                        .resizable()
                                 }
                         }
                     

@@ -16,10 +16,7 @@ struct ContentView: View {
     
     var body: some View {
             TabView(selection: $selection) {
-<<<<<<< Updated upstream
-                
-=======
->>>>>>> Stashed changes
+
                 OutfitScreen()
                     .tabItem {
                         Label ("Galleria Outfit", systemImage: "tshirt")
