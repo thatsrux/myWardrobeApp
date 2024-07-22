@@ -2,11 +2,10 @@ import SwiftUI
 import Firebase
 
 struct AddOutfitScreen: View {
-    @State private var isAddShirtScreenActive = false
-    @State private var isAddTrousersScreenActive = false
-    @State private var isAddShoesScreenActive = false
+    @State private var isAddToOutfitScreenActive = false
     @EnvironmentObject var database:Database
-    var outfit:[Outfit]
+    //var outfit:[Outfit]
+    @State private var categoria: Categoria = .NA
     
     var body: some View {
         NavigationStack {
@@ -14,16 +13,16 @@ struct AddOutfitScreen: View {
                 Spacer().frame(height: 50)
                 VStack(spacing:60){
                     Button("",systemImage: "tshirt") {
-                        isAddShirtScreenActive = true
-                        print("maglia")
+                        isAddToOutfitScreenActive = true
+                        categoria = .tshirt
                     }
                     Button("",systemImage: "plus") {
-                        isAddTrousersScreenActive = true
-                        print("pantalone")
+                        isAddToOutfitScreenActive = true
+                        categoria = .pantalone
                     }
                     Button("",systemImage: "shoe") {
-                        isAddShoesScreenActive = true
-                        print()
+                        isAddToOutfitScreenActive = true
+                        categoria = .scarpe
                     }
                     
                 }.frame(width:150, height: 300,alignment: Alignment.center)
@@ -35,7 +34,7 @@ struct AddOutfitScreen: View {
                 Text("Outfit già composti")
                 
                 Spacer().frame(height: 20)
-
+                
                 ScrollView(.horizontal){
                     HStack(spacing:20){
                         ForEach(0..<10) {
@@ -50,19 +49,13 @@ struct AddOutfitScreen: View {
             }
         }
         .navigationTitle("Componi Outfit")
-        .navigationDestination(isPresented: $isAddShirtScreenActive){
-            AddShirtScreen()
+        .navigationDestination(isPresented: $isAddToOutfitScreenActive){
+            AddToOutfitScreen(category: categoria)
         }
-        .navigationDestination(isPresented: $isAddTrousersScreenActive){
-            AddTrousersScreen()
-        }
-        .navigationDestination(isPresented: $isAddShoesScreenActive){
-            AddShoesScreen()
-        }
+        
     }
-    
 }
-
-#Preview {
-    AddOutfitScreen()
-}
+//
+//#Preview {
+//    AddOutfitScreen()
+//}

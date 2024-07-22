@@ -8,10 +8,11 @@
 import SwiftUI
 import Firebase
 
-struct AddShirtScreen: View {
+struct AddToOutfitScreen: View {
     @State var isPresenting: Bool = false
     @State var uiImage: UIImage?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    private var category: Categoria
     
     @State private var isInfoClothScreenActive = false
     @State private var isEditClothScreenActive = false
@@ -23,6 +24,9 @@ struct AddShirtScreen: View {
     
     @State private var selectedOption = "icone"
     
+    init(category: Categoria) {
+        self.category = category
+    }
     
     func deleteCloth(cloth:Cloth){
         Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
@@ -67,9 +71,8 @@ struct AddShirtScreen: View {
         NavigationStack {
             if searchIsActive {
                 List {
-                    ForEach(database.clothes) { cloth in
+                    ForEach(database.categorie[category.rawValue]!) { cloth in
                         if cloth.nome.lowercased().contains(searchText.lowercased()) {
-                            
                                 HStack {
                                     VStack{
                                         Image(uiImage: (cloth.image?.toImage())!)
@@ -108,9 +111,7 @@ struct AddShirtScreen: View {
             else {
                 if selectedOption == "elenco" {
                     List {
-                        ForEach(database.categorie.keys.sorted(), id: \.self){ category in
-                            Section(header: Text(category).font(.headline)){
-                                ForEach(database.categorie[category]!) { cloth in
+                        ForEach(database.categorie[category.rawValue]!) { cloth in
                                         HStack {
                                             VStack{
                                                 Image(uiImage: (cloth.image?.toImage())!)
@@ -147,17 +148,13 @@ struct AddShirtScreen: View {
                                 }.onDelete(perform: deleteClothSwipe)
                                 
                             }
-                        }
-                    }
                     
                     
                     
                 } else {
                     ScrollView {
                         LazyVGrid(columns: [GridItem(.flexible(), alignment: .top), GridItem(.flexible(), alignment: .top)], spacing: 10) {
-                            ForEach(database.categorie.keys.sorted(), id: \.self){ category in
-                                Section(header: Text(category).font(.headline)){
-                                    ForEach(database.categorie[category]!, id: \.self) { cloth in
+                            ForEach(database.categorie[category.rawValue]!) { cloth in
                                             VStack{
                                                 VStack {
                                                     Image(uiImage: (cloth.image?.toImage())!)
@@ -197,10 +194,6 @@ struct AddShirtScreen: View {
                                 }
                             }.padding(.bottom,20)
                         }
-                        .padding()
-                    }
-                    
-                }
             }
             Spacer()
                 .navigationTitle("My Wardrobe")
