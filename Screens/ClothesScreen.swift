@@ -16,6 +16,10 @@ struct ClothesScreen: View {
     @State private var isInfoClothScreenActive = false
     @State private var isEditClothScreenActive = false
     
+    let columns = [
+            GridItem(.adaptive(minimum: 160))
+        ]
+    
     @State private var searchText = ""
     @State private var searchIsActive = false
     
@@ -143,12 +147,9 @@ struct ClothesScreen: View {
                             }
                         }
                     }
-                    
-                    
-                    
                 } else {
                     ScrollView {
-                        LazyVGrid(columns: [GridItem(.flexible(), alignment: .top), GridItem(.flexible(), alignment: .top)], spacing: 10) {
+                        LazyVGrid(columns: columns, spacing: 10) {
                             ForEach(database.categorie.keys.sorted(), id: \.self){ category in
                                 Section(header: Text(category).font(.headline)){
                                     ForEach(database.categorie[category]!, id: \.self) { cloth in
@@ -172,17 +173,15 @@ struct ClothesScreen: View {
                                                     Text(cloth.nome)
                                                     Text(cloth.taglia.rawValue)
                                                 }
-                                                
+                                            }.frame(width: 150, height: 200)
+                                                .background(Color.white)
+                                                .cornerRadius(10)
+                                                .shadow(radius: 5)
                                                 .contextMenu(menuItems: {
                                                     Button("Elimina", role: .destructive, action: {
                                                         deleteCloth(cloth: cloth)
                                                     })
                                                 })
-                                            }.frame(width: 150, height: 200)
-                                                .background(Color.white)
-                                                .cornerRadius(10)
-                                                .shadow(radius: 5)
-                                            
                                         }
                                     }
                                     
