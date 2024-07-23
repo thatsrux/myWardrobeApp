@@ -174,11 +174,12 @@ struct ClothesScreen: View {
                             }
                         }
                 }
-                .navigationDestination(isPresented: $isInfoClothScreenActive){
+            
+                .navigationDestination(isPresented: $isInfoClothScreenActive) {
                     if uiImage != nil {
-                        InfoClothScreen(image: uiImage!.resized(withPercentage: 0.2)!)
-                            .onAppear {
-                                loading=false
+                        InfoClothScreen(image: uiImage!)
+                            .onDisappear{
+                                uiImage = nil
                             }
                     }
                 }
