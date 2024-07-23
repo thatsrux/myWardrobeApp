@@ -104,11 +104,6 @@ struct AddOutfitScreen: View {
         self.shoes = shoes
         
     }
-//        func saveOutfit(){
-//            guard let shirt = shirt, let trousers = trousers, let shoes = shoes else { return }
-//            let newOutfit = Outfit(shirt: shirt, trousers: trousers, shoes: shoes)
-//            database.outfits.append(newOutfit)
-//        }
         
     
     func saveOutfit(){

@@ -114,7 +114,7 @@ struct OutfitScreen: View {
             
             group.notify(queue: .main) {
                 print("All documents have been processed.")
-                database.fetchOutfits()  // Refresh outfits after deletion
+                database.fetchOutfits()
             }
         }
     }
