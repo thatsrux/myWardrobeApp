@@ -16,9 +16,7 @@ struct ClothesScreen: View {
     @State private var isInfoClothScreenActive = false
     @State private var isEditClothScreenActive = false
     
-    let columns = [
-            GridItem(.adaptive(minimum: 160))
-        ]
+    @State private var loading = false
     
     @State private var searchText = ""
     @State private var searchIsActive = false
@@ -28,19 +26,6 @@ struct ClothesScreen: View {
     @EnvironmentObject var database:Database
     
     @State private var selectedOption = "icone"
-    
-    
-    func deleteCloth(cloth:Cloth){
-        Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
-            if let err = err {
-                print("Error removing document: \(err)")
-            } else {
-                print("Document successfully removed!")
-            }
-        }
-        database.fetchClothes()
-        database.fetchCategorie()
-    }
     
     func deleteClothSwipe(at offsets:IndexSet){
         
@@ -67,10 +52,11 @@ struct ClothesScreen: View {
         database.fetchCategorie()
     }
     
-    
     var body: some View {
-        
         NavigationStack {
+            if isInfoClothScreenActive {
+                ProgressView("Elaborazione immagine in corso").frame(alignment: .center)
+            }
             if searchIsActive {
                 List {
                     ForEach(database.clothes) { cloth in
@@ -98,9 +84,9 @@ struct ClothesScreen: View {
                                     
                                     VStack(spacing:5){
                                         Text(cloth.nome).frame(maxWidth: .infinity, alignment: .leading)
-
+                                        
                                         if cloth.taglia != .NA {
-                                        Text(cloth.taglia.rawValue).frame(maxWidth: .infinity, alignment: .leading)
+                                            Text(cloth.taglia.rawValue).frame(maxWidth: .infinity, alignment: .leading)
                                         }
                                     }
                                     
@@ -108,98 +94,13 @@ struct ClothesScreen: View {
                             }
                         }
                     }.onDelete(perform: deleteClothSwipe)
-                    
                 }
             }
             else {
                 if selectedOption == "elenco" {
-                    List {
-                        ForEach(database.categorie.keys.sorted(), id: \.self){ category in
-                            Section(header: Text(categoriePlurale[Categoria(rawValue: category)!]!).font(.headline)){
-                                ForEach(database.categorie[category]!) { cloth in
-                                    NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                        HStack {
-                                            VStack{
-                                                Image(uiImage: (cloth.image?.toImage())!)
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .clipped()
-                                                    .frame(width:100,height:100)
-                                                HStack{
-                                                    Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                    if cloth.colorsNum > 1 {
-                                                        Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                        if cloth.colorsNum > 2 {
-                                                            Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                        }
-                                                    }
-                                                }.padding(.bottom,10)
-                                            }
-                                            
-                                            Spacer().frame(width: 30, height: 100)
-                                            
-                                            VStack(spacing:5){
-                                                Text(cloth.nome).frame(maxWidth: .infinity, alignment: .leading)
-                                                if cloth.taglia != .NA {
-                                                    Text(cloth.taglia.rawValue).frame(maxWidth: .infinity, alignment: .leading)
-                                                }
-                                            }
-                                            
-                                        }
-                                    }
-                                }.onDelete(perform: deleteClothSwipe)
-                                
-                            }
-                        }
-                    }
+                    ClothesList()
                 } else {
-                    ScrollView {
-                        LazyVGrid(columns: columns, spacing: 10) {
-                            ForEach(database.categorie.keys.sorted(), id: \.self){ category in
-                                Section(header: Text(categoriePlurale[Categoria(rawValue: category)!]!).font(.headline)){
-                                    ForEach(database.categorie[category]!, id: \.self) { cloth in
-                                        NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                            VStack{
-                                                VStack {
-                                                    Image(uiImage: (cloth.image?.toImage())!)
-                                                        .resizable()
-                                                        .scaledToFit()
-                                                        .clipped()
-                                                        .cornerRadius(10)
-                                                        .padding(5)
-                                                    HStack{
-                                                        Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                        if cloth.colorsNum > 1 {
-                                                            Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                            if cloth.colorsNum > 2 {
-                                                                Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                            }
-                                                        }
-                                                    }
-                                                    Text(cloth.nome)
-                                                        .padding(5)
-                                                    if cloth.taglia != .NA {
-                                                        Text(cloth.taglia.rawValue)
-                                                    }
-                                                }
-                                            }.frame(width: 150, height: 200)
-                                                .background(Color.white)
-                                                .cornerRadius(10)
-                                                .shadow(radius: 5)
-                                                .contextMenu(menuItems: {
-                                                    Button("Elimina", role: .destructive, action: {
-                                                        deleteCloth(cloth: cloth)
-                                                    })
-                                                })
-                                        }
-                                    }
-                                    
-                                }
-                            }.padding(.bottom,20)
-                        }
-                        .padding()
-                    }
-                    
+                    ClothesGrid()
                 }
             }
             Spacer()
@@ -267,11 +168,11 @@ struct ClothesScreen: View {
                 .sheet(isPresented: $isPresenting){
                     ImagePicker(uiImage: $uiImage, isPresenting:  $isPresenting, sourceType: $sourceType)
                         .onDisappear{
-                            isInfoClothScreenActive = true
+                            if uiImage != nil {
+                                isInfoClothScreenActive = true
+                            }
                         }
-                    
                 }
-            
                 .navigationDestination(isPresented: $isInfoClothScreenActive){
                     if uiImage != nil {
                         InfoClothScreen(image: uiImage!)
