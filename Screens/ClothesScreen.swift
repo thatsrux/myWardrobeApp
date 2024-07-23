@@ -54,7 +54,7 @@ struct ClothesScreen: View {
     
     var body: some View {
         NavigationStack {
-            if isInfoClothScreenActive {
+            if loading {
                 ProgressView("Elaborazione immagine in corso").frame(alignment: .center)
             }
             if searchIsActive {
@@ -170,12 +170,16 @@ struct ClothesScreen: View {
                         .onDisappear{
                             if uiImage != nil {
                                 isInfoClothScreenActive = true
+                                loading = true
                             }
                         }
                 }
                 .navigationDestination(isPresented: $isInfoClothScreenActive){
                     if uiImage != nil {
-                        InfoClothScreen(image: uiImage!)
+                        InfoClothScreen(image: uiImage!.resized(withPercentage: 0.2)!)
+                            .onAppear {
+                                loading=false
+                            }
                     }
                 }
                 .navigationDestination(isPresented: $isEditClothScreenActive){

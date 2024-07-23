@@ -61,7 +61,7 @@ struct InfoClothScreen: View {
         }
         
         self.cloth = Cloth(image: image)
-        cloth.image = cloth.image?.toImage()!.resized(withPercentage: 0.2)?.toPngString()
+        cloth.image = cloth.image?.toImage()!.toPngString()
         
         cloth.stile = stileClassificato
     }
