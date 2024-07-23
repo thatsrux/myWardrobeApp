@@ -183,6 +183,10 @@ class Database:ObservableObject{
         }
     }
     
+    func removeOutfits(){
+        outfits.removeAll()
+    }
+    
     
 }
 

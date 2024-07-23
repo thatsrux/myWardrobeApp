@@ -12,7 +12,7 @@ struct AddToOutfitScreen: View {
     @State var isPresenting: Bool = false
     @State var uiImage: UIImage?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
-    private var category: Categoria
+    
     
     let columns = [
             GridItem(.adaptive(minimum: 160))
@@ -20,17 +20,27 @@ struct AddToOutfitScreen: View {
     
     @State private var isInfoClothScreenActive = false
     @State private var isEditClothScreenActive = false
+    @State private var returnCloth = false
+    
+    
     
     @State private var searchText = ""
     @State private var searchIsActive = false
     
     @EnvironmentObject var database:Database
+    @Environment(\.dismiss) private var dismiss
+    var onDismiss: ((_ model: Cloth) -> Void)?
+    @Binding var category: Categoria
+    @Binding var shirtToAdd:Cloth?
+    @Binding var trousersToAdd:Cloth?
+    @Binding var shoesToAdd:Cloth?
+
     
     @State private var selectedOption = "icone"
     
-    init(category: Categoria) {
-        self.category = category
-    }
+//    init(category: Categoria) {
+//        self.category = category
+//    }
     
     func deleteCloth(cloth:Cloth){
         Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
@@ -73,183 +83,146 @@ struct AddToOutfitScreen: View {
     var body: some View {
         
         NavigationStack {
-            if searchIsActive {
+            if selectedOption == "elenco" {
                 List {
                     ForEach(database.categorie[category.rawValue]!) { cloth in
-                        if cloth.nome.lowercased().contains(searchText.lowercased()) {
-                                HStack {
-                                    VStack{
-                                        Image(uiImage: (cloth.image?.toImage())!)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .clipped()
-                                            .frame(width:100,height:100)
-                                        HStack{
-                                            Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                            if cloth.colorsNum > 1 {
-                                                Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                if cloth.colorsNum > 2 {
-                                                    Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                }
-                                            }
-                                        }.padding(.bottom,10)
+                        HStack {
+                            VStack{
+                                Image(uiImage: (cloth.image?.toImage())!)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipped()
+                                    .frame(width:100,height:100)
+                                HStack{
+                                    Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                                    if cloth.colorsNum > 1 {
+                                        Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                                        if cloth.colorsNum > 2 {
+                                            Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                                        }
                                     }
-                                    
-                                    Spacer().frame(width: 30, height: 100)
-                                    
-                                    VStack(spacing:5){
-                                        Text(cloth.nome).frame(maxWidth: .infinity, alignment: .leading)
-                                        Text(cloth.taglia.rawValue).frame(maxWidth: .infinity, alignment: .leading)
-                                    }
-                                    
-                                }.onTapGesture {
-                                    //var outfit = Outfit(cloth)
-                                    print(cloth.nome)
-                                }
+                                }.padding(.bottom,10)
+                            }
                             
+                            Spacer().frame(width: 30, height: 100)
+                            
+                            VStack(spacing:5){
+                                Text(cloth.nome).frame(maxWidth: .infinity, alignment: .leading)
+                                Text(cloth.taglia.rawValue).frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            
+                        }.onTapGesture {
+                            if cloth.categoria == .tshirt{
+                                shirtToAdd = cloth
+                                onDismiss?(shirtToAdd!)
+                            }
+                            else if cloth.categoria == .pantalone{
+                                trousersToAdd = cloth
+                                onDismiss?(trousersToAdd!)
+                            }
+                            else if cloth.categoria == .scarpe{
+                                shoesToAdd = cloth
+                                onDismiss?(shoesToAdd!)
+                            }
+                           
+                            dismiss()
                         }
+                        
                     }.onDelete(perform: deleteClothSwipe)
                     
                 }
-            }
-            else {
-                if selectedOption == "elenco" {
-                    List {
+                
+                
+                
+            } else {
+                ScrollView {
+                    LazyVGrid(columns: [GridItem(.flexible(), alignment: .top), GridItem(.flexible(), alignment: .top)], spacing: 10) {
                         ForEach(database.categorie[category.rawValue]!) { cloth in
-                                        HStack {
-                                            VStack{
-                                                Image(uiImage: (cloth.image?.toImage())!)
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .clipped()
-                                                    .frame(width:100,height:100)
-                                                HStack{
-                                                    Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                    if cloth.colorsNum > 1 {
-                                                        Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                        if cloth.colorsNum > 2 {
-                                                            Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                        }
-                                                    }
-                                                }.padding(.bottom,10)
+                            VStack{
+                                VStack {
+                                    Image(uiImage: (cloth.image?.toImage())!)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipped()
+                                        .cornerRadius(10)
+                                    HStack{
+                                        Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                                        if cloth.colorsNum > 1 {
+                                            Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                                            if cloth.colorsNum > 2 {
+                                                Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
                                             }
-                                            
-                                            Spacer().frame(width: 30, height: 100)
-                                            
-                                            VStack(spacing:5){
-                                                Text(cloth.nome).frame(maxWidth: .infinity, alignment: .leading)
-                                                Text(cloth.taglia.rawValue).frame(maxWidth: .infinity, alignment: .leading)
-                                            }
-                                            
-                                        }.onTapGesture {
-                                            let outfit = Outfit(cloth:cloth)
-                                            print(cloth.nome)
-                                            database.outfits.append(outfit)
-                                            
-                                            print(database.outfits.count)
                                         }
-                                    
-                                }.onDelete(perform: deleteClothSwipe)
-                                
-                            }
-                    
-                    
-                    
-                } else {
-                    ScrollView {
-                        LazyVGrid(columns: columns, spacing: 10) {
-                            ForEach(database.categorie[category.rawValue]!) { cloth in
-                                            VStack{
-                                                VStack {
-                                                    Image(uiImage: (cloth.image?.toImage())!)
-                                                        .resizable()
-                                                        .scaledToFit()
-                                                        .clipped()
-                                                        .cornerRadius(10)
-                                                    HStack{
-                                                        Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                        if cloth.colorsNum > 1 {
-                                                            Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                            if cloth.colorsNum > 2 {
-                                                                Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                            }
-                                                        }
-                                                    }
-                                                    Text(cloth.nome)
-                                                    Text(cloth.taglia.rawValue)
-                                                }
-                                                
-                                                .contextMenu(menuItems: {
-                                                    Button("Elimina", role: .destructive, action: {
-                                                        deleteCloth(cloth: cloth)
-                                                    })
-                                                })
-                                            }.frame(width: 150, height: 200)
-                                                .background(Color.white)
-                                                .cornerRadius(10)
-                                                .shadow(radius: 5)
-                                                .onTapGesture {
-                                                    //var outfit = Outfit(cloth)
-                                                    print(cloth.nome)
-                                                }
-                                        
+
                                     }
-                                    
+                                    Text(cloth.nome)
+                                    Text(cloth.taglia.rawValue)
                                 }
-                            }.padding(.bottom,20)
-                        }
-            }
-            Spacer()
-                .navigationTitle(category.rawValue)
-                .toolbar {
-                    ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        
-                        Menu() {
-                            Picker(selection: $selectedOption, label: Text("Options")) {
-                                HStack{
-                                    Text("Icone")
-                                    Image(systemName: "square.grid.2x2")
-                                }.tag("icone")
+
                                 
-                                HStack{
-                                    Text("Elenco")
-                                    Image(systemName: "list.bullet")
-                                }.tag("elenco")
-                            }
-                            
-                            Divider()
+                            }.frame(width: 150, height: 200)
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .shadow(radius: 5)
+                                .onTapGesture {
+                                    if cloth.categoria == .tshirt{
+                                        shirtToAdd = cloth
+                                        onDismiss?(shirtToAdd!)
+                                    }
+                                    else if cloth.categoria == .pantalone{
+                                        trousersToAdd = cloth
+                                        onDismiss?(trousersToAdd!)
+                                    }
+                                    else if cloth.categoria == .scarpe{
+                                        shoesToAdd = cloth
+                                        onDismiss?(shoesToAdd!)
+                                    }
+                                   
+                                    dismiss()
+                                }
                             
                         }
-                    label:{
-                        Image(systemName: "ellipsis.circle")
+                        
                     }
-                    }
-                }
-                .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
-                .sheet(isPresented: $isPresenting){
-                    ImagePicker(uiImage: $uiImage, isPresenting:  $isPresenting, sourceType: $sourceType)
-                        .onDisappear{
-                            isInfoClothScreenActive = true
-                        }
-                    
-                }
-            
-                .navigationDestination(isPresented: $isInfoClothScreenActive){
-                    if uiImage != nil {
-                        InfoClothScreen(image: uiImage!)
-                    }
-                }
-                .navigationDestination(isPresented: $isEditClothScreenActive){
-                    EditClothScreen()
-                }
+                }.padding(.bottom,20)
+            }
         }
-    }
-    
-    static func save(outfits: [Outfit]){
-        
+        Spacer()
+            .navigationTitle("My Wardrobe")
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    
+                    Menu() {
+                        Picker(selection: $selectedOption, label: Text("Options")) {
+                            HStack{
+                                Text("Icone")
+                                Image(systemName: "square.grid.2x2")
+                            }.tag("icone")
+                            
+                            HStack{
+                                Text("Elenco")
+                                Image(systemName: "list.bullet")
+                            }.tag("elenco")
+                        }
+                        
+                        Divider()
+                        
+                    }
+                label:{
+                    Image(systemName: "ellipsis.circle")
+                }
+                }
+            }
+//            .navigationDestination(isPresented: $returnCloth){
+//                if let clothToAdd = clothToAdd{
+//                    AddOutfitScreen(cloth:clothToAdd)
+//                }
+//                else{
+//                    
+//                }
+//            }
     }
 }
-
 //#Preview {
 //    @EnvironmentObject var database:Database
 //    ClothesScreen(clothes: $database.clothes)

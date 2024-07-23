@@ -19,12 +19,7 @@ struct InfoOutfitScreen: View {
         self.outfit = outfits[index]
     }
     var body: some View {
-        Text("""
-Outfit selezionato (indice \(index))
-\(outfits[index].shirt.categoria): \(outfits[index].shirt.nome)
-\(outfits[index].trousers.categoria): \(outfits[index].trousers.nome)
-\(outfits[index].shoes.categoria): \(outfits[index].shoes.nome)
-""")
+        Text("")
     }
 }
 /*

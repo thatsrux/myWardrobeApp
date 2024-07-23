@@ -30,7 +30,6 @@ class Cloth: Identifiable, Codable, Hashable{
         return lhs.id == rhs.id
     }
     
-    
     init(id:UUID, image:String,mainColor:ColorData,secondColor:ColorData,thirdColor:ColorData,colorsNum:Int, categoria:Categoria,nome:String,taglia:Taglia,stile:Stile,data:Data){
         self.id = id
         self.image = image
@@ -51,19 +50,6 @@ class Cloth: Identifiable, Codable, Hashable{
         self.secondColor = ColorData(uiColor: .black)
         self.thirdColor = ColorData(uiColor: .black)
         self.colorsNum = 3
-        self.data = Date.now
-    }
-    
-    init(nome: String, categoria: Categoria) {
-
-        self.image = UIImage(imageLiteralResourceName: "juve1").toPngString()!
-        self.mainColor = ColorData(uiColor: .white)
-        self.secondColor = ColorData(uiColor: .white)
-        self.thirdColor = ColorData(uiColor: .white)
-        self.colorsNum = 3
-        self.categoria = categoria
-        self.nome = nome
-        self.taglia = Taglia.NA
         self.data = Date.now
     }
     
