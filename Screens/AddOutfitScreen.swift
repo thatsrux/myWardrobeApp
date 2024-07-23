@@ -104,12 +104,25 @@ struct AddOutfitScreen: View {
         self.shoes = shoes
         
     }
-        func saveOutfit(){
-            guard let shirt = shirt, let trousers = trousers, let shoes = shoes else { return }
-            let newOutfit = Outfit(shirt: shirt, trousers: trousers, shoes: shoes)
-            database.outfits.append(newOutfit)
-        }
         
+    
+    func saveOutfit(){
+        
+        let outfit = Outfit(shirt:shirt!,trousers: trousers!,shoes:shoes!)
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("Outfit").document(outfit.id.uuidString)
+        ref.setData(["shirtId": shirt!.id.uuidString,
+                     "trousersId" : trousers!.id.uuidString,
+                     "shoesId" : shoes!.id.uuidString
+                        ]){
+                error in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+            }
+    }
+    
     }
     //
     //#Preview {

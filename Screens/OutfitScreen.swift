@@ -1,25 +1,15 @@
-//
-//  OutfitScreen.swift
-//  myWardrobe
-//
-//  Created by Studente on 02/07/24.
-//
-
 import SwiftUI
-
+import Firebase
 struct OutfitScreen: View {
     
     
     @State private var isAddOutfitScreenActive = false
-    @State private var isEditOutfitScreenActive = false
     @State private var isInfoOutfitScreenActive = false
     
     @State private var searchText = ""
     @State private var searchIsActive = false
     
     @EnvironmentObject var database:Database
-    
-    
     
     init(){
         
@@ -29,14 +19,14 @@ struct OutfitScreen: View {
         NavigationStack {
             ScrollView{
                 VStack{
-                    Text("Outfits")
+                    Text("Outfits (\(database.outfits.count.description))")
                     ScrollView(.horizontal,showsIndicators: false){
                         HStack{
                             ForEach(database.outfits, id:\.self){ o in
                                 NavigationLink(destination: AddOutfitScreen(outfit: o)) {
                                     HStack{
                                         VStack(spacing:10){
-                                            Text(o.shirt?.nome ?? "")
+                                            Text(o.shirt!.nome)
                                             Image(uiImage: o.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
                                                 .resizable()
                                                 .scaledToFit()
@@ -62,7 +52,7 @@ struct OutfitScreen: View {
                         }
                         
                     }.onAppear{
-                        
+                        database.fetchOutfits()
                     }
                 }
                 .navigationTitle("My Outfits")
@@ -77,8 +67,8 @@ struct OutfitScreen: View {
                     }
                         
                         Button {
-                            isEditOutfitScreenActive = true
-                            database.removeOutfits()
+                            deleteAllOutfits()
+                            database.fetchOutfits()
                         }
                     label: {
                         Image(systemName: "ellipsis.circle")
@@ -91,9 +81,43 @@ struct OutfitScreen: View {
             }
         }
     }
-    //
-    //#Preview {
-    //    OutfitScreen(outfits:[Outfit(shirt: Cloth(nome: "", categoria: ""), trousers: Cloth(nome: "", categoria: ""), shoes: Cloth(nome: "", categoria: ""))])
-    //}
-    //
+
+    
+    func deleteAllOutfits() {
+        let db = Firestore.firestore()
+        let ref = db.collection("Outfit")
+        
+        ref.getDocuments { snapshot, error in
+            if let error = error {
+                print("Error fetching documents: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let snapshot = snapshot else {
+                print("No documents found")
+                return
+            }
+            
+            let group = DispatchGroup()
+            
+            for document in snapshot.documents {
+                group.enter()
+                document.reference.delete { error in
+                    if let error = error {
+                        print("Error removing document \(document.documentID): \(error.localizedDescription)")
+                    } else {
+                        print("Document \(document.documentID) successfully removed!")
+                    }
+                    group.leave()
+                }
+            }
+            
+            group.notify(queue: .main) {
+                print("All documents have been processed.")
+                database.fetchOutfits()
+            }
+        }
+    }
+
+
 }
