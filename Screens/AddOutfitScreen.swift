@@ -78,7 +78,7 @@ struct AddOutfitScreen: View {
                     .border(Color.black)
                 
             }.onAppear{
-                updateOutfit(outfit: outfit ?? Outfit(shirt: Cloth(image: UIImage(imageLiteralResourceName: "imageNA")), trousers: Cloth(image: UIImage(imageLiteralResourceName: "imageNA")) , shoes: Cloth(image: UIImage(imageLiteralResourceName: "imageNA"))))
+                
             }.toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Button(action: {
