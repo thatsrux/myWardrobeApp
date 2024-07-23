@@ -93,12 +93,10 @@ struct AddOutfitScreen: View {
     }
     
     func updateOutfit() {
-        guard let outfit = outfit else {
-            print("bah")
-            return}
+        guard let outfit = outfit else {return}
         
         guard let shirt = outfit.shirt, let trousers = outfit.trousers, let shoes = outfit.shoes else {
-            print("bah2")
+            print("error shirt/trousers/shoes")
             return}
         
         self.shirt = shirt
