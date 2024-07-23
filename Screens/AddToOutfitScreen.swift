@@ -14,6 +14,10 @@ struct AddToOutfitScreen: View {
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
     
+    let columns = [
+            GridItem(.adaptive(minimum: 160))
+        ]
+    
     @State private var isInfoClothScreenActive = false
     @State private var isEditClothScreenActive = false
     @State private var returnCloth = false
@@ -149,10 +153,12 @@ struct AddToOutfitScreen: View {
                                                 Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
                                             }
                                         }
+
                                     }
                                     Text(cloth.nome)
                                     Text(cloth.taglia.rawValue)
                                 }
+
                                 
                             }.frame(width: 150, height: 200)
                                 .background(Color.white)

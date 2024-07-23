@@ -33,9 +33,9 @@ struct InfoClothScreen: View {
     var lower = [Categoria.pantalone, Categoria.pantaloncini]
     var shoes = [Categoria.scarpe]
     
-    var tagliaUpper = [Taglia.NA, Taglia.tgXS, Taglia.tgS, Taglia.tgM, Taglia.tgL, Taglia.tgXL, Taglia.tgXXL]
-    var tagliaLower = [Taglia.NA, Taglia.tg42, Taglia.tg44, Taglia.tg46, Taglia.tg48, Taglia.tg50, Taglia.tg52, Taglia.tg54]
-    var tagliaShoes = [Taglia.NA, Taglia.tg38, Taglia.tg39, Taglia.tg40, Taglia.tg41, Taglia.tg42, Taglia.tg43, Taglia.tg44, Taglia.tg45]
+    var tagliaUpper = [Taglia.tgXS, Taglia.tgS, Taglia.tgM, Taglia.tgL, Taglia.tgXL, Taglia.tgXXL, Taglia.NA]
+    var tagliaLower = [Taglia.tg42, Taglia.tg44, Taglia.tg46, Taglia.tg48, Taglia.tg50, Taglia.tg52, Taglia.tg54, Taglia.NA]
+    var tagliaShoes = [Taglia.tg38, Taglia.tg39, Taglia.tg40, Taglia.tg41, Taglia.tg42, Taglia.tg43, Taglia.tg44, Taglia.tg45, Taglia.NA]
     
     init(cloth: Cloth){
         self.cloth = cloth
@@ -59,7 +59,7 @@ struct InfoClothScreen: View {
         } catch {
             fatalError(error.localizedDescription)
         }
-      
+        
         self.cloth = Cloth(image: image)
         cloth.image = cloth.image?.toImage()!.resized(withPercentage: 0.2)?.toPngString()
         
@@ -72,7 +72,7 @@ struct InfoClothScreen: View {
                 Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 150, height: 200)
+                    .frame(minWidth: 150, maxWidth: 187.5, minHeight: 200, maxHeight: 250, alignment: .center)
                 if !edit {
                     Group {
                         if classifier.typeConfidence > 0.5 {
@@ -138,7 +138,7 @@ struct InfoClothScreen: View {
                                 }
                             Text(closestColor(to: UIColor(cpColor1)))
                                 .multilineTextAlignment(.center)
-                                .frame(maxWidth: .infinity, alignment: .center)
+                                .frame(maxWidth: 140, minHeight: 50 ,alignment: .top)
                         }
                         
                         if colorsNum > 1 {
@@ -162,7 +162,7 @@ struct InfoClothScreen: View {
                                     }
                                 Text(closestColor(to: UIColor(cpColor2)))
                                     .multilineTextAlignment(.center)
-                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .frame(maxWidth: 140, minHeight: 50 ,alignment: .top)
                             }
                         }
                         
@@ -191,7 +191,7 @@ struct InfoClothScreen: View {
                                 
                                 Text(closestColor(to: UIColor(cpColor3)))
                                     .multilineTextAlignment(.center)
-                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .frame(maxWidth: 140, minHeight: 50 ,alignment: .top)
                             }
                             
                         }
@@ -214,8 +214,9 @@ struct InfoClothScreen: View {
                             ForEach(Categoria.allCases, id:\.self){ c in
                                 Text(c.rawValue)
                             }
-                        }
-                        
+                        }.onTapGesture(perform: {
+                            tagliaText = Taglia.NA
+                        })
                     } label: {
                         Text("Categoria: ")
                             .font(.system(size: 18, weight: .bold))
