@@ -10,17 +10,11 @@ struct AddOutfitScreen: View {
     @State var shirt:Cloth?
     @State var trousers:Cloth?
     @State var shoes:Cloth?
-    @State var outfit:Outfit?
+    var outfit:Outfit?
     
     
-    init(outfit:Outfit?) {
-        if let outfit = outfit{
-            self.outfit = outfit
-            self.shirt = outfit.shirt
-            self.trousers = outfit.trousers
-            self.shoes = outfit.shoes
-        }
-        
+    init(outfit:Outfit) {
+        self.outfit = outfit
     }
     
     init(){
@@ -78,7 +72,7 @@ struct AddOutfitScreen: View {
                     .border(Color.black)
                 
             }.onAppear{
-                
+                updateOutfit()
             }.toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Button(action: {
@@ -98,20 +92,29 @@ struct AddOutfitScreen: View {
         
     }
     
-    func updateOutfit(outfit:Outfit){
-        self.shirt = outfit.shirt
-        self.trousers = outfit.trousers
-        self.shoes = outfit.shoes
+    func updateOutfit() {
+        guard let outfit = outfit else {
+            print("bah")
+            return}
+        
+        guard let shirt = outfit.shirt, let trousers = outfit.trousers, let shoes = outfit.shoes else {
+            print("bah2")
+            return}
+        
+        self.shirt = shirt
+        self.trousers = trousers
+        self.shoes = shoes
+        
     }
-    
-    func saveOutfit(){
-        guard let shirt = shirt, let trousers = trousers, let shoes = shoes else { return }
-                let newOutfit = Outfit(shirt: shirt, trousers: trousers, shoes: shoes)
-                database.outfits.append(newOutfit)
+        func saveOutfit(){
+            guard let shirt = shirt, let trousers = trousers, let shoes = shoes else { return }
+            let newOutfit = Outfit(shirt: shirt, trousers: trousers, shoes: shoes)
+            database.outfits.append(newOutfit)
+        }
+        
     }
-    
-}
-//
-//#Preview {
-//    AddOutfitScreen()
-//}
+    //
+    //#Preview {
+    //    AddOutfitScreen()
+    //}
+
