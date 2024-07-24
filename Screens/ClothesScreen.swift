@@ -55,52 +55,53 @@ struct ClothesScreen: View {
     var body: some View {
         NavigationStack {
             if loading {
-                ProgressView("Elaborazione immagine in corso").frame(alignment: .center)
-            }
-            if searchIsActive {
-                List {
-                    ForEach(database.clothes) { cloth in
-                        if cloth.nome.lowercased().contains(searchText.lowercased()) {
-                            NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                HStack {
-                                    VStack{
-                                        Image(uiImage: (cloth.image?.toImage())!)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .clipped()
-                                            .frame(width:100,height:100)
-                                        HStack{
-                                            Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                            if cloth.colorsNum > 1 {
-                                                Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                if cloth.colorsNum > 2 {
-                                                    Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                ProgressView("Elaborazione immagine in corso").frame(maxHeight: .infinity, alignment: .center)
+            } else {
+                if searchIsActive {
+                    List {
+                        ForEach(database.clothes) { cloth in
+                            if cloth.nome.lowercased().contains(searchText.lowercased()) {
+                                NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                    HStack {
+                                        VStack{
+                                            Image(uiImage: (cloth.image?.toImage())!)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .clipped()
+                                                .frame(width:100,height:100)
+                                            HStack{
+                                                Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                                                if cloth.colorsNum > 1 {
+                                                    Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                                                    if cloth.colorsNum > 2 {
+                                                        Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                                                    }
                                                 }
-                                            }
-                                        }.padding(.bottom,10)
-                                    }
-                                    
-                                    Spacer().frame(width: 30, height: 100)
-                                    
-                                    VStack(spacing:5){
-                                        Text(cloth.nome).frame(maxWidth: .infinity, alignment: .leading)
-                                        
-                                        if cloth.taglia != .NA {
-                                            Text(cloth.taglia.rawValue).frame(maxWidth: .infinity, alignment: .leading)
+                                            }.padding(.bottom,10)
                                         }
+                                        
+                                        Spacer().frame(width: 30, height: 100)
+                                        
+                                        VStack(spacing:5){
+                                            Text(cloth.nome).frame(maxWidth: .infinity, alignment: .leading)
+                                            
+                                            if cloth.taglia != .NA {
+                                                Text(cloth.taglia.rawValue).frame(maxWidth: .infinity, alignment: .leading)
+                                            }
+                                        }
+                                        
                                     }
-                                    
                                 }
                             }
-                        }
-                    }.onDelete(perform: deleteClothSwipe)
+                        }.onDelete(perform: deleteClothSwipe)
+                    }
                 }
-            }
-            else {
-                if selectedOption == "elenco" {
-                    ClothesList()
-                } else {
-                    ClothesGrid()
+                else {
+                    if selectedOption == "elenco" {
+                        ClothesList()
+                    } else {
+                        ClothesGrid()
+                    }
                 }
             }
             Spacer()
@@ -180,7 +181,6 @@ struct ClothesScreen: View {
                         InfoClothScreen(image: uiImage!)
                             .onDisappear {
                                 uiImage = nil
-//                                loading = false
                             }
                             .onAppear {
                                 loading = false
