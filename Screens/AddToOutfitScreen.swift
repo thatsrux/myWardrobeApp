@@ -83,35 +83,37 @@ struct AddToOutfitScreen: View {
     var body: some View {
         
         NavigationStack {
-            if selectedOption == "elenco" {
+            
+            if searchIsActive {
                 List {
-                    ForEach(database.categorie[category.rawValue]!) { cloth in
-                        SingleClothList(cloth: cloth)
-                            .onTapGesture {
-                            if cloth.categoria == .tshirt{
-                                shirtToAdd = cloth
-                                onDismiss?(shirtToAdd!)
-                            }
-                            else if cloth.categoria == .pantalone{
-                                trousersToAdd = cloth
-                                onDismiss?(trousersToAdd!)
-                            }
-                            else if cloth.categoria == .scarpe{
-                                shoesToAdd = cloth
-                                onDismiss?(shoesToAdd!)
-                            }
-                            
-                            dismiss()
+                    ForEach(database.clothes) { cloth in
+                        if cloth.nome.lowercased().contains(searchText.lowercased()) {
+                            SingleClothList(cloth: cloth)
+                                .onTapGesture {
+                                    if cloth.categoria == .tshirt{
+                                        shirtToAdd = cloth
+                                        onDismiss?(shirtToAdd!)
+                                    }
+                                    else if cloth.categoria == .pantalone{
+                                        trousersToAdd = cloth
+                                        onDismiss?(trousersToAdd!)
+                                    }
+                                    else if cloth.categoria == .scarpe{
+                                        shoesToAdd = cloth
+                                        onDismiss?(shoesToAdd!)
+                                    }
+                                    
+                                    dismiss()
+                                }
                         }
-                        
                     }.onDelete(perform: deleteClothSwipe)
-                    
                 }
-            } else {
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 10) {
+            }
+            else {
+                if selectedOption == "elenco" {
+                    List {
                         ForEach(database.categorie[category.rawValue]!) { cloth in
-                            SingleClothGrid(cloth: cloth)
+                            SingleClothList(cloth: cloth)
                                 .onTapGesture {
                                     if cloth.categoria == .tshirt{
                                         shirtToAdd = cloth
@@ -129,14 +131,41 @@ struct AddToOutfitScreen: View {
                                     dismiss()
                                 }
                             
-                        }
+                        }.onDelete(perform: deleteClothSwipe)
                         
                     }
-                }.padding(.bottom,20)
+                } else {
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 10) {
+                            ForEach(database.categorie[category.rawValue]!) { cloth in
+                                SingleClothGrid(cloth: cloth)
+                                    .onTapGesture {
+                                        if cloth.categoria == .tshirt{
+                                            shirtToAdd = cloth
+                                            onDismiss?(shirtToAdd!)
+                                        }
+                                        else if cloth.categoria == .pantalone{
+                                            trousersToAdd = cloth
+                                            onDismiss?(trousersToAdd!)
+                                        }
+                                        else if cloth.categoria == .scarpe{
+                                            shoesToAdd = cloth
+                                            onDismiss?(shoesToAdd!)
+                                        }
+                                        
+                                        dismiss()
+                                    }
+                                
+                            }
+                            
+                        }
+                    }.padding(.bottom,20)
+                }
             }
         }
         Spacer()
-            .navigationTitle("My Wardrobe")
+            .navigationTitle(category.rawValue)
+            .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     
