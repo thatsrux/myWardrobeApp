@@ -21,35 +21,38 @@ struct OutfitScreen: View {
                 VStack{
                     Text("Outfits (\(database.outfits.count.description))")
                     ScrollView(.horizontal,showsIndicators: false){
-                        HStack{
+                        HStack(spacing:25){
                             ForEach(database.outfits, id:\.self){ o in
                                 NavigationLink(destination: AddOutfitScreen(outfit: o)) {
                                     HStack{
                                         VStack(spacing:10){
-                                            Text(o.shirt!.nome)
                                             Image(uiImage: o.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
                                                 .resizable()
                                                 .scaledToFit()
                                                 .clipped()
                                                 .frame(width:100,height:100)
-                                            Text(o.trousers?.nome ?? "")
                                             Image(uiImage: o.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
                                                 .resizable()
                                                 .scaledToFit()
                                                 .clipped()
                                                 .frame(width:100,height:100)
-                                            Text(o.shoes?.nome ?? "")
                                             Image(uiImage: o.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
                                                 .resizable()
                                                 .scaledToFit()
                                                 .clipped()
                                                 .frame(width:100,height:100)
-                                        }
+                                        }.frame(width: 150, height: 350)
+                                            .background(Color.white)
+                                            .clipShape(RoundedRectangle(cornerRadius:15))
+                                            .overlay(
+                                                            RoundedRectangle(cornerRadius: 15)
+                                                                .stroke(Color.black, lineWidth: 3)
+                                                        )
                                         
                                     }
                                 }
-                            }.padding(.trailing,30)
-                        }
+                            }
+                        }.padding(.leading,20)
                         
                     }.onAppear{
                         database.fetchOutfits()
