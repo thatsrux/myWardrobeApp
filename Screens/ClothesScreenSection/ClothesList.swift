@@ -19,37 +19,9 @@ struct ClothesList: View {
                 Section(header: Text(categoriePlurale[Categoria(rawValue: category)!]!).font(.headline)){
                     ForEach(database.categorie[category]!) { cloth in
                         NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                            HStack {
-                                VStack{
-                                    Image(uiImage: (cloth.image?.toImage())!)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .clipped()
-                                        .frame(width:100,height:100)
-                                    HStack{
-                                        Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                        if cloth.colorsNum > 1 {
-                                            Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                            if cloth.colorsNum > 2 {
-                                                Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                            }
-                                        }
-                                    }.padding(.bottom,10)
-                                }
-                                
-                                Spacer().frame(width: 30, height: 100)
-                                
-                                VStack(spacing:5){
-                                    Text(cloth.nome).frame(maxWidth: .infinity, alignment: .leading)
-                                    if cloth.taglia != .NA {
-                                        Text(cloth.taglia.rawValue).frame(maxWidth: .infinity, alignment: .leading)
-                                    }
-                                }
-                                
-                            }
+                            SingleClothList(cloth: cloth)
                         }
                     }.onDelete(perform: deleteClothSwipe)
-                    
                 }
             }
         }
@@ -81,4 +53,45 @@ struct ClothesList: View {
         database.fetchCategorie()
     }
     
+}
+
+
+struct SingleClothList: View {
+    
+    @EnvironmentObject var database:Database
+    private let cloth: Cloth
+    
+    init(cloth: Cloth) {
+        self.cloth = cloth
+    }
+    
+    var body: some View {
+        HStack {
+            VStack{
+                Image(uiImage: (cloth.image?.toImage())!)
+                    .resizable()
+                    .scaledToFit()
+                    .clipped()
+                    .frame(width:100,height:100)
+                HStack{
+                    Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                    if cloth.colorsNum > 1 {
+                        Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                        if cloth.colorsNum > 2 {
+                            Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
+                        }
+                    }
+                }.padding(.bottom,10)
+            }
+            
+            Spacer().frame(width: 30, height: 100)
+            
+            VStack(spacing:5){
+                Text(cloth.nome).frame(maxWidth: .infinity, alignment: .leading)
+                if cloth.taglia != .NA {
+                    Text(cloth.taglia.rawValue).frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+        }
+    }
 }
