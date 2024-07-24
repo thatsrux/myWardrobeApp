@@ -12,46 +12,53 @@ let colorMap: [String: UIColor] = [
     "Arancione": UIColor.orange,
     // Variazioni dell'arancione
     "Arancione2": UIColor(red: 0.76, green: 0.4, blue: 0.2, alpha: 1.0),
-    "Giallo uovo": UIColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 1.0),
+    "Giallo Uovo": UIColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 1.0),
     "Giallo": UIColor.yellow,
+    //Variazioni del giallo
+    "Giallo2": UIColor(red: 0.9, green: 0.8, blue: 0.4, alpha: 1.0),
     "Crema": UIColor(red: 1.0, green: 0.99, blue: 0.82, alpha: 1.0),
     "Lime": UIColor(red: 0.7, green: 1, blue: 0, alpha: 1.0),
-    "Verde fluo": UIColor.green,
-    "Verde foglia": UIColor(red: 0.23, green: 0.53, blue: 0.22, alpha: 1.0),
-    "Verde scuro": UIColor(red: 0.1, green: 0.28, blue: 0.13, alpha: 1.0),
-    "Verde oliva": UIColor(red: 0.5, green: 0.5, blue: 0.0, alpha: 1.0),
+    //Variazioni del lime
+    "Lime2": UIColor(red: 0.73, green: 0.86, blue: 0.58, alpha: 1.0),
+    "Lime3": UIColor(red: 0.88, green: 0.93, blue: 0.84, alpha: 1.0),
+    "Verde Fluo": UIColor.green,
+    "Verde Foglia": UIColor(red: 0.23, green: 0.53, blue: 0.22, alpha: 1.0),
+    "Verde Scuro": UIColor(red: 0.1, green: 0.28, blue: 0.13, alpha: 1.0),
+    "Verde Oliva": UIColor(red: 0.5, green: 0.5, blue: 0.0, alpha: 1.0),
     "Avio": UIColor(red: 0.43, green: 0.6, blue: 0.75, alpha: 1.0),
-    "Avio scuro": UIColor(red: 0.33, green: 0.43, blue: 0.62, alpha: 1.0),
+    "Avio Scuro": UIColor(red: 0.33, green: 0.43, blue: 0.62, alpha: 1.0),
     // Variazioni dell'avio scuro
-    "Avio scuro2": UIColor(red: 0.33, green: 0.43, blue: 0.62, alpha: 1.0),
-    "Avio scuro3": UIColor(red: 0.11, green: 0.3, blue: 0.38, alpha: 1.0),
-    "Avio scuro4": UIColor(red: 0.2, green: 0.5, blue: 0.6, alpha: 1.0),
-    "Avio scuro5": UIColor(red: 0.46, green: 0.5, blue: 0.6, alpha: 1.0),
+    "Avio Scuro2": UIColor(red: 0.33, green: 0.43, blue: 0.62, alpha: 1.0),
+    "Avio Scuro3": UIColor(red: 0.11, green: 0.3, blue: 0.38, alpha: 1.0),
+    "Avio Scuro4": UIColor(red: 0.2, green: 0.5, blue: 0.6, alpha: 1.0),
+    "Avio Scuro5": UIColor(red: 0.46, green: 0.5, blue: 0.6, alpha: 1.0),
     "Celeste": UIColor(red: 0.8, green: 0.95, blue: 0.97, alpha: 1.0),
     // Variazioni del celeste
     "Celeste2": UIColor(red: 0.65, green: 0.9, blue: 0.98, alpha: 1.0),
-    "Celeste scuro": UIColor(red: 0.32, green: 0.75, blue: 0.84, alpha: 1.0),
+    "Celeste3": UIColor(red: 0.25, green: 0.56, blue: 0.8, alpha: 1.0),
+    "Celeste Scuro": UIColor(red: 0, green: 0.83, blue: 1, alpha: 1.0),
     // Variazioni del celeste scuro
-    "Celeste scuro2": UIColor(red: 0.32, green: 0.75, blue: 0.84, alpha: 1.0),
+    "Celeste Scuro2": UIColor(red: 0.32, green: 0.75, blue: 0.84, alpha: 1.0),
     "Blu": UIColor.blue,
     // Variazioni del blu
     "Blu2": UIColor(red: 0.063, green: 0.18, blue: 0.46, alpha: 1.0),
     "Blu3": UIColor(red: 0.16, green: 0.37, blue: 0.9, alpha: 1.0),
     "Blu4": UIColor(red: 0.3, green: 0.5, blue: 0.96, alpha: 1.0),
-    "Blu navy": UIColor(red: 0.03, green: 0.11, blue: 0.33, alpha: 1.0),
+    "Blu Navy": UIColor(red: 0.03, green: 0.11, blue: 0.33, alpha: 1.0),
     // Variazioni del blu navy
-    "Blu navy2": UIColor(red: 0.16, green: 0.04, blue: 0.44, alpha: 1.0),
-    "Blu notte": UIColor(red: 0.13, green: 0.13, blue: 0.25, alpha: 1.0),
+    "Blu Navy2": UIColor(red: 0.16, green: 0.04, blue: 0.44, alpha: 1.0),
+    "Blu Notte": UIColor(red: 0.13, green: 0.13, blue: 0.25, alpha: 1.0),
     // Variazioni del blu notte
-    "Blu notte2": UIColor(red: 0.058, green: 0.02, blue: 0.22, alpha: 1.0),
+    "Blu Notte2": UIColor(red: 0.058, green: 0.02, blue: 0.22, alpha: 1.0),
     "Viola": UIColor.purple,
     // Variazioni del viola
     "Viola2": UIColor(red: 0.2, green: 0.1, blue: 0.3, alpha: 1.0),
     "Viola4": UIColor(red: 0.25, green: 0.07, blue: 0.34, alpha: 1.0),
     "Viola5": UIColor(red: 0.165, green: 0, blue: 0.23, alpha: 1.0),
     "Viola6": UIColor(red: 0.27, green: 0.22, blue: 0.4, alpha: 1.0),
+    "Viola7": UIColor(red: 0.55, green: 0.2, blue: 0.7, alpha: 1.0),
     "Viola8": UIColor(red: 0.4, green: 0, blue: 0.4, alpha: 1.0),
-    "Fuxia fluo": UIColor.magenta,
+    "Fuxia Fluo": UIColor.magenta,
     "Fuxia": UIColor(red: 0.8, green: 0.05, blue: 0.5, alpha: 1.0),
     // Variazioni del fucsia
     "Fuxia2": UIColor(red: 0.44, green: 0.2, blue: 0.4, alpha: 1.0),
@@ -60,8 +67,8 @@ let colorMap: [String: UIColor] = [
     "Marrone": UIColor.brown,
     // Variazioni del marrone
     "Marrone2": UIColor(red: 0.675, green: 0.475, blue: 0.3, alpha: 1.0),
-    "Marrone cammello": UIColor(red: 0.63, green: 0.5, blue: 0.42, alpha: 1.0),
-    "Marrone scuro": UIColor(red: 0.32, green: 0.2, blue: 0.05, alpha: 1.0),
+    "Marrone Cammello": UIColor(red: 0.63, green: 0.5, blue: 0.42, alpha: 1.0),
+    "Marrone Scuro": UIColor(red: 0.32, green: 0.2, blue: 0.05, alpha: 1.0),
     "Grigio": UIColor.gray,
     "Nero": UIColor.black,
     "Bianco": UIColor.white
@@ -99,7 +106,7 @@ let colorMap: [String: UIColor] = [
     //"Taupe": UIColor(red: 0.28, green: 0.24, blue: 0.2, alpha: 1.0),
 ]
 
-func closestColor(to color: UIColor) -> String {
+func closestColor(to color: UIColor) -> Colore {
     var closestColorName: String?
     var smallestDifference = CGFloat.infinity
 
@@ -130,7 +137,7 @@ func closestColor(to color: UIColor) -> String {
     // I colori vengono raggruppati nuovamente
     closestColorName = groupColors(closestColorName: closestColorName!)
 
-    return closestColorName ?? "NA"
+    return Colore(rawValue: closestColorName!) ?? .na
 }
 
 func groupColors(closestColorName: String) -> String {

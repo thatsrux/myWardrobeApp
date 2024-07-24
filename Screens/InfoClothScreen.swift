@@ -136,7 +136,7 @@ struct InfoClothScreen: View {
                                         .scaleEffect(x:3,y:3)
                                         .labelsHidden()
                                 }
-                            Text(closestColor(to: UIColor(cpColor1)))
+                            Text(closestColor(to: UIColor(cpColor1)).rawValue)
                                 .multilineTextAlignment(.center)
                                 .frame(maxWidth: 140, minHeight: 50 ,alignment: .top)
                         }
@@ -160,7 +160,7 @@ struct InfoClothScreen: View {
                                             .scaleEffect(x:3,y:3)
                                             .labelsHidden()
                                     }
-                                Text(closestColor(to: UIColor(cpColor2)))
+                                Text(closestColor(to: UIColor(cpColor2)).rawValue)
                                     .multilineTextAlignment(.center)
                                     .frame(maxWidth: 140, minHeight: 50 ,alignment: .top)
                             }
@@ -189,7 +189,7 @@ struct InfoClothScreen: View {
                                             .labelsHidden()
                                     )
                                 
-                                Text(closestColor(to: UIColor(cpColor3)))
+                                Text(closestColor(to: UIColor(cpColor3)).rawValue)
                                     .multilineTextAlignment(.center)
                                     .frame(maxWidth: 140, minHeight: 50 ,alignment: .top)
                             }
