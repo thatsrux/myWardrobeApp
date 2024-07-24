@@ -153,6 +153,8 @@ struct ClothesScreen: View {
                         InfoClothScreen(image: uiImage!)
                             .onDisappear {
                                 uiImage = nil
+                                loading = false
+                                isInfoClothScreenActive = false
                             }
                             .onAppear {
                                 loading = false
