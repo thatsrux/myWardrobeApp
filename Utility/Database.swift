@@ -13,7 +13,6 @@ class Database:ObservableObject{
         self.outfits = []
         fetchClothes()
         fetchCategorie()
-        fetchOutfits()
     }
     
     func fetchClothes(){
