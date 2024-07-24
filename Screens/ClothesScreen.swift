@@ -178,8 +178,12 @@ struct ClothesScreen: View {
                 .navigationDestination(isPresented: $isInfoClothScreenActive) {
                     if uiImage != nil {
                         InfoClothScreen(image: uiImage!)
-                            .onDisappear{
+                            .onDisappear {
                                 uiImage = nil
+//                                loading = false
+                            }
+                            .onAppear {
+                                loading = false
                             }
                     }
                 }

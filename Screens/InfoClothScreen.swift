@@ -46,7 +46,6 @@ struct InfoClothScreen: View {
         self.stileClassificato = cloth.stile
         
         self.image = (cloth.image?.toImage())!
-        
         edit = true
     }
     
@@ -63,7 +62,8 @@ struct InfoClothScreen: View {
         self.cloth = Cloth(image: image)
         cloth.image = cloth.image?.toImage()!.toPngString()
         
-        cloth.stile = stileClassificato
+        // Il classificatore analizza l'immagine con sfondo e non tagliata, così che possa tenere conto delle dimensioni del capo
+        classifier.detect(uiImage: image)
     }
     
     var body: some View {
@@ -77,7 +77,7 @@ struct InfoClothScreen: View {
                     Group {
                         if classifier.typeConfidence > 0.5 {
                             HStack {
-                                Text("Capo di abbiagliamento:")
+                                Text("Capo di abbigliamento:")
                                     .font(.caption)
                                 Text(classifier.typeClass)
                                     .bold()
@@ -85,7 +85,7 @@ struct InfoClothScreen: View {
                             }
                         } else {
                             HStack {
-                                Text("Capo di abbiagliamento: NA")
+                                Text("Capo di abbigliamento: NA")
                                     .font(.caption)
                             }
                         }
@@ -351,8 +351,6 @@ struct InfoClothScreen: View {
             if colors[2].makeUIColor() == colors[0].makeUIColor() || colors[2].makeUIColor() == colors[1].makeUIColor() {
                 cloth.thirdColor = ColorData(uiColor: colors[2].makeUIColor())
             }
-            // Il classificatore ha l'immagine senza sfondo ma non tagliata, così che possa tenere conto delle dimensioni del capo
-            classifier.detect(uiImage: imageNoBackground!)
             self.categoriaClassificata = Categoria(fromRawValue: classifier.typeClass)
             self.stileClassificato = Stile(fromRawValue: classifier.styleClass)
         }
