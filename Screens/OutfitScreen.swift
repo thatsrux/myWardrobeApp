@@ -70,7 +70,6 @@ struct OutfitScreen: View {
                     label: {
                         Image(systemName: "plus.circle")
                     }
-                        
                         Button {
                             deleteAllOutfits()
                             database.fetchOutfits()
@@ -85,7 +84,7 @@ struct OutfitScreen: View {
                 }
             }
         }.onAppear{
-            database.fetchOutfits()
+            //database.fetchOutfits()
         }
     }
 

@@ -70,7 +70,9 @@ let colorMap: [String: UIColor] = [
     "Marrone Scuro": UIColor(red: 0.32, green: 0.2, blue: 0.05, alpha: 1.0),
     "Grigio": UIColor.gray,
     "Nero": UIColor.black,
-    "Bianco": UIColor.white
+    "Nero2": UIColor(red: 0.17, green: 0.17, blue: 0.12, alpha: 1.0),
+    "Bianco": UIColor.white,
+    "Bianco2": UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1.0),
     
     // COLORI RIMOSSI
     
@@ -123,7 +125,7 @@ func closestColor(to color: UIColor) -> Colore {
     closestColorName = groupColors(closestColorName: closestColorName!)
     
     // Se il colore ha molte variazioni o colori simili, viene utilizzato l'algoritmo CIEDE2000, che risulta più preciso nelle piccole variazioni
-    if closestColorName == "Blu navy" || closestColorName == "Blu notte" || closestColorName == "Viola" || closestColorName == "Nero" || closestColorName == "Grigio" || closestColorName == "Beige" {
+    if closestColorName == "Blu Navy" || closestColorName == "Blu Notte" || closestColorName == "Viola" || closestColorName == "Nero" || closestColorName == "Grigio" || closestColorName == "Beige"  {
         for (name, testColor) in colorMap {
             let diff = color.CIEDE2000(compare: testColor)
             if diff < smallestDifference {

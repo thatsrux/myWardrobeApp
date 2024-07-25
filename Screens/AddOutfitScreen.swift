@@ -12,6 +12,7 @@ struct AddOutfitScreen: View {
     @State var shoes: Cloth?
     var outfit: Outfit?
     var edit = false
+    @State var first = true
     
     init(outfit:Outfit) {
         self.outfit = outfit
@@ -92,20 +93,30 @@ struct AddOutfitScreen: View {
         .navigationTitle("Componi Outfit")
         .navigationDestination(isPresented: $isAddToOutfitScreenActive){
             AddToOutfitScreen(category: $categoria,shirtToAdd: $shirt,trousersToAdd:$trousers,shoesToAdd:$shoes)
+                .onDisappear {
+                    updateOutfit()
+                }
         }
         
     }
     
     func updateOutfit() {
-        guard let outfit = outfit else {return}
-        
-        guard let shirt = outfit.shirt, let trousers = outfit.trousers, let shoes = outfit.shoes else {
-            print("error shirt/trousers/shoes")
-            return}
-        
-        self.shirt = shirt
-        self.trousers = trousers
-        self.shoes = shoes
+        if first == true {
+            guard let outfit = outfit else {return}
+            
+            guard let shirt = outfit.shirt, let trousers = outfit.trousers, let shoes = outfit.shoes else {
+                print("error shirt/trousers/shoes")
+                return}
+            self.shirt = shirt
+            self.trousers = trousers
+            self.shoes = shoes
+            first = false
+        }
+        else {
+            self.shirt = shirt
+            self.trousers = trousers
+            self.shoes = shoes
+        }
     }
     
     
@@ -132,7 +143,7 @@ struct AddOutfitScreen: View {
         database.fetchOutfits()
     }
     
-    func editOutfit(){
+    func editOutfit() {
         let db = Firestore.firestore()
         let ref = db.collection("Outfit").document(outfit!.id.uuidString)
         ref.setData([
