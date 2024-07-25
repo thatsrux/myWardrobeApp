@@ -72,6 +72,7 @@ struct AddOutfitScreen: View {
                 Text("Valutazione")
                 if shirt != nil && trousers != nil && shoes != nil {
                     Text(outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!))
+                    Text(outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!))
                 }
             }.onAppear{
                 updateOutfit()
@@ -206,29 +207,25 @@ struct AddOutfitScreen: View {
     }
     
     func outfitStyleEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> String {
-        var outfit = [shirt, trousers, shoes]
+        let outfit = [shirt, trousers, shoes]
         
         var combinazioneValida = true
         var valutazione = ""
         
-        var shirtStyle = shirt.stile
-    
-        var trousersStyle = trousers.stile
-        
-        var shoesStyle = shoes.stile
-        
         for c1 in outfit {
             for c2 in outfit {
                 if c1.stile == Stile.formale && c1.stile != c2.stile {
-                    print("Stai male, non puoi mettere \(c1.stile) con \(c2.stile)")
+                    combinazioneValida = false
+                    valutazione += "Stai male, non puoi mettere \(c1.stile) con \(c2.stile).\n"
+                                
                 }
             }
         }
         
-//        Stile.casual
-//        Stile.formale
-//        Stile.sportivo
-//        
+        if combinazioneValida {
+                valutazione = "L'outfit è ben coordinato."
+            }
+          
         return valutazione
     }
 }
