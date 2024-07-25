@@ -254,6 +254,7 @@ struct AddOutfitScreen: View {
     
     func outfitColorEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> String {
         var valutazione = ""
+        coloreValido = true
         
         var shirtColors = [closestColor(to: shirt.mainColor.uiColor)]
         if shirt.colorsNum > 1 {
@@ -334,6 +335,7 @@ struct AddOutfitScreen: View {
     func outfitStyleEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> String {
         let outfit = [shirt, trousers, shoes]
         
+        stileValido = true
         var combinazionePerfetta = true
         var valutazione = ""
         
