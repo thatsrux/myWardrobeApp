@@ -1,5 +1,4 @@
 import SwiftUI
-import UIImageColors
 import BackgroundRemoval
 import ColorThiefSwift
 import Firebase

@@ -1,5 +1,6 @@
 import SwiftUI
 import Firebase
+
 struct OutfitScreen: View {
     
     

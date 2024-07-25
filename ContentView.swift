@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Firebase
-import FirebaseFirestore
 
 struct ContentView: View {
     @State var clothes : [Cloth] = ([])

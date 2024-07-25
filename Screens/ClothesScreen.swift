@@ -160,9 +160,6 @@ struct ClothesScreen: View {
                             }
                     }
                 }
-                .navigationDestination(isPresented: $isEditClothScreenActive){
-                    EditClothScreen()
-                }
         }
     }
 }
