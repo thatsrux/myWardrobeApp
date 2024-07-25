@@ -79,7 +79,7 @@ struct AddToOutfitScreen: View {
         database.fetchCategorie()
     }
     
-        
+    
     var body: some View {
         
         NavigationStack {
@@ -144,26 +144,26 @@ struct AddToOutfitScreen: View {
                                 cat in
                                 if database.categorie[cat.rawValue] != nil {
                                     
-                                ForEach(database.categorie[cat.rawValue]!) { cloth in
-                                    SingleClothGrid(cloth: cloth)
-                                        .onTapGesture {
-                                            if upperCat.contains(cloth.categoria) {
-                                                shirtToAdd = cloth
-                                                onDismiss?(shirtToAdd!)
+                                    ForEach(database.categorie[cat.rawValue]!) { cloth in
+                                        SingleClothGrid(cloth: cloth)
+                                            .onTapGesture {
+                                                if upperCat.contains(cloth.categoria) {
+                                                    shirtToAdd = cloth
+                                                    onDismiss?(shirtToAdd!)
+                                                }
+                                                else if lowerCat.contains(cloth.categoria) {
+                                                    trousersToAdd = cloth
+                                                    onDismiss?(trousersToAdd!)
+                                                }
+                                                else if shoesCat.contains(cloth.categoria) {
+                                                    shoesToAdd = cloth
+                                                    onDismiss?(shoesToAdd!)
+                                                }
+                                                
+                                                dismiss()
                                             }
-                                            else if lowerCat.contains(cloth.categoria) {
-                                                trousersToAdd = cloth
-                                                onDismiss?(trousersToAdd!)
-                                            }
-                                            else if shoesCat.contains(cloth.categoria) {
-                                                shoesToAdd = cloth
-                                                onDismiss?(shoesToAdd!)
-                                            }
-                                            
-                                            dismiss()
-                                        }
+                                    }
                                 }
-                            }
                             }
                         }
                     }.padding(.bottom,20)
@@ -174,7 +174,7 @@ struct AddToOutfitScreen: View {
             .navigationTitle(
                 category == upperCat ? "Parte superiore" :
                     category == lowerCat ? "Parte inferiore" :
-                        "Scarpe"
+                    "Scarpe"
             )
             .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
             .toolbar {
