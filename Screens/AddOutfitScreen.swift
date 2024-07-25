@@ -11,10 +11,11 @@ struct AddOutfitScreen: View {
     @State var trousers: Cloth?
     @State var shoes: Cloth?
     var outfit: Outfit?
-    
+    var edit = false
     
     init(outfit:Outfit) {
         self.outfit = outfit
+        edit = true
     }
     
     init(){
@@ -105,12 +106,14 @@ struct AddOutfitScreen: View {
         self.shirt = shirt
         self.trousers = trousers
         self.shoes = shoes
-        
     }
     
     
     func saveOutfit(){
-        
+        if edit {
+            editOutfit()
+            return
+        }
         let outfit = Outfit(shirt:shirt!,trousers: trousers!,shoes:shoes!)
         
         let db = Firestore.firestore()
@@ -124,6 +127,23 @@ struct AddOutfitScreen: View {
                 print(error.localizedDescription)
             }
         }
+        database.fetchOutfits()
+    }
+    
+    func editOutfit(){
+        let db = Firestore.firestore()
+        let ref = db.collection("Outfit").document(outfit!.id.uuidString)
+        ref.setData(["shirtId": shirt!.id.uuidString,
+                     "trousersId" : trousers!.id.uuidString,
+                     "shoesId" : shoes!.id.uuidString
+                    ]){
+            error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+        }
+        database.outfits.append(outfit!)
+        database.fetchOutfits()
     }
     
     func outfitColorEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> String {
@@ -217,15 +237,15 @@ struct AddOutfitScreen: View {
                 if c1.stile == Stile.formale && c1.stile != c2.stile {
                     combinazioneValida = false
                     valutazione += "Stai male, non puoi mettere \(c1.stile) con \(c2.stile).\n"
-                                
+                    
                 }
             }
         }
         
         if combinazioneValida {
-                valutazione = "L'outfit è ben coordinato."
-            }
-          
+            valutazione = "L'outfit è ben coordinato."
+        }
+        
         return valutazione
     }
 }
