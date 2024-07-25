@@ -259,7 +259,8 @@ struct InfoClothScreen: View {
                     
                     
                 }
-                .padding(.leading,35)
+                .padding(.leading, 35)
+                .padding(.trailing, 35)
                 
             }
             
