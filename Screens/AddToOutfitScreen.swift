@@ -171,7 +171,11 @@ struct AddToOutfitScreen: View {
             }
         }
         Spacer()
-            .navigationTitle("AAA")
+            .navigationTitle(
+                category == Categoria.upper() ? "Parte superiore" :
+                    category == Categoria.lower() ? "Parte inferiore" :
+                        "Scarpe"
+            )
             .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
