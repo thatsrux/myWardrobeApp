@@ -1,5 +1,4 @@
 import UIKit
-import ColorKit
 
 // Assegnazione di nomi ai colori
 // Per i colori più scuri sono presenti più variazioni

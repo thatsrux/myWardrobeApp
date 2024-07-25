@@ -1,6 +1,4 @@
 import Firebase
-import FirebaseFirestore
-
 
 class Database:ObservableObject{
     
