@@ -356,8 +356,10 @@ struct AddOutfitScreen: View {
             valutazione = "L'outfit è ben coordinato\n"
             if combinazionePerfetta {
                 valutazione.append("(stile " + shirt.stile.rawValue+")")
+                stile = shirt.stile
             } else {
                 valutazione.append("(stile sportivo e casual)")
+                stile = .casual
             }
         }
         
