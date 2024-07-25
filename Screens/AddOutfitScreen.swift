@@ -3,14 +3,14 @@ import Firebase
 
 struct AddOutfitScreen: View {
     @State private var isAddToOutfitScreenActive = false
-    @EnvironmentObject var database:Database
+    @EnvironmentObject var database: Database
     @Environment(\.dismiss) private var dismiss
     
-    @State private var categoria: Categoria = .NA
-    @State var shirt:Cloth?
-    @State var trousers:Cloth?
-    @State var shoes:Cloth?
-    var outfit:Outfit?
+    @State private var categoria: [Categoria] = [.NA]
+    @State var shirt: Cloth?
+    @State var trousers: Cloth?
+    @State var shoes: Cloth?
+    var outfit: Outfit?
     
     
     init(outfit:Outfit) {
@@ -28,7 +28,7 @@ struct AddOutfitScreen: View {
                 VStack(spacing:60){
                     Button(action: {
                         isAddToOutfitScreenActive = true
-                        categoria = .tshirt
+                        categoria = Categoria.upper()
                     }) {
                         if let shirt = shirt, let image = shirt.image?.toImage() {
                             Image(uiImage: image)
@@ -41,7 +41,7 @@ struct AddOutfitScreen: View {
                     }
                     Button(action: {
                         isAddToOutfitScreenActive = true
-                        categoria = .pantalone
+                        categoria = Categoria.lower()
                     }) {
                         if let trousers = trousers, let image = trousers.image?.toImage() {
                             Image(uiImage: image)
@@ -54,7 +54,7 @@ struct AddOutfitScreen: View {
                     }
                     Button(action: {
                         isAddToOutfitScreenActive = true
-                        categoria = .scarpe
+                        categoria = Categoria.shoes()
                     }) {
                         if let shoes = shoes, let image = shoes.image?.toImage() {
                             Image(uiImage: image)
@@ -205,7 +205,32 @@ struct AddOutfitScreen: View {
         return valutazione
     }
     
+    func outfitStyleEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> String {
+        var outfit = [shirt, trousers, shoes]
+        
+        var combinazioneValida = true
+        var valutazione = ""
+        
+        var shirtStyle = shirt.stile
     
+        var trousersStyle = trousers.stile
+        
+        var shoesStyle = shoes.stile
+        
+        for c1 in outfit {
+            for c2 in outfit {
+                if c1.stile == Stile.formale && c1.stile != c2.stile {
+                    print("Stai male, non puoi mettere \(c1.stile) con \(c2.stile)")
+                }
+            }
+        }
+        
+//        Stile.casual
+//        Stile.formale
+//        Stile.sportivo
+//        
+        return valutazione
+    }
 }
 //
 //#Preview {

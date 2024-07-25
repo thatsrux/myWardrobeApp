@@ -15,4 +15,17 @@ enum Categoria: String, Codable, CaseIterable {
     init(fromRawValue: String){
         self = Categoria(rawValue: fromRawValue) ?? .NA
     }
+    
+    static func upper() -> [Categoria] {
+        return [.camicia, .canotta, .felpa, .giacca, .giubbino, .tshirt]
+    }
+    
+    static func lower() -> [Categoria] {
+        return [.pantalone, .pantaloncini]
+    }
+    
+    static func shoes() -> [Categoria] {
+        return [.scarpe]
+    }
+    
 }
