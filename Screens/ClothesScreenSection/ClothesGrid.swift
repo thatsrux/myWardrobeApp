@@ -20,7 +20,7 @@ struct ClothesGrid: View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 10) {
                 ForEach(database.categorie.sorted(), id: \.self){ category in
-                    Section(header: Text(categoriePlurale[Categoria(rawValue: category)!]!).font(.headline)){
+                    Section(header: Text(categoriePlurale[Categoria(rawValue: category) ?? .NA]!).font(.headline)){
                         ForEach(database.clothes, id: \.self) { cloth in
                             if cloth.categoria.rawValue == category {
                                 NavigationLink(destination: InfoClothScreen(cloth: cloth)) {

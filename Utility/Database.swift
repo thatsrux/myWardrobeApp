@@ -4,14 +4,17 @@ class Database:ObservableObject{
     
     @Published var clothes:[Cloth]
     @Published var categorie:[String]
+    @Published var categorieOutfit:[String]
     @Published var outfits:[Outfit]
     init(){
         self.clothes = []
         self.categorie = []
         self.outfits = []
+        self.categorieOutfit = []
         fetchClothes()
         fetchCategorie()
         fetchOutfits()
+        fetchCategorieOutfit()
     }
     
     func fetchClothes(){
@@ -81,11 +84,8 @@ class Database:ObservableObject{
                     let categoria = data["categoria"] as? String ?? ""
                     
                     if !self.categorie.contains(categoria)  {
-                        print(categoria)
                         self.categorie.append(categoria)
                     }
-                    
-                    //self.categorie = self.categorie.mapValues { $0.sorted { $0.nome < $1.nome } }
                 }
             }
         }
@@ -145,6 +145,30 @@ class Database:ObservableObject{
                             print("One or more items could not be fetched")
                         }
                         
+                    }
+                }
+            }
+        }
+    }
+    
+    func fetchCategorieOutfit(){
+        categorieOutfit.removeAll()
+        let db = Firestore.firestore()
+        let ref = db.collection("Outfit")
+        ref.getDocuments{ snapshot, error in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                return
+            }
+            
+            if let snapshot = snapshot {
+                for document in snapshot.documents {
+                    let data = document.data()
+                    
+                    let categoria = data["stile"] as? String ?? ""
+                    
+                    if !self.categorieOutfit.contains(categoria)  {
+                        self.categorieOutfit.append(categoria)
                     }
                 }
             }

@@ -27,6 +27,20 @@ struct OutfitScreen: View {
                                 }
                             }.padding(.leading,20)
                         }
+                        ForEach(database.categorieOutfit, id:\.self) { category in
+                            Text("Outfit \(category)").font(.headline)
+                            ScrollView(.horizontal,showsIndicators: false){
+                                HStack(spacing:25){
+                                    ForEach(database.outfits, id:\.self){ o in
+                                        if o.stile.rawValue == category {
+                                            NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                                SingleOutfitGrid(outfit: o)
+                                            }
+                                        }
+                                    }
+                                }.padding(.leading,20)
+                            }
+                        }
                     }
                     else {
                         ScrollView(.horizontal,showsIndicators: false){
