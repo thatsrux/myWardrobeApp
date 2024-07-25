@@ -1,7 +1,4 @@
-import ColorKit
 import SwiftUI
-import UIImageColors
-import BackgroundRemoval
 
 class Cloth: Identifiable, Codable, Hashable{
     
