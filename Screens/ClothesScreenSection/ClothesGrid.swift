@@ -19,14 +19,15 @@ struct ClothesGrid: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 10) {
-                ForEach(database.categorie.keys.sorted(), id: \.self){ category in
+                ForEach(database.categorie.sorted(), id: \.self){ category in
                     Section(header: Text(categoriePlurale[Categoria(rawValue: category)!]!).font(.headline)){
-                        ForEach(database.categorie[category]!, id: \.self) { cloth in
-                            NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                SingleClothGrid(cloth: cloth)
+                        ForEach(database.clothes, id: \.self) { cloth in
+                            if cloth.categoria.rawValue == category {
+                                NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                    SingleClothGrid(cloth: cloth)
+                                }
                             }
                         }
-                        
                     }
                 }.padding(.bottom,20)
             }

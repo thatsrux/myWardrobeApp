@@ -15,11 +15,13 @@ struct ClothesList: View {
     
     var body: some View {
         List {
-            ForEach(database.categorie.keys.sorted(), id: \.self){ category in
+            ForEach(database.categorie.sorted(), id: \.self){ category in
                 Section(header: Text(categoriePlurale[Categoria(rawValue: category)!]!).font(.headline)){
-                    ForEach(database.categorie[category]!) { cloth in
-                        NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                            SingleClothList(cloth: cloth)
+                    ForEach(database.clothes, id: \.self) { cloth in
+                        if cloth.categoria.rawValue == category {
+                            NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                SingleClothList(cloth: cloth)
+                            }
                         }
                     }.onDelete(perform: deleteClothSwipe)
                 }

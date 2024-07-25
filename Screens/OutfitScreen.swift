@@ -12,10 +12,6 @@ struct OutfitScreen: View {
     
     @EnvironmentObject var database:Database
     
-    init(){
-        
-    }
-    
     var body: some View {
         NavigationStack {
             ScrollView{
@@ -56,13 +52,6 @@ struct OutfitScreen: View {
                     label: {
                         Image(systemName: "plus.circle")
                     }
-                        //                        Button {
-                        //                            deleteAllOutfits()
-                        //                            database.fetchOutfits()
-                        //                        }
-                        //                    label: {
-                        //                        Image(systemName: "ellipsis.circle")
-                        //                    }
                     }
                 }
                 .navigationDestination(isPresented: $isAddOutfitScreenActive){
