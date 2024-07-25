@@ -118,10 +118,12 @@ struct AddOutfitScreen: View {
         
         let db = Firestore.firestore()
         let ref = db.collection("Outfit").document(outfit.id.uuidString)
-        ref.setData(["shirtId": shirt!.id.uuidString,
-                     "trousersId" : trousers!.id.uuidString,
-                     "shoesId" : shoes!.id.uuidString
-                    ]){
+        ref.setData([
+            "id": outfit.id.uuidString,
+            "shirtId": shirt!.id.uuidString,
+            "trousersId" : trousers!.id.uuidString,
+            "shoesId" : shoes!.id.uuidString
+        ]){
             error in
             if let error = error {
                 print(error.localizedDescription)
@@ -133,16 +135,17 @@ struct AddOutfitScreen: View {
     func editOutfit(){
         let db = Firestore.firestore()
         let ref = db.collection("Outfit").document(outfit!.id.uuidString)
-        ref.setData(["shirtId": shirt!.id.uuidString,
-                     "trousersId" : trousers!.id.uuidString,
-                     "shoesId" : shoes!.id.uuidString
-                    ]){
+        ref.setData([
+            "id": outfit!.id.uuidString,
+            "shirtId": shirt!.id.uuidString,
+            "trousersId" : trousers!.id.uuidString,
+            "shoesId" : shoes!.id.uuidString
+        ]){
             error in
             if let error = error {
                 print(error.localizedDescription)
             }
         }
-        database.outfits.append(outfit!)
         database.fetchOutfits()
     }
     

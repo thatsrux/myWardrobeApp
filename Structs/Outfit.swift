@@ -20,6 +20,13 @@ class Outfit: Identifiable, Hashable{
         self.shoes = shoes
     }
     
+    init(id: UUID, shirt: Cloth, trousers: Cloth, shoes: Cloth) {
+        self.id = id
+        self.shirt = shirt
+        self.trousers = trousers
+        self.shoes = shoes
+    }
+    
     init(shirt:Cloth){
         
         self.shirt = shirt

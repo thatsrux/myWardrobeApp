@@ -58,8 +58,6 @@ class Database:ObservableObject{
                     
                     self.clothes.append(cloth)
                     self.clothes.sort(by:{$0.data>$1.data})
-                    
-                    
                 }
             }
         }
@@ -139,6 +137,7 @@ class Database:ObservableObject{
                 for document in snapshot.documents {
                     let data = document.data()
                     
+                    let id = data["id"] as? String ?? ""
                     let shirtId = data["shirtId"] as? String ?? ""
                     let trousersId = data["trousersId"] as? String ?? ""
                     let shoesId = data["shoesId"] as? String ?? ""
@@ -167,7 +166,7 @@ class Database:ObservableObject{
                     
                     group.notify(queue: .main) {
                         if let shirt = shirt, let trousers = trousers, let shoes = shoes {
-                            let outfit = Outfit(shirt: shirt, trousers: trousers, shoes: shoes)
+                            let outfit = Outfit(id: UUID(uuidString: id)!, shirt: shirt, trousers: trousers, shoes: shoes)
                             self.outfits.append(outfit)
                         } else {
                             print("One or more items could not be fetched")
