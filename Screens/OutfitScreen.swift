@@ -53,9 +53,6 @@ struct OutfitScreen: View {
                                 }
                             }
                         }.padding(.leading,20)
-                        
-                    }.onAppear{
-                        database.fetchOutfits()
                     }
                 }
                 .navigationTitle("My Outfits")
@@ -82,6 +79,8 @@ struct OutfitScreen: View {
                     AddOutfitScreen()
                 }
             }
+        }.onAppear{
+            database.fetchOutfits()
         }
     }
 

@@ -54,7 +54,7 @@ struct InfoClothScreen: View {
         
         do {
             imageNoBackground = try backgroundRemoval.removeBackground(image: image)
-            self.image = imageNoBackground!.croppedToBoundingBox()!
+            self.image = imageNoBackground!.croppedToBoundingBox() ?? imageNoBackground!
         } catch {
             fatalError(error.localizedDescription)
         }
@@ -471,4 +471,16 @@ struct InfoClothScreen: View {
     func addColor() {
         colorsNum += 1
     }
+}
+
+extension Array {
+
+    subscript(safe index: Int) -> Element? {
+        guard indices.contains(index) else {
+            return nil
+        }
+
+        return self[index]
+    }
+
 }

@@ -140,7 +140,7 @@ struct ClothesScreen: View {
                 .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
                 .sheet(isPresented: $isPresenting){
                     ImagePicker(uiImage: $uiImage, isPresenting:  $isPresenting, sourceType: $sourceType)
-                        .onDisappear{
+                        .onDisappear {
                             if uiImage != nil {
                                 isInfoClothScreenActive = true
                                 loading = true
@@ -153,7 +153,6 @@ struct ClothesScreen: View {
                         InfoClothScreen(image: uiImage!)
                             .onDisappear {
                                 uiImage = nil
-                                loading = false
                                 isInfoClothScreenActive = false
                             }
                             .onAppear {

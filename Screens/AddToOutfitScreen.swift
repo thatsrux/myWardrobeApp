@@ -22,8 +22,6 @@ struct AddToOutfitScreen: View {
     @State private var isEditClothScreenActive = false
     @State private var returnCloth = false
     
-    
-    
     @State private var searchText = ""
     @State private var searchIsActive = false
     

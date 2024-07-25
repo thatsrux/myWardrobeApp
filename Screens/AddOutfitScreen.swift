@@ -66,10 +66,13 @@ struct AddOutfitScreen: View {
                                 .resizable()
                         }
                     }
-                    
                 }.frame(width:200, height: 500,alignment: Alignment.center)
                     .border(Color.black)
                 
+                Text("Valutazione")
+                if shirt != nil && trousers != nil && shoes != nil {
+                    Text(outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!))
+                }
             }.onAppear{
                 updateOutfit()
             }.toolbar {
@@ -103,7 +106,7 @@ struct AddOutfitScreen: View {
         self.shoes = shoes
         
     }
-        
+    
     
     func saveOutfit(){
         
@@ -114,17 +117,98 @@ struct AddOutfitScreen: View {
         ref.setData(["shirtId": shirt!.id.uuidString,
                      "trousersId" : trousers!.id.uuidString,
                      "shoesId" : shoes!.id.uuidString
-                        ]){
-                error in
-                if let error = error {
-                    print(error.localizedDescription)
-                }
+                    ]){
+            error in
+            if let error = error {
+                print(error.localizedDescription)
             }
+        }
     }
     
+    func outfitColorEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> String {
+        var combinazioneValida = true
+        var valutazione = ""
+        
+        var shirtColors = [closestColor(to: shirt.mainColor.uiColor)]
+        if shirt.colorsNum > 1 {
+            shirtColors.append(closestColor(to: shirt.secondColor.uiColor))
+        }
+        if shirt.colorsNum > 2 {
+            shirtColors.append(closestColor(to: shirt.thirdColor.uiColor))
+        }
+        
+        var trousersColors = [closestColor(to: trousers.mainColor.uiColor)]
+        if trousers.colorsNum > 1 {
+            trousersColors.append(closestColor(to: trousers.secondColor.uiColor))
+        }
+        if trousers.colorsNum > 2 {
+            trousersColors.append(closestColor(to: trousers.thirdColor.uiColor))
+        }
+        
+        var shoesColors = [closestColor(to: shoes.mainColor.uiColor)]
+        if shoes.colorsNum > 1 {
+            shoesColors.append(closestColor(to: shoes.secondColor.uiColor))
+        }
+        if shoes.colorsNum > 2 {
+            shoesColors.append(closestColor(to: shoes.thirdColor.uiColor))
+        }
+        
+        for shirtColor in shirtColors {
+            for trousersColor in trousersColors {
+                if shirtColor == trousersColor {
+                    continue // Ignora la combinazione se i colori sono uguali
+                }
+                if let vietati = coloriVietati[shirtColor], vietati.contains(trousersColor) {
+                    valutazione.append("Combinazione da evitare: \(shirtColor.rawValue) e \(trousersColor.rawValue)\n")
+                    combinazioneValida = false
+                } else if let consentiti = coloriConsentiti[shirtColor], !consentiti.contains(trousersColor) {
+                    valutazione.append("Combinazione da evitare: \(shirtColor.rawValue) e \(trousersColor.rawValue)\n")
+                    combinazioneValida = false
+                }
+            }
+        }
+        
+        for shirtColor in shirtColors {
+            for shoesColor in shoesColors {
+                if shirtColor == shoesColor {
+                    continue // Ignora la combinazione se i colori sono uguali
+                }
+                if let vietati = coloriVietati[shirtColor], vietati.contains(shoesColor) {
+                    valutazione.append("Combinazione da evitare: \(shirtColor.rawValue) e \(shoesColor.rawValue)\n")
+                    combinazioneValida = false
+                } else if let consentiti = coloriConsentiti[shirtColor], !consentiti.contains(shoesColor) {
+                    valutazione.append("Combinazione da evitare: \(shirtColor.rawValue) e \(shoesColor.rawValue)\n")
+                    combinazioneValida = false
+                }
+            }
+        }
+        
+        for trousersColor in trousersColors {
+            for shoesColor in shoesColors {
+                if trousersColor == shoesColor {
+                    continue // Ignora la combinazione se i colori sono uguali
+                }
+                if let vietati = coloriVietati[trousersColor], vietati.contains(shoesColor) {
+                    valutazione.append("Combinazione da evitare: \(trousersColor.rawValue) e \(shoesColor.rawValue)\n")
+                    combinazioneValida = false
+                } else if let consentiti = coloriConsentiti[trousersColor], !consentiti.contains(shoesColor) {
+                    valutazione.append("Combinazione da evitare: \(trousersColor.rawValue) e \(shoesColor.rawValue)\n")
+                    combinazioneValida = false
+                }
+            }
+        }
+        
+        if combinazioneValida {
+            valutazione.append("Combinazione valida: shirt - \(shirtColors.map { $0.rawValue }.joined(separator: ", ")), trousers - \(trousersColors.map { $0.rawValue }.joined(separator: ", ")), shoes - \(shoesColors.map { $0.rawValue }.joined(separator: ", "))")
+        }
+        
+        return valutazione
     }
-    //
-    //#Preview {
-    //    AddOutfitScreen()
-    //}
+    
+    
+}
+//
+//#Preview {
+//    AddOutfitScreen()
+//}
 

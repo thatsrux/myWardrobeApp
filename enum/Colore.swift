@@ -40,7 +40,7 @@ let coloriVietati: [Colore: [Colore]] = [
 ]
 
 let coloriConsentiti: [Colore: [Colore]] = [
-    .rosso: [.bluNotte, .bluNavy, .fuxia, .bianco, .nero, .viola],
+    .rosso: [.bluNotte, .bluNavy, .fuxia, .viola],
     .bordeaux: [.beige, .verdeFoglia, .rosa],
     .rosa: [.avio, .viola, .fuxia, .blu, .bordeaux, .marrone],
     .arancione: [.marroneScuro, .crema, .avioScuro, .bluNotte, .gialloUovo],
