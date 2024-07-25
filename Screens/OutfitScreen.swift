@@ -20,7 +20,7 @@ struct OutfitScreen: View {
         NavigationStack {
             ScrollView{
                 VStack{
-                    Text("Outfits (\(database.outfits.count.description))")
+                    Text("Tutti gli outfit (\(database.outfits.count.description))").font(.headline)
                     ScrollView(.horizontal,showsIndicators: false){
                         HStack(spacing:25){
                             ForEach(database.outfits, id:\.self){ o in
@@ -42,25 +42,30 @@ struct OutfitScreen: View {
                                                 .scaledToFit()
                                                 .clipped()
                                                 .frame(width:100,height:100)
-                                        }.frame(width: 150, height: 350)
+                                            Text(o.nome!)
+                                                .foregroundStyle(.black)
+                                        }.frame(width: 150, height: 370)
                                             .background(Color.white)
-                                            .clipShape(RoundedRectangle(cornerRadius:15))
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 15)
-                                                    .stroke(Color.black, lineWidth: 3)
-                                            )
+                                            .cornerRadius(10)
+                                            .contextMenu(menuItems: {
+                                                Button("Elimina", role: .destructive, action: {
+                                                    deleteOutfit(outfit: o)
+                                                })
+                                            })
+                                            .shadow(radius: 5)
+                                            .padding(10)
+                                        //                                            .clipShape(RoundedRectangle(cornerRadius:15))
+                                        //                                            .overlay(
+                                        //                                                RoundedRectangle(cornerRadius: 15)
+                                        //                                                    .stroke(Color.black, lineWidth: 3)
+                                        //                                            )
                                     }
                                 }
-                                .contextMenu(menuItems: {
-                                    Button("Elimina", role: .destructive, action: {
-                                        deleteOutfit(outfit: o)
-                                    })
-                                })
                             }
                         }.padding(.leading,20)
                     }
                 }
-                .navigationTitle("My Outfits")
+                .navigationTitle("I tuoi outfit")
                 
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -85,7 +90,7 @@ struct OutfitScreen: View {
             }
         }
     }
-
+    
     
     func deleteAllOutfits() {
         let db = Firestore.firestore()
@@ -122,7 +127,7 @@ struct OutfitScreen: View {
             }
         }
     }
-
+    
     func deleteOutfit(outfit: Outfit){
         Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
             if let err = err {

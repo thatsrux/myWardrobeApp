@@ -31,7 +31,7 @@ struct AddOutfitScreen: View {
         NavigationStack {
             ScrollView{
                 Spacer().frame(height: 50)
-                VStack(spacing:60){
+                VStack(spacing:20){
                     Button(action: {
                         isAddToOutfitScreenActive = true
                         categoria = upperCat
@@ -56,7 +56,7 @@ struct AddOutfitScreen: View {
                                 .resizable()
                                 .scaledToFit()
                                 .clipped()
-                                .frame(width:100,height:150)
+                                .frame(width:150,height:150)
                         } else {
                             Image(uiImage: UIImage(imageLiteralResourceName: "imageNA"))
                                 .resizable()
@@ -71,7 +71,7 @@ struct AddOutfitScreen: View {
                                 .resizable()
                                 .scaledToFit()
                                 .clipped()
-                                .frame(width:100,height:60)
+                                .frame(width:150,height:150)
                         } else {
                             
                             Image(uiImage: UIImage(imageLiteralResourceName: "imageNA"))
@@ -104,9 +104,11 @@ struct AddOutfitScreen: View {
                     Text("Valutazione Colori")
                         .fontWeight(.bold)
                     Text(outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!))
+                        .multilineTextAlignment(.center)
                     Text("Valutazione Stile")
                         .fontWeight(.bold)
                     Text(outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!))
+                        .multilineTextAlignment(.center)
                 }
             }.onAppear{
                 updateOutfit()
@@ -117,6 +119,14 @@ struct AddOutfitScreen: View {
                         dismiss()
                     }) {
                         Text("Salva")
+                    }
+                    if edit {
+                        Button(action: {
+                            deleteOutfit(outfit: outfit!)
+                            dismiss()
+                        }) {
+                            Text("Elimina")
+                        }
                     }
                 }
             }
@@ -272,7 +282,7 @@ struct AddOutfitScreen: View {
         }
         
         if combinazioneValida {
-            valutazione.append("Combinazione valida!\nParte superiore \(shirtColors.map { $0.rawValue }.joined(separator: ", "))\nParte inferiore \(trousersColors.map { $0.rawValue }.joined(separator: ", "))\nScarpe \(shoesColors.map { $0.rawValue }.joined(separator: ", "))")
+            valutazione.append("Combinazione valida!\nParte superiore: \(shirtColors.map { $0.rawValue }.joined(separator: ", "))\nParte inferiore: \(trousersColors.map { $0.rawValue }.joined(separator: ", "))\nScarpe: \(shoesColors.map { $0.rawValue }.joined(separator: ", "))")
         }
         
         return valutazione
@@ -282,22 +292,44 @@ struct AddOutfitScreen: View {
         let outfit = [shirt, trousers, shoes]
         
         var combinazioneValida = true
+        var combinazionePerfetta = true
         var valutazione = ""
         
         for c1 in outfit {
             for c2 in outfit {
                 if c1.stile == Stile.formale && c1.stile != c2.stile && c1.stile != .NA && c2.stile != .NA {
                     combinazioneValida = false
+                    combinazionePerfetta = false
                     valutazione += "Stile non coordinato! \(c1.categoria) \(c1.stile) con \(c2.categoria) \(c2.stile).\n"
+                }
+                if c1.stile != c2.stile && c1.stile != .NA && c2.stile != .NA {
+                    combinazionePerfetta = false
                 }
             }
         }
         
         if combinazioneValida {
-            valutazione = "L'outfit è ben coordinato."
+            valutazione = "L'outfit è ben coordinato\n"
+            if combinazionePerfetta {
+                valutazione.append("(stile " + shirt.stile.rawValue+")")
+            } else {
+                valutazione.append("(stile sportivo e casual)")
+            }
         }
         
         return valutazione
+    }
+    
+
+    func deleteOutfit(outfit: Outfit){
+        Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
+            if let err = err {
+                print("Error removing document: \(err)")
+            } else {
+                print("Document \(outfit.id) successfully removed!")
+            }
+        }
+        database.fetchOutfits()
     }
 }
 //

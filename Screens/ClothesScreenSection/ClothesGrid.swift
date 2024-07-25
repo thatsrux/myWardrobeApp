@@ -66,6 +66,7 @@ struct SingleClothGrid: View {
                 }
                 Text(cloth.nome)
                     .padding(5)
+                    .foregroundStyle(.black)
                 if cloth.taglia != .NA {
                     Text(cloth.taglia.rawValue)
                 }
