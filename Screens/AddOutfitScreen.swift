@@ -10,6 +10,10 @@ struct AddOutfitScreen: View {
     @State var shirt: Cloth?
     @State var trousers: Cloth?
     @State var shoes: Cloth?
+    
+    @State var nomeText = ""
+    @State var stile = Stile.NA
+    
     var outfit: Outfit?
     var edit = false
     @State var first = true
@@ -35,7 +39,9 @@ struct AddOutfitScreen: View {
                         if let shirt = shirt, let image = shirt.image?.toImage() {
                             Image(uiImage: image)
                                 .resizable()
-                                .frame(width:100,height:100)
+                                .scaledToFit()
+                                .clipped()
+                                .frame(width:150,height:150)
                         } else {
                             Image(uiImage: UIImage(imageLiteralResourceName: "imageNA"))
                                 .resizable()
@@ -48,7 +54,9 @@ struct AddOutfitScreen: View {
                         if let trousers = trousers, let image = trousers.image?.toImage() {
                             Image(uiImage: image)
                                 .resizable()
-                                .frame(width:100,height:100)
+                                .scaledToFit()
+                                .clipped()
+                                .frame(width:100,height:150)
                         } else {
                             Image(uiImage: UIImage(imageLiteralResourceName: "imageNA"))
                                 .resizable()
@@ -61,19 +69,43 @@ struct AddOutfitScreen: View {
                         if let shoes = shoes, let image = shoes.image?.toImage() {
                             Image(uiImage: image)
                                 .resizable()
-                                .frame(width:100,height:100)
+                                .scaledToFit()
+                                .clipped()
+                                .frame(width:100,height:60)
                         } else {
                             
                             Image(uiImage: UIImage(imageLiteralResourceName: "imageNA"))
                                 .resizable()
                         }
                     }
-                }.frame(width:200, height: 500,alignment: Alignment.center)
+                }.frame(width:200, height: 550,alignment: Alignment.center)
                     .border(Color.black)
                 
-                Text("Valutazione")
+                LabeledContent {
+                    TextField("Nome outfit", text: $nomeText)
+                        .font(.system(size: 18))
+                } label: {
+                    Text("Nome outfit: ")
+                        .font(.system(size: 18, weight: .bold))
+                }
+                
                 if shirt != nil && trousers != nil && shoes != nil {
+                    LabeledContent {
+                        Picker("", selection: $stile){
+                            ForEach(Stile.allCases, id:\.self){ s in
+                                Text(s.rawValue)
+                            }
+                        }
+                    } label: {
+                        Text("Stile: ")
+                            .font(.system(size: 18, weight: .bold))
+                    }
+                    
+                    Text("Valutazione Colori")
+                        .fontWeight(.bold)
                     Text(outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!))
+                    Text("Valutazione Stile")
+                        .fontWeight(.bold)
                     Text(outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!))
                 }
             }.onAppear{
@@ -110,6 +142,8 @@ struct AddOutfitScreen: View {
             self.shirt = shirt
             self.trousers = trousers
             self.shoes = shoes
+            self.nomeText = outfit.nome!
+            self.stile = outfit.stile
             first = false
         }
         else {
@@ -125,7 +159,7 @@ struct AddOutfitScreen: View {
             editOutfit()
             return
         }
-        let outfit = Outfit(shirt:shirt!,trousers: trousers!,shoes:shoes!)
+        let outfit = Outfit(shirt:shirt!,trousers: trousers!,shoes:shoes!, nome: nomeText, stile: stile)
         
         let db = Firestore.firestore()
         let ref = db.collection("Outfit").document(outfit.id.uuidString)
@@ -133,7 +167,9 @@ struct AddOutfitScreen: View {
             "id": outfit.id.uuidString,
             "shirtId": shirt!.id.uuidString,
             "trousersId" : trousers!.id.uuidString,
-            "shoesId" : shoes!.id.uuidString
+            "shoesId" : shoes!.id.uuidString,
+            "nome" : nomeText,
+            "stile" : stile.rawValue
         ]){
             error in
             if let error = error {
@@ -150,7 +186,9 @@ struct AddOutfitScreen: View {
             "id": outfit!.id.uuidString,
             "shirtId": shirt!.id.uuidString,
             "trousersId" : trousers!.id.uuidString,
-            "shoesId" : shoes!.id.uuidString
+            "shoesId" : shoes!.id.uuidString,
+            "nome" : nomeText,
+            "stile" : stile.rawValue
         ]){
             error in
             if let error = error {
@@ -251,7 +289,6 @@ struct AddOutfitScreen: View {
                 if c1.stile == Stile.formale && c1.stile != c2.stile && c1.stile != .NA && c2.stile != .NA {
                     combinazioneValida = false
                     valutazione += "Stile non coordinato! \(c1.categoria) \(c1.stile) con \(c2.categoria) \(c2.stile).\n"
-                    
                 }
             }
         }

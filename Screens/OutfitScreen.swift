@@ -83,8 +83,6 @@ struct OutfitScreen: View {
                     AddOutfitScreen()
                 }
             }
-        }.onAppear{
-            //database.fetchOutfits()
         }
     }
 
