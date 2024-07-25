@@ -42,7 +42,7 @@ let coloriVietati: [Colore: [Colore]] = [
 var coloriConsentiti: [Colore: [Colore]] = [
     .bianco: [.rosso, .bordeaux, .rosa, .arancione, .gialloUovo, .giallo, .lime, .verdeFluo, .verdeFoglia, .verdeScuro, .verdeOliva,
               .avio, .avioScuro, .blu, .bluNavy, .bluNotte, .viola, .fuxia, .fuxiaFluo, .marrone, .marroneScuro, .marroneCammello, .celeste, .celesteScuro, .grigio, .nero],
-    .rosso: [.bluNotte, .bluNavy, .fuxia, .viola, .grigio, .avio, .avioScuro, .bianco],
+    .rosso: [.bluNotte, .bluNavy, .fuxia, .viola, .grigio, .avio, .avioScuro, .bianco, .nero],
     .bordeaux: [.beige, .verdeFoglia, .rosa, .grigio, .avio, .avioScuro, .bianco],
     .rosa: [.avio, .viola, .fuxia, .blu, .bordeaux, .marrone, .grigio, .avio, .avioScuro, .bianco],
     .arancione: [.marroneScuro, .crema, .avioScuro, .bluNotte, .gialloUovo, .grigio, .avio, .avioScuro, .bianco],
