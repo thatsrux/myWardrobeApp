@@ -46,12 +46,16 @@ struct OutfitScreen: View {
                                             .background(Color.white)
                                             .clipShape(RoundedRectangle(cornerRadius:15))
                                             .overlay(
-                                                            RoundedRectangle(cornerRadius: 15)
-                                                                .stroke(Color.black, lineWidth: 3)
-                                                        )
-                                        
+                                                RoundedRectangle(cornerRadius: 15)
+                                                    .stroke(Color.black, lineWidth: 3)
+                                            )
                                     }
                                 }
+                                .contextMenu(menuItems: {
+                                    Button("Elimina", role: .destructive, action: {
+                                        deleteOutfit(outfit: o)
+                                    })
+                                })
                             }
                         }.padding(.leading,20)
                     }
@@ -122,5 +126,14 @@ struct OutfitScreen: View {
         }
     }
 
-
+    func deleteOutfit(outfit: Outfit){
+        Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
+            if let err = err {
+                print("Error removing document: \(err)")
+            } else {
+                print("Document \(outfit.id) successfully removed!")
+            }
+        }
+        database.fetchOutfits()
+    }
 }
