@@ -29,9 +29,9 @@ struct InfoClothScreen: View {
     
     var edit: Bool = false
     
-    var upper = [Categoria.camicia, Categoria.canotta, Categoria.felpa, Categoria.giacca, Categoria.giubbino, Categoria.tshirt]
-    var lower = [Categoria.pantalone, Categoria.pantaloncini]
-    var shoes = [Categoria.scarpe]
+    var upper = [Categoria.NA, Categoria.camicia, Categoria.canotta, Categoria.felpa, Categoria.giacca, Categoria.giubbino, Categoria.tshirt]
+    var lower = [Categoria.NA, Categoria.pantalone, Categoria.pantaloncini]
+    var shoes = [Categoria.NA, Categoria.scarpe]
     
     var tagliaUpper = [Taglia.tgXS, Taglia.tgS, Taglia.tgM, Taglia.tgL, Taglia.tgXL, Taglia.tgXXL, Taglia.NA]
     var tagliaLower = [Taglia.tg42, Taglia.tg44, Taglia.tg46, Taglia.tg48, Taglia.tg50, Taglia.tg52, Taglia.tg54, Taglia.NA]
