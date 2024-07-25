@@ -20,53 +20,34 @@ struct OutfitScreen: View {
         NavigationStack {
             ScrollView{
                 VStack{
-                    Text("Tutti gli outfit (\(database.outfits.count.description))").font(.headline)
-                    ScrollView(.horizontal,showsIndicators: false){
-                        HStack(spacing:25){
-                            ForEach(database.outfits, id:\.self){ o in
-                                NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                    HStack{
-                                        VStack(spacing:10){
-                                            Image(uiImage: o.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
-                                                .resizable()
-                                                .scaledToFit()
-                                                .clipped()
-                                                .frame(width:100,height:100)
-                                            Image(uiImage: o.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
-                                                .resizable()
-                                                .scaledToFit()
-                                                .clipped()
-                                                .frame(width:100,height:100)
-                                            Image(uiImage: o.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
-                                                .resizable()
-                                                .scaledToFit()
-                                                .clipped()
-                                                .frame(width:100,height:100)
-                                            Text(o.nome!)
-                                                .foregroundStyle(.black)
-                                        }.frame(width: 150, height: 370)
-                                            .background(Color.white)
-                                            .cornerRadius(10)
-                                            .contextMenu(menuItems: {
-                                                Button("Elimina", role: .destructive, action: {
-                                                    deleteOutfit(outfit: o)
-                                                })
-                                            })
-                                            .shadow(radius: 5)
-                                            .padding(10)
-                                        //                                            .clipShape(RoundedRectangle(cornerRadius:15))
-                                        //                                            .overlay(
-                                        //                                                RoundedRectangle(cornerRadius: 15)
-                                        //                                                    .stroke(Color.black, lineWidth: 3)
-                                        //                                            )
+                    if !searchIsActive {
+                        Text("Tutti gli outfit (\(database.outfits.count.description))").font(.headline)
+                        ScrollView(.horizontal,showsIndicators: false){
+                            HStack(spacing:25){
+                                ForEach(database.outfits, id:\.self){ o in
+                                    NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                        SingleOutfitGrid(outfit: o)
                                     }
                                 }
-                            }
-                        }.padding(.leading,20)
+                            }.padding(.leading,20)
+                        }
+                    }
+                    else {
+                        ScrollView(.horizontal,showsIndicators: false){
+                            HStack(spacing:25){
+                                ForEach(database.outfits, id:\.self){ o in
+                                    if o.nome!.contains(searchText) {
+                                        NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                            SingleOutfitGrid(outfit: o)
+                                        }
+                                    }
+                                }
+                            }.padding(.leading,20)
+                        }
                     }
                 }
                 .navigationTitle("I tuoi outfit")
-                
+                .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca outfit")
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         Button {
@@ -75,13 +56,13 @@ struct OutfitScreen: View {
                     label: {
                         Image(systemName: "plus.circle")
                     }
-                        Button {
-                            deleteAllOutfits()
-                            database.fetchOutfits()
-                        }
-                    label: {
-                        Image(systemName: "ellipsis.circle")
-                    }
+                        //                        Button {
+                        //                            deleteAllOutfits()
+                        //                            database.fetchOutfits()
+                        //                        }
+                        //                    label: {
+                        //                        Image(systemName: "ellipsis.circle")
+                        //                    }
                     }
                 }
                 .navigationDestination(isPresented: $isAddOutfitScreenActive){
@@ -125,6 +106,50 @@ struct OutfitScreen: View {
                 print("All documents have been processed.")
                 database.fetchOutfits()
             }
+        }
+    }
+}
+
+struct SingleOutfitGrid: View {
+    
+    @EnvironmentObject var database:Database
+    
+    private var outfit: Outfit
+    
+    init(outfit: Outfit){
+        self.outfit = outfit
+    }
+    
+    var body: some View {
+        HStack{
+            VStack(spacing:10){
+                Image(uiImage: outfit.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
+                    .resizable()
+                    .scaledToFit()
+                    .clipped()
+                    .frame(width:100,height:100)
+                Image(uiImage: outfit.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
+                    .resizable()
+                    .scaledToFit()
+                    .clipped()
+                    .frame(width:100,height:100)
+                Image(uiImage: outfit.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
+                    .resizable()
+                    .scaledToFit()
+                    .clipped()
+                    .frame(width:100,height:100)
+                Text(outfit.nome!)
+                    .foregroundStyle(.black)
+            }.frame(width: 150, height: 370)
+                .background(Color.white)
+                .cornerRadius(10)
+                .contextMenu(menuItems: {
+                    Button("Elimina", role: .destructive, action: {
+                        deleteOutfit(outfit: outfit)
+                    })
+                })
+                .shadow(radius: 5)
+                .padding(10)
         }
     }
     
