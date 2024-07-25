@@ -159,10 +159,10 @@ struct AddOutfitScreen: View {
                     continue // Ignora la combinazione se i colori sono uguali
                 }
                 if let vietati = coloriVietati[shirtColor], vietati.contains(trousersColor) {
-                    valutazione.append("Combinazione da evitare: \(shirtColor.rawValue) e \(trousersColor.rawValue)\n")
+                    valutazione.append("Combinazione da evitare: \(shirtColor.rawValue) delle parte superiore e \(trousersColor.rawValue) della parte inferiore\n")
                     combinazioneValida = false
                 } else if let consentiti = coloriConsentiti[shirtColor], !consentiti.contains(trousersColor) {
-                    valutazione.append("Combinazione da evitare: \(shirtColor.rawValue) e \(trousersColor.rawValue)\n")
+                    valutazione.append("Combinazione da evitare: \(shirtColor.rawValue) della parte superiore e \(trousersColor.rawValue) della parte inferiore\n")
                     combinazioneValida = false
                 }
             }
@@ -174,10 +174,10 @@ struct AddOutfitScreen: View {
                     continue // Ignora la combinazione se i colori sono uguali
                 }
                 if let vietati = coloriVietati[shirtColor], vietati.contains(shoesColor) {
-                    valutazione.append("Combinazione da evitare: \(shirtColor.rawValue) e \(shoesColor.rawValue)\n")
+                    valutazione.append("Combinazione da evitare: \(shirtColor.rawValue) dellla parte superiore e \(shoesColor.rawValue) delle scarpe\n")
                     combinazioneValida = false
                 } else if let consentiti = coloriConsentiti[shirtColor], !consentiti.contains(shoesColor) {
-                    valutazione.append("Combinazione da evitare: \(shirtColor.rawValue) e \(shoesColor.rawValue)\n")
+                    valutazione.append("Combinazione da evitare: \(shirtColor.rawValue) dellla parte superiore e \(shoesColor.rawValue) delle scarpe\n")
                     combinazioneValida = false
                 }
             }
@@ -189,17 +189,17 @@ struct AddOutfitScreen: View {
                     continue // Ignora la combinazione se i colori sono uguali
                 }
                 if let vietati = coloriVietati[trousersColor], vietati.contains(shoesColor) {
-                    valutazione.append("Combinazione da evitare: \(trousersColor.rawValue) e \(shoesColor.rawValue)\n")
+                    valutazione.append("Combinazione da evitare: \(trousersColor.rawValue) della parte inferiore e \(shoesColor.rawValue) della parte superiore\n")
                     combinazioneValida = false
                 } else if let consentiti = coloriConsentiti[trousersColor], !consentiti.contains(shoesColor) {
-                    valutazione.append("Combinazione da evitare: \(trousersColor.rawValue) e \(shoesColor.rawValue)\n")
+                    valutazione.append("Combinazione da evitare: \(trousersColor.rawValue) della parte inferiore e \(shoesColor.rawValue) delle scarpe\n")
                     combinazioneValida = false
                 }
             }
         }
         
         if combinazioneValida {
-            valutazione.append("Combinazione valida: shirt - \(shirtColors.map { $0.rawValue }.joined(separator: ", ")), trousers - \(trousersColors.map { $0.rawValue }.joined(separator: ", ")), shoes - \(shoesColors.map { $0.rawValue }.joined(separator: ", "))")
+            valutazione.append("Combinazione valida!\nParte superiore \(shirtColors.map { $0.rawValue }.joined(separator: ", "))\nParte inferiore \(trousersColors.map { $0.rawValue }.joined(separator: ", "))\nScarpe \(shoesColors.map { $0.rawValue }.joined(separator: ", "))")
         }
         
         return valutazione
