@@ -24,3 +24,7 @@ enum Taglia: String, Codable, CaseIterable {
         self = Taglia(rawValue: fromRawValue) ?? .NA
     }
 }
+
+let tagliaUpper = [Taglia.tgXS, Taglia.tgS, Taglia.tgM, Taglia.tgL, Taglia.tgXL, Taglia.tgXXL, Taglia.NA]
+let tagliaLower = [Taglia.tg42, Taglia.tg44, Taglia.tg46, Taglia.tg48, Taglia.tg50, Taglia.tg52, Taglia.tg54, Taglia.NA]
+let tagliaShoes = [Taglia.tg38, Taglia.tg39, Taglia.tg40, Taglia.tg41, Taglia.tg42, Taglia.tg43, Taglia.tg44, Taglia.tg45, Taglia.NA]

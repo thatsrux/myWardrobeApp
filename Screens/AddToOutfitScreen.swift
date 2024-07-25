@@ -90,15 +90,15 @@ struct AddToOutfitScreen: View {
                         if cloth.nome.lowercased().contains(searchText.lowercased()) {
                             SingleClothList(cloth: cloth)
                                 .onTapGesture {
-                                    if Categoria.upper().contains(cloth.categoria) {
+                                    if upperCat.contains(cloth.categoria) {
                                         shirtToAdd = cloth
                                         onDismiss?(shirtToAdd!)
                                     }
-                                    else if Categoria.lower().contains(cloth.categoria) {
+                                    else if lowerCat.contains(cloth.categoria) {
                                         trousersToAdd = cloth
                                         onDismiss?(trousersToAdd!)
                                     }
-                                    else if Categoria.shoes().contains(cloth.categoria) {
+                                    else if shoesCat.contains(cloth.categoria) {
                                         shoesToAdd = cloth
                                         onDismiss?(shoesToAdd!)
                                     }
@@ -117,15 +117,15 @@ struct AddToOutfitScreen: View {
                             ForEach(database.categorie[cat.rawValue]!) { cloth in
                                 SingleClothGrid(cloth: cloth)
                                     .onTapGesture {
-                                        if Categoria.upper().contains(cloth.categoria) {
+                                        if upperCat.contains(cloth.categoria) {
                                             shirtToAdd = cloth
                                             onDismiss?(shirtToAdd!)
                                         }
-                                        else if Categoria.lower().contains(cloth.categoria) {
+                                        else if lowerCat.contains(cloth.categoria) {
                                             trousersToAdd = cloth
                                             onDismiss?(trousersToAdd!)
                                         }
-                                        else if Categoria.shoes().contains(cloth.categoria) {
+                                        else if shoesCat.contains(cloth.categoria) {
                                             shoesToAdd = cloth
                                             onDismiss?(shoesToAdd!)
                                         }
@@ -147,15 +147,15 @@ struct AddToOutfitScreen: View {
                                 ForEach(database.categorie[cat.rawValue]!) { cloth in
                                     SingleClothGrid(cloth: cloth)
                                         .onTapGesture {
-                                            if Categoria.upper().contains(cloth.categoria) {
+                                            if upperCat.contains(cloth.categoria) {
                                                 shirtToAdd = cloth
                                                 onDismiss?(shirtToAdd!)
                                             }
-                                            else if Categoria.lower().contains(cloth.categoria) {
+                                            else if lowerCat.contains(cloth.categoria) {
                                                 trousersToAdd = cloth
                                                 onDismiss?(trousersToAdd!)
                                             }
-                                            else if Categoria.shoes().contains(cloth.categoria) {
+                                            else if shoesCat.contains(cloth.categoria) {
                                                 shoesToAdd = cloth
                                                 onDismiss?(shoesToAdd!)
                                             }
@@ -172,8 +172,8 @@ struct AddToOutfitScreen: View {
         }
         Spacer()
             .navigationTitle(
-                category == Categoria.upper() ? "Parte superiore" :
-                    category == Categoria.lower() ? "Parte inferiore" :
+                category == upperCat ? "Parte superiore" :
+                    category == lowerCat ? "Parte inferiore" :
                         "Scarpe"
             )
             .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")

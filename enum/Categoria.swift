@@ -16,16 +16,8 @@ enum Categoria: String, Codable, CaseIterable {
         self = Categoria(rawValue: fromRawValue) ?? .NA
     }
     
-    static func upper() -> [Categoria] {
-        return [.camicia, .canotta, .felpa, .giacca, .giubbino, .tshirt]
-    }
-    
-    static func lower() -> [Categoria] {
-        return [.pantalone, .pantaloncini]
-    }
-    
-    static func shoes() -> [Categoria] {
-        return [.scarpe]
-    }
-    
 }
+
+let upperCat = [Categoria.camicia, Categoria.canotta, Categoria.felpa, Categoria.giacca, Categoria.giubbino, Categoria.tshirt]
+let lowerCat = [Categoria.pantalone, Categoria.pantaloncini]
+let shoesCat = [Categoria.scarpe]

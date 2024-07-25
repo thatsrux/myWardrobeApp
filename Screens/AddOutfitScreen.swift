@@ -28,7 +28,7 @@ struct AddOutfitScreen: View {
                 VStack(spacing:60){
                     Button(action: {
                         isAddToOutfitScreenActive = true
-                        categoria = Categoria.upper()
+                        categoria = upperCat
                     }) {
                         if let shirt = shirt, let image = shirt.image?.toImage() {
                             Image(uiImage: image)
@@ -41,7 +41,7 @@ struct AddOutfitScreen: View {
                     }
                     Button(action: {
                         isAddToOutfitScreenActive = true
-                        categoria = Categoria.lower()
+                        categoria = lowerCat
                     }) {
                         if let trousers = trousers, let image = trousers.image?.toImage() {
                             Image(uiImage: image)
@@ -54,7 +54,7 @@ struct AddOutfitScreen: View {
                     }
                     Button(action: {
                         isAddToOutfitScreenActive = true
-                        categoria = Categoria.shoes()
+                        categoria = shoesCat
                     }) {
                         if let shoes = shoes, let image = shoes.image?.toImage() {
                             Image(uiImage: image)

@@ -29,10 +29,6 @@ struct InfoClothScreen: View {
     
     var edit: Bool = false
     
-    var tagliaUpper = [Taglia.tgXS, Taglia.tgS, Taglia.tgM, Taglia.tgL, Taglia.tgXL, Taglia.tgXXL, Taglia.NA]
-    var tagliaLower = [Taglia.tg42, Taglia.tg44, Taglia.tg46, Taglia.tg48, Taglia.tg50, Taglia.tg52, Taglia.tg54, Taglia.NA]
-    var tagliaShoes = [Taglia.tg38, Taglia.tg39, Taglia.tg40, Taglia.tg41, Taglia.tg42, Taglia.tg43, Taglia.tg44, Taglia.tg45, Taglia.NA]
-    
     init(cloth: Cloth){
         self.cloth = cloth
         
@@ -228,15 +224,15 @@ struct InfoClothScreen: View {
                     
                     LabeledContent {
                         Picker("", selection: $tagliaText){
-                            if(Categoria.upper().contains(categoriaClassificata)){
+                            if(upperCat.contains(categoriaClassificata)){
                                 ForEach(tagliaUpper, id:\.self){ t in
                                     Text(t.rawValue)
                                 }
-                            } else if(Categoria.lower().contains(categoriaClassificata)){
+                            } else if(lowerCat.contains(categoriaClassificata)){
                                 ForEach(tagliaLower, id:\.self){ t in
                                     Text(t.rawValue)
                                 }
-                            } else if(Categoria.shoes().contains(categoriaClassificata)){
+                            } else if(shoesCat.contains(categoriaClassificata)){
                                 ForEach(tagliaShoes, id:\.self){ t in
                                     Text(t.rawValue)
                                 }
