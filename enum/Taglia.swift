@@ -18,7 +18,7 @@ enum Taglia: String, Codable, CaseIterable {
          tg41 = "41",
          tg43 = "43",
          tg45 = "45",
-         NA = "N/A"
+         NA = "Non specificata"
     
     init(fromRawValue: String){
         self = Taglia(rawValue: fromRawValue) ?? .NA

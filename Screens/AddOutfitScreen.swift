@@ -187,6 +187,7 @@ struct AddOutfitScreen: View {
             }
         }
         database.fetchOutfits()
+        database.fetchCategorieOutfit()
     }
     
     func editOutfit() {
@@ -206,6 +207,7 @@ struct AddOutfitScreen: View {
             }
         }
         database.fetchOutfits()
+        database.fetchCategorieOutfit()
     }
     
     func outfitColorEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> String {
@@ -330,6 +332,7 @@ struct AddOutfitScreen: View {
             }
         }
         database.fetchOutfits()
+        database.fetchCategorieOutfit()
     }
 }
 //

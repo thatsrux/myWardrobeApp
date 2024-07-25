@@ -164,23 +164,3 @@ struct ClothesScreen: View {
     }
 }
 
-let categoriePlurale: [Categoria: String] = [
-    .camicia: "Camicie",
-    .canotta: "Canotte",
-    .cappello: "Cappelli",
-    .giacca: "Giacche",
-    .giubbino: "Giubbini",
-    .felpa: "Felpe",
-    .maglione: "Maglioni",
-    .pantaloncini: "Pantaloncini",
-    .pantalone: "Pantaloni",
-    .scarpe: "Scarpe",
-    .tshirt: "T-Shirts",
-    .NA: "N/A"
-]
-
-//#Preview {
-//    @EnvironmentObject var database:Database
-//    ClothesScreen(clothes: $database.clothes)
-//}
-

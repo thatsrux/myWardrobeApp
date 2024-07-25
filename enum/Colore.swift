@@ -29,7 +29,7 @@ enum Colore: String, Codable, CaseIterable {
     case grigio = "Grigio"
     case nero = "Nero"
     case bianco = "Bianco"
-    case na = "N/A"
+    case na = "Non specificato"
 }
 
 let coloriVietati: [Colore: [Colore]] = [
