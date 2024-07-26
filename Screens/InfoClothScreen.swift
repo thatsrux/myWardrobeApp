@@ -49,12 +49,15 @@ struct InfoClothScreen: View {
         } catch {
             fatalError(error.localizedDescription)
         }
-        
         self.cloth = Cloth(image: image)
         cloth.image = cloth.image?.toImage()!.toPngString()
         
-        // Il classificatore analizza l'immagine con sfondo e non tagliata, così che possa tenere conto delle dimensioni del capo
-        classifier.detect(uiImage: image)
+        // Il classificatore analizza l'immagine non tagliata, così che possa tenere conto delle dimensioni del capo
+        if let i = imageNoBackground {
+            classifier.detect(uiImage: i.withBackground(color: UIColor.white))
+        } else {
+            classifier.detect(uiImage: image)
+        }
     }
     
     var body: some View {
