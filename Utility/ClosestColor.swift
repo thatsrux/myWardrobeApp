@@ -1,5 +1,4 @@
 import UIKit
-import HandyUIKit
 
 // Assegnazione di nomi ai colori
 // Per i colori più scuri sono presenti più variazioni

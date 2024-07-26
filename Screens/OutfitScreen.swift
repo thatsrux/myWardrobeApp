@@ -46,7 +46,7 @@ struct OutfitScreen: View {
                         ScrollView(.horizontal,showsIndicators: false){
                             HStack(spacing:25){
                                 ForEach(database.outfits, id:\.self){ o in
-                                    if o.nome!.contains(searchText) {
+                                    if o.nome!.lowercased().contains(searchText.lowercased()) {
                                         NavigationLink(destination: AddOutfitScreen(outfit: o)) {
                                             SingleOutfitGrid(outfit: o)
                                         }
