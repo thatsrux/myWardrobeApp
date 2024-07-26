@@ -76,7 +76,8 @@ let colorMap: [String: UIColor] = [
     "Grigio": UIColor.gray,
     "Nero": UIColor.black,
     "Nero2": UIColor(red: 0.17, green: 0.17, blue: 0, alpha: 1.0),
-    "Nero3": UIColor(red: 0.17, green: 0.12, blue: 0, alpha: 1.0),
+    "Nero3": UIColor(red: 0.17, green: 0.17, blue: 0.08, alpha: 1.0), // Se il nero e blu scuro si confondono modificare questo
+    "Nero4": UIColor(red: 0.17, green: 0.12, blue: 0.05, alpha: 1.0),
     "Bianco": UIColor.white,
     "Bianco2": UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1.0),
     
