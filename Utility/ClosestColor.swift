@@ -1,5 +1,4 @@
 import UIKit
-import HandyUIKit
 
 // Assegnazione di nomi ai colori
 // Per i colori più scuri sono presenti più variazioni
@@ -8,7 +7,9 @@ let colorMap: [String: UIColor] = [
     // Variazioni del rosso
     "Rosso2": UIColor(red: 0.57, green: 0.24, blue: 0.24, alpha: 1.0),
     "Bordeaux": UIColor(red: 0.5, green: 0, blue: 0, alpha: 1.0),
+    "Bordeaux2": UIColor(red: 0.3, green: 0.1, blue: 0.1, alpha: 1.0),
     "Rosa": UIColor(red: 1.0, green: 0.75, blue: 0.8, alpha: 1.0),
+    "Rosa2": UIColor(red: 1.0, green: 0.78, blue: 0.7, alpha: 1.0),
     "Arancione": UIColor.orange,
     // Variazioni dell'arancione
     "Arancione2": UIColor(red: 0.76, green: 0.4, blue: 0.2, alpha: 1.0),
@@ -32,6 +33,7 @@ let colorMap: [String: UIColor] = [
     "Avio Scuro3": UIColor(red: 0.11, green: 0.3, blue: 0.38, alpha: 1.0),
     "Avio Scuro4": UIColor(red: 0.2, green: 0.5, blue: 0.6, alpha: 1.0),
     "Avio Scuro5": UIColor(red: 0.46, green: 0.5, blue: 0.6, alpha: 1.0),
+    "Avio Scuro6": UIColor(red: 0, green: 0.6, blue: 0.55, alpha: 1.0),
     "Celeste": UIColor(red: 0.8, green: 0.95, blue: 0.97, alpha: 1.0),
     // Variazioni del celeste
     "Celeste2": UIColor(red: 0.65, green: 0.9, blue: 0.98, alpha: 1.0),
@@ -46,6 +48,7 @@ let colorMap: [String: UIColor] = [
     "Blu2": UIColor(red: 0.063, green: 0.18, blue: 0.46, alpha: 1.0),
     "Blu3": UIColor(red: 0.16, green: 0.37, blue: 0.9, alpha: 1.0),
     "Blu4": UIColor(red: 0.3, green: 0.5, blue: 0.96, alpha: 1.0),
+    "Blu5": UIColor(red: 0.23, green: 0.35, blue: 0.55, alpha: 1.0),
     "Blu Navy": UIColor(red: 0.03, green: 0.11, blue: 0.33, alpha: 1.0),
     // Variazioni del blu navy
     "Blu Navy2": UIColor(red: 0.16, green: 0.04, blue: 0.44, alpha: 1.0),
@@ -76,10 +79,10 @@ let colorMap: [String: UIColor] = [
     "Grigio": UIColor.gray,
     "Nero": UIColor.black,
     "Nero2": UIColor(red: 0.17, green: 0.17, blue: 0, alpha: 1.0),
-    "Nero3": UIColor(red: 0.17, green: 0.17, blue: 0.08, alpha: 1.0), // Se il nero e blu scuro si confondono modificare questo
+    "Nero3": UIColor(red: 0.176, green: 0.169, blue: 0.09, alpha: 1.0), // Se il nero e blu notte si confondono modificare questo
     "Nero4": UIColor(red: 0.17, green: 0.12, blue: 0.05, alpha: 1.0),
     "Bianco": UIColor.white,
-    "Bianco2": UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1.0),
+    "Bianco2": UIColor(red: 0.93, green: 0.92, blue: 0.92, alpha: 1.0),
     
     // COLORI RIMOSSI
     
@@ -115,14 +118,13 @@ let colorMap: [String: UIColor] = [
 ]
 
 func closestColor(to color: UIColor) -> Colore {
-    var analizedColor = color
     var closestColorName: String?
     var smallestDifference = CGFloat.infinity
     
     // Si valuta la differenza dei colori presi in esame con tutti i colori presenti nella mappa.
     // Viene restituito il colore con la differenza minore
     for (name, testColor) in colorMap {
-        let diff = analizedColor.CIE94(compare: testColor)
+        let diff = color.CIE94(compare: testColor)
         if diff < smallestDifference {
             smallestDifference = diff
             closestColorName = name
@@ -136,7 +138,7 @@ func closestColor(to color: UIColor) -> Colore {
     if closestColorName == "Blu Navy" || closestColorName == "Blu Notte" || closestColorName == "Viola" || closestColorName == "Nero" || closestColorName == "Grigio" || closestColorName == "Beige" || closestColorName == "Celeste Scuro" || closestColorName == "Avio Scuro"  {
         
         for (name, testColor) in colorMap {
-            let diff = analizedColor.CIEDE2000(compare: testColor)
+            let diff = color.CIEDE2000(compare: testColor)
             if diff < smallestDifference {
                 smallestDifference = diff
                 closestColorName = name
