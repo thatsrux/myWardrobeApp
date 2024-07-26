@@ -109,9 +109,9 @@ class Database:ObservableObject{
                     let data = document.data()
                     
                     let id = data["id"] as? String ?? ""
-                    let shirtId = data["shirtId"] as? String ?? ""
-                    let trousersId = data["trousersId"] as? String ?? ""
-                    let shoesId = data["shoesId"] as? String ?? ""
+                    let shirtId = data["shirtId"] as? String ?? "Non specificato"
+                    let trousersId = data["trousersId"] as? String ?? "Non specificato"
+                    let shoesId = data["shoesId"] as? String ?? "Non specificato"
                     let nome = data["nome"] as? String ?? ""
                     let stile = data["stile"] as? String ?? ""
                     
@@ -138,13 +138,8 @@ class Database:ObservableObject{
                     }
                     
                     group.notify(queue: .main) {
-                        if let shirt = shirt, let trousers = trousers, let shoes = shoes {
-                            let outfit = Outfit(id: UUID(uuidString: id)!, shirt: shirt, trousers: trousers, shoes: shoes, nome: nome, stile: Stile(rawValue: stile) ?? .NA )
+                        let outfit = Outfit(id: UUID(uuidString: id)!, shirt: shirt ?? Cloth(image: UIImage(imageLiteralResourceName: "imageNA")), trousers: trousers ?? Cloth(image: UIImage(imageLiteralResourceName: "imageNA")), shoes: shoes ?? Cloth(image: UIImage(imageLiteralResourceName: "imageNA")), nome: nome, stile: Stile(rawValue: stile) ?? .NA )
                             self.outfits.append(outfit)
-                        } else {
-                            print("One or more items could not be fetched")
-                        }
-                        
                     }
                 }
             }

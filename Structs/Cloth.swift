@@ -42,6 +42,7 @@ class Cloth: Identifiable, Codable, Hashable{
     }
     
     init(image: UIImage){
+        self.id = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
         self.image = image.toPngString()
         self.mainColor = ColorData(uiColor: .black)
         self.secondColor = ColorData(uiColor: .black)

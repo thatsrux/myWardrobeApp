@@ -211,15 +211,32 @@ struct AddOutfitScreen: View {
             editOutfit()
             return
         }
-        let outfit = Outfit(shirt:shirt!,trousers: trousers!,shoes:shoes!, nome: nomeText, stile: stile)
+        
+        var shirtToAdd:Cloth?
+        var trousersToAdd:Cloth?
+        var shoesToAdd:Cloth?
+        
+        if let shirt = shirt{
+            shirtToAdd = shirt
+        }
+        
+        if let trousers = trousers{
+            trousersToAdd = trousers
+        }
+        
+        if let shoes = shoes{
+            shoesToAdd = shoes
+        }
+        
+        let outfit = Outfit(shirt:shirtToAdd,trousers: trousersToAdd,shoes:shoesToAdd, nome: nomeText, stile: stile)
         
         let db = Firestore.firestore()
         let ref = db.collection("Outfit").document(outfit.id.uuidString)
         ref.setData([
             "id": outfit.id.uuidString,
-            "shirtId": shirt!.id.uuidString,
-            "trousersId" : trousers!.id.uuidString,
-            "shoesId" : shoes!.id.uuidString,
+            "shirtId": shirt?.id.uuidString ?? "00000000-0000-0000-0000-000000000000",
+            "trousersId" : trousers?.id.uuidString ?? "00000000-0000-0000-0000-000000000000",
+            "shoesId" : shoes?.id.uuidString ?? "00000000-0000-0000-0000-000000000000",
             "nome" : nomeText,
             "stile" : stile.rawValue
         ]){
