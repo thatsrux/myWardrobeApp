@@ -24,6 +24,14 @@ class Outfit: Identifiable, Hashable{
         self.stile = stile
     }
     
+    init(shirt: Cloth?, trousers: Cloth?, shoes: Cloth?, nome: String, stile: Stile) {
+        self.shirt = shirt
+        self.trousers = trousers
+        self.shoes = shoes
+        self.nome = nome
+        self.stile = stile
+    }
+    
     init(id: UUID, shirt: Cloth, trousers: Cloth, shoes: Cloth, nome: String, stile: Stile) {
         self.id = id
         self.shirt = shirt
