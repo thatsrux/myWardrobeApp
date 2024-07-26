@@ -114,25 +114,27 @@ struct AddToOutfitScreen: View {
                     List {
                         ForEach(category, id: \.self){
                             cat in
-                            ForEach(database.categorie[cat.rawValue]!) { cloth in
-                                SingleClothGrid(cloth: cloth)
-                                    .onTapGesture {
-                                        if upperCat.contains(cloth.categoria) {
-                                            shirtToAdd = cloth
-                                            onDismiss?(shirtToAdd!)
+                            ForEach(database.clothes) { cloth in
+                                if cloth.categoria == cat {
+                                    SingleClothGrid(cloth: cloth)
+                                        .onTapGesture {
+                                            if upperCat.contains(cloth.categoria) {
+                                                shirtToAdd = cloth
+                                                onDismiss?(shirtToAdd!)
+                                            }
+                                            else if lowerCat.contains(cloth.categoria) {
+                                                trousersToAdd = cloth
+                                                onDismiss?(trousersToAdd!)
+                                            }
+                                            else if shoesCat.contains(cloth.categoria) {
+                                                shoesToAdd = cloth
+                                                onDismiss?(shoesToAdd!)
+                                            }
+                                            
+                                            
+                                            dismiss()
                                         }
-                                        else if lowerCat.contains(cloth.categoria) {
-                                            trousersToAdd = cloth
-                                            onDismiss?(trousersToAdd!)
-                                        }
-                                        else if shoesCat.contains(cloth.categoria) {
-                                            shoesToAdd = cloth
-                                            onDismiss?(shoesToAdd!)
-                                        }
-                                        
-                                        
-                                        dismiss()
-                                    }
+                                }
                             }
                         }.onDelete(perform: deleteClothSwipe)
                         
@@ -142,9 +144,8 @@ struct AddToOutfitScreen: View {
                         LazyVGrid(columns: columns, spacing: 10) {
                             ForEach(category, id: \.self){
                                 cat in
-                                if database.categorie[cat.rawValue] != nil {
-                                    
-                                    ForEach(database.categorie[cat.rawValue]!) { cloth in
+                                ForEach(database.clothes) { cloth in
+                                    if cloth.categoria == cat {
                                         SingleClothGrid(cloth: cloth)
                                             .onTapGesture {
                                                 if upperCat.contains(cloth.categoria) {

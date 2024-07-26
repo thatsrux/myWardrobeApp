@@ -10,13 +10,28 @@ enum Categoria: String, Codable, CaseIterable {
          pantalone = "Pantalone",
          scarpe = "Scarpe",
          tshirt = "T-Shirt",
-         NA = "N/A"
+         NA = "Altro"
     
     init(fromRawValue: String){
         self = Categoria(rawValue: fromRawValue) ?? .NA
     }
     
 }
+
+let categoriePlurale: [Categoria: String] = [
+    .camicia: "Camicie",
+    .canotta: "Canotte",
+    .cappello: "Cappelli",
+    .giacca: "Giacche",
+    .giubbino: "Giubbini",
+    .felpa: "Felpe",
+    .maglione: "Maglioni",
+    .pantaloncini: "Pantaloncini",
+    .pantalone: "Pantaloni",
+    .scarpe: "Scarpe",
+    .tshirt: "T-Shirts",
+    .NA: "Altro"
+]
 
 let upperCat = [Categoria.camicia, Categoria.canotta, Categoria.felpa, Categoria.giacca, Categoria.giubbino, Categoria.tshirt]
 let lowerCat = [Categoria.pantalone, Categoria.pantaloncini]

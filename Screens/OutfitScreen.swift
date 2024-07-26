@@ -12,10 +12,6 @@ struct OutfitScreen: View {
     
     @EnvironmentObject var database:Database
     
-    init(){
-        
-    }
-    
     var body: some View {
         NavigationStack {
             ScrollView{
@@ -30,6 +26,20 @@ struct OutfitScreen: View {
                                     }
                                 }
                             }.padding(.leading,20)
+                        }
+                        ForEach(database.categorieOutfit, id:\.self) { category in
+                            Text("Outfit \(category)").font(.headline)
+                            ScrollView(.horizontal,showsIndicators: false){
+                                HStack(spacing:25){
+                                    ForEach(database.outfits, id:\.self){ o in
+                                        if o.stile.rawValue == category {
+                                            NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                                SingleOutfitGrid(outfit: o)
+                                            }
+                                        }
+                                    }
+                                }.padding(.leading,20)
+                            }
                         }
                     }
                     else {
@@ -56,13 +66,6 @@ struct OutfitScreen: View {
                     label: {
                         Image(systemName: "plus.circle")
                     }
-                        //                        Button {
-                        //                            deleteAllOutfits()
-                        //                            database.fetchOutfits()
-                        //                        }
-                        //                    label: {
-                        //                        Image(systemName: "ellipsis.circle")
-                        //                    }
                     }
                 }
                 .navigationDestination(isPresented: $isAddOutfitScreenActive){

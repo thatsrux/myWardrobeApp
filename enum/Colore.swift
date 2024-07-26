@@ -29,7 +29,7 @@ enum Colore: String, Codable, CaseIterable {
     case grigio = "Grigio"
     case nero = "Nero"
     case bianco = "Bianco"
-    case na = "N/A"
+    case na = "Non specificato"
 }
 
 let coloriVietati: [Colore: [Colore]] = [
@@ -62,7 +62,7 @@ var coloriConsentiti: [Colore: [Colore]] = [
     .blu: [.beige, .rosso, .rosa, .fuxia, .grigio, .avio, .avioScuro, .bianco],
     .bluNavy: [.beige, .rosso, .gialloUovo, .grigio, .avio, .avioScuro, .bianco],
     .bluNotte: [.avioScuro, .rosso, .verdeFluo, .lime, .grigio, .avio, .avioScuro, .bianco],
-    .viola: [.giallo, .rosa, .gialloUovo, .rosso, .fuxiaFluo, .grigio, .avio, .avioScuro, .bianco],
+    .viola: [.giallo, .rosa, .gialloUovo, .rosso, .fuxiaFluo, .grigio, .avio, .avioScuro, .bianco, .nero],
     .fuxiaFluo: [.viola, .grigio, .rosa, .avio, .avioScuro, .bianco],
     .fuxia: [.blu, .rosso, .avio, .grigio, .avioScuro, .bianco],
     .marrone: [.verdeOliva, .marroneScuro, .rosa, .grigio, .avio, .avioScuro, .bianco],
