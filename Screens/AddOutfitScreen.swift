@@ -17,6 +17,8 @@ struct AddOutfitScreen: View {
     @State var nomeText = ""
     @State var stile = Stile.NA
     
+    @State var compatibleClothes: [Cloth] = []
+    
     @State var coloreValido = true
     @State var spiegazioneColore = ""
     
@@ -110,44 +112,31 @@ struct AddOutfitScreen: View {
                             .font(.system(size: 18, weight: .bold))
                     }
                     
-                    if missingCloth != [.NA] {
+                    if missingCloth != [.NA] && !compatibleClothes.isEmpty {
                         Text("Completa il tuo outfit con uno di questi capi: ")
                         ScrollView {
                             HStack(spacing:25){
-                                ForEach(missingCloth, id: \.self){
-                                    cat in
-                                    ForEach(database.clothes) { cloth in
-                                        if cloth.categoria == cat {
-                                            if missingCloth == upperCat && quickColorEvaluation(shirt: cloth, trousers: trousers!, shoes: shoes!) && quickStyleEvaluation(shirt: cloth, trousers: trousers!, shoes: shoes!)
-                                            ||
-                                                missingCloth == lowerCat && quickColorEvaluation(shirt: shirt!, trousers: cloth, shoes: shoes!) && quickStyleEvaluation(shirt: shirt!, trousers: cloth, shoes: shoes!)
-                                            ||
-                                                missingCloth == shoesCat && quickColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: cloth) && quickStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: cloth)
-                                            {
-                                                SingleClothGrid(cloth: cloth)
-                                                    .onTapGesture {
-                                                        if upperCat.contains(cloth.categoria) {
-                                                            shirt = cloth
-                                                        }
-                                                        else if lowerCat.contains(cloth.categoria) {
-                                                            trousers = cloth
-                                                        }
-                                                        else if shoesCat.contains(cloth.categoria) {
-                                                            shoes = cloth
-                                                        }
-                                                        updateOutfit()
-                                                        spiegazioneColore=outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
-                                                        spiegazioneStile=outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
-                                                    }
+                                ForEach(compatibleClothes) { cloth in
+                                    SingleClothGrid(cloth: cloth)
+                                        .onTapGesture {
+                                            if upperCat.contains(cloth.categoria) {
+                                                shirt = cloth
                                             }
+                                            else if lowerCat.contains(cloth.categoria) {
+                                                trousers = cloth
+                                            }
+                                            else if shoesCat.contains(cloth.categoria) {
+                                                shoes = cloth
+                                            }
+                                            updateOutfit()
+                                            spiegazioneColore=outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
+                                            spiegazioneStile=outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
                                         }
-                                    }
                                 }
-                            }
-                        }.padding(.bottom,20)
-                            .padding(.top,20)
+                            }.padding(.bottom,20)
+                                .padding(.top,20)
+                        }
                     }
-                    
                     if shirt != nil && trousers != nil && shoes != nil {
                         VStack {
                             Text("Valutazione Colori:")
@@ -235,6 +224,7 @@ struct AddOutfitScreen: View {
         } else {
             missingCloth = [.NA]
         }
+        checkCompatibleClothes()
         if first == true {
             guard let outfit = outfit else {return}
             
@@ -518,6 +508,22 @@ struct AddOutfitScreen: View {
         return stileValido
     }
     
+    func checkCompatibleClothes() {
+        compatibleClothes.removeAll()
+        for cat in missingCloth {
+            for cloth in database.clothes {
+                if cloth.categoria == cat {
+                    if missingCloth == upperCat && quickColorEvaluation(shirt: cloth, trousers: trousers!, shoes: shoes!) && quickStyleEvaluation(shirt: cloth, trousers: trousers!, shoes: shoes!)
+                        ||
+                        missingCloth == lowerCat && quickColorEvaluation(shirt: shirt!, trousers: cloth, shoes: shoes!) && quickStyleEvaluation(shirt: shirt!, trousers: cloth, shoes: shoes!)
+                        ||
+                        missingCloth == shoesCat && quickColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: cloth) && quickStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: cloth) {
+                        compatibleClothes.append(cloth)
+                    }
+                }
+            }
+        }
+    }
     
     func deleteOutfit(outfit: Outfit){
         Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
