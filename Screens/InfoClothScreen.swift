@@ -500,6 +500,29 @@ struct InfoClothScreen: View {
         database.fetchClothes()
         database.fetchCategorie()
     }
+    
+    func listenToClothChanges() {
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("Cloth").document(cloth.id.uuidString)
+        
+        ref.addSnapshotListener { documentSnapshot, error in
+            if let error = error {
+                print("Error listening to outfit changes: \(error)")
+                return
+            }
+            
+            guard let document = documentSnapshot, document.exists,
+                  let data = document.data() else {
+                print("Document does not exist")
+                return
+            }
+            
+            if let favourite = data["favourite"] as? Bool {
+                self.isStarFilled = favourite
+            }
+        }
+    }
 }
 
 extension Array {

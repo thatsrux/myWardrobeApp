@@ -96,6 +96,13 @@ struct SingleClothGrid: View {
                 Button("Elimina", role: .destructive, action: {
                     deleteCloth(cloth: cloth)
                 })
+            
+        Button{
+            favouriteToggle(cloth: cloth)
+        }
+        label:{
+            Label(!database.favClothes.contains(cloth) ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti", systemImage:!database.favClothes.contains(cloth) ? "star" : "star.fill")
+        }
             })
     }
     
@@ -105,6 +112,24 @@ struct SingleClothGrid: View {
                 print("Error removing document: \(err)")
             } else {
                 print("Document successfully removed!")
+            }
+        }
+        database.fetchClothes()
+        database.fetchCategorie()
+    }
+    
+    func favouriteToggle(cloth:Cloth){
+        
+        cloth.favourite.toggle()
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("Cloth").document(cloth.id.uuidString)
+        ref.updateData([
+            "favourite": cloth.favourite
+        ]){
+            error in
+            if let error = error {
+                print(error.localizedDescription)
             }
         }
         database.fetchClothes()

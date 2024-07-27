@@ -178,8 +178,6 @@ struct SingleOutfitGrid: View {
                 })
                 .shadow(radius: 5)
                 .padding(10)
-        }.onAppear{
-            listenToOutfitChanges()
         }
     }
     
@@ -187,7 +185,6 @@ struct SingleOutfitGrid: View {
         
         outfit.favourite.toggle()
         self.isStarFilled = outfit.favourite
-
 
         let db = Firestore.firestore()
         let ref = db.collection("Outfit").document(outfit.id.uuidString)
@@ -203,28 +200,7 @@ struct SingleOutfitGrid: View {
         database.fetchCategorieOutfit()
     }
     
-    func listenToOutfitChanges() {
-        
-//        let db = Firestore.firestore()
-//        let ref = db.collection("Outfit").document(outfit.id.uuidString)
-//        
-//        ref.addSnapshotListener { documentSnapshot, error in
-//            if let error = error {
-//                print("Error listening to outfit changes: \(error)")
-//                return
-//            }
-//            
-//            guard let document = documentSnapshot, document.exists,
-//                  let data = document.data() else {
-//                print("Document does not exist")
-//                return
-//            }
-//            
-//            if let favourite = data["favourite"] as? Bool {
-//                self.isStarFilled = favourite
-//            }
-//        }
-    }
+
     
     func deleteOutfit(outfit: Outfit){
         Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
