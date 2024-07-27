@@ -12,14 +12,23 @@ struct OutfitScreen: View {
     
     @EnvironmentObject var database:Database
     
-    //@State var isStarFilled:Bool = false
-
-    
     var body: some View {
         NavigationStack {
             ScrollView{
                 VStack{
                     if !searchIsActive {
+                        if database.favOutfits.count > 0{
+                            Text("Outfit preferiti (\(database.favOutfits.count.description))").font(.headline)
+                            ScrollView(.horizontal,showsIndicators: false){
+                                HStack(spacing:25){
+                                    ForEach(database.favOutfits, id:\.self){ o in
+                                        NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                            SingleOutfitGrid(outfit: o)
+                                        }
+                                    }
+                                }.padding(.leading,20)
+                            }
+                        }
                         Text("Tutti gli outfit (\(database.outfits.count.description))").font(.headline)
                         ScrollView(.horizontal,showsIndicators: false){
                             HStack(spacing:25){
