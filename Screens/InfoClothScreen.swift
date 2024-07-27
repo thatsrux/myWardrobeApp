@@ -275,6 +275,7 @@ struct InfoClothScreen: View {
             
         }
         .onAppear {
+            listenToClothChanges()
             if !edit {
                 extractColorsAndClassify()
             }
