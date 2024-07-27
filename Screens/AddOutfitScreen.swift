@@ -459,7 +459,6 @@ struct AddOutfitScreen: View {
                 return
             }
             
-            // Aggiorna il valore `isStarFilled` con il valore dal database
             if let favourite = data["favourite"] as? Bool {
                 self.isStarFilled = favourite
             }

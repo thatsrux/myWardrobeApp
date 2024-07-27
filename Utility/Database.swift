@@ -3,17 +3,20 @@ import Firebase
 class Database:ObservableObject{
     
     @Published var clothes:[Cloth]
+    @Published var favClothes:[Cloth]
     @Published var categorie:[String]
-    @Published var categorieOutfit:[String]
     @Published var outfits:[Outfit]
     @Published var favOutfits:[Outfit]
+    @Published var categorieOutfit:[String]
     
     init(){
         self.clothes = []
+        self.favClothes = []
         self.categorie = []
         self.outfits = []
-        self.categorieOutfit = []
         self.favOutfits = []
+        self.categorieOutfit = []
+        
         fetchClothes()
         fetchCategorie()
         fetchOutfits()
@@ -22,6 +25,7 @@ class Database:ObservableObject{
     
     func fetchClothes(){
         clothes.removeAll()
+        favClothes.removeAll()
         let db = Firestore.firestore()
         let ref = db.collection("Cloth")
         ref.getDocuments{ snapshot, error in
@@ -61,14 +65,22 @@ class Database:ObservableObject{
                     let stile = data["stile"] as? String ?? ""
                     let dataAgg = data["data"] as? String ?? ""
                     
+                    let favourite = data["favourite"] as? Bool ?? false
+                    
                     let cloth = Cloth(id: UUID(uuidString: id)!, image: image, mainColor: ColorData(red: color1r.CGFloatValue()! , green: color1g.CGFloatValue()!, blue: color1b.CGFloatValue()!, alpha: color1a.CGFloatValue()!), secondColor: ColorData(red: color2r.CGFloatValue()!, green: color2g.CGFloatValue()!, blue: color2b.CGFloatValue()!, alpha: color2a.CGFloatValue()!), thirdColor: ColorData(red: color3r.CGFloatValue()!, green: color3g.CGFloatValue()!, blue: color3b.CGFloatValue()!, alpha: color3a.CGFloatValue()!), colorsNum: colorsNum, categoria: Categoria(rawValue: categoria) ?? Categoria.NA, nome: nome, taglia: Taglia(rawValue: taglia) ?? Taglia.NA,stile: Stile(rawValue: stile) ?? Stile.NA, data: dataAgg.data(using: .utf8)!)
                     
                     self.clothes.append(cloth)
                     self.clothes.sort(by:{$0.data>$1.data})
+                    
+                    
+                    if favourite && !self.favClothes.contains(cloth){
+                        self.favClothes.append(cloth)
+                    }
                 }
             }
         }
     }
+    
     
     func fetchCategorie(){
         categorie.removeAll()
@@ -183,40 +195,6 @@ class Database:ObservableObject{
         }
     }
     
-//    func fetchFavOutfits(){
-//        
-//        favOutfits.removeAll()
-//        
-//        let db = Firestore.firestore()
-//        let ref = db.collection("Outfit")
-//        ref.getDocuments{ [self] snapshot, error in
-//            guard error == nil else {
-//                print(error!.localizedDescription)
-//                return
-//            }
-//            
-//            if let snapshot = snapshot {
-//                let group = DispatchGroup()
-//                
-//                for document in snapshot.documents {
-//                    let data = document.data()
-//                    
-//                    let favourite = data["favourite"] as? String ?? ""
-//                    
-//                    if favourite.{
-//                        
-//                    }
-//                            self.outfits.append(outfit)
-//                        
-//                    
-//                }
-//            }
-//        }
-//        
-//        if outfit.favourite == false{
-//            self.favOutfits.append(outfit)
-//        }
-//    }
     
     func removeOutfits(){
         outfits.removeAll()

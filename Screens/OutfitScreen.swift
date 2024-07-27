@@ -130,8 +130,12 @@ struct SingleOutfitGrid: View {
     @EnvironmentObject var database:Database
     
     private var outfit: Outfit
+    @State var isStarFilled : Bool
+
+    
     init(outfit: Outfit){
         self.outfit = outfit
+        self._isStarFilled = State(initialValue: outfit.favourite)
     }
     
     var body: some View {
@@ -166,14 +170,60 @@ struct SingleOutfitGrid: View {
 
                 }
                     Button{
+                        favouriteToggle(outfit: outfit)
                     }
                     label:{
-                    Label("Aggiungi ai preferiti", systemImage: "star")
-                }
+                        Label(!database.favOutfits.contains(outfit) ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti", systemImage:!database.favOutfits.contains(outfit) ? "star" : "star.fill")
+                    }
                 })
                 .shadow(radius: 5)
                 .padding(10)
+        }.onAppear{
+            listenToOutfitChanges()
         }
+    }
+    
+    func favouriteToggle(outfit:Outfit){
+        
+        outfit.favourite.toggle()
+        self.isStarFilled = outfit.favourite
+
+
+        let db = Firestore.firestore()
+        let ref = db.collection("Outfit").document(outfit.id.uuidString)
+        ref.updateData([
+            "favourite": outfit.favourite
+        ]){
+            error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+        }
+        database.fetchOutfits()
+        database.fetchCategorieOutfit()
+    }
+    
+    func listenToOutfitChanges() {
+        
+//        let db = Firestore.firestore()
+//        let ref = db.collection("Outfit").document(outfit.id.uuidString)
+//        
+//        ref.addSnapshotListener { documentSnapshot, error in
+//            if let error = error {
+//                print("Error listening to outfit changes: \(error)")
+//                return
+//            }
+//            
+//            guard let document = documentSnapshot, document.exists,
+//                  let data = document.data() else {
+//                print("Document does not exist")
+//                return
+//            }
+//            
+//            if let favourite = data["favourite"] as? Bool {
+//                self.isStarFilled = favourite
+//            }
+//        }
     }
     
     func deleteOutfit(outfit: Outfit){

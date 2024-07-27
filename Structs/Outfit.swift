@@ -42,18 +42,6 @@ class Outfit: Identifiable, Hashable{
         self.stile = stile
     }
     
-//    init(shirt:Cloth){
-//        self.shirt = shirt
-//    }
-//    
-//    init(trousers:Cloth){
-//        self.trousers = trousers
-//    }
-//    
-//    init(shoes:Cloth){
-//        self.shoes = shoes
-//    }
-    
     init(){
         self.shirt = Cloth(image: UIImage())
         self.trousers = Cloth(image: UIImage())
