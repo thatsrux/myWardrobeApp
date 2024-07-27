@@ -178,7 +178,7 @@ struct AddOutfitScreen: View {
                     }
                 label:{
                     Image(systemName: isStarFilled ? "star.fill" : "star")
-                }
+                }.disabled(!edit)
                     
                     Button(action: {
                         saveOutfit()
