@@ -7,6 +7,7 @@ class Outfit: Identifiable, Hashable{
     var shoes:Cloth?
     var nome: String?
     var stile: Stile
+    var favourite:Bool = false
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)

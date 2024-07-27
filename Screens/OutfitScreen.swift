@@ -12,6 +12,9 @@ struct OutfitScreen: View {
     
     @EnvironmentObject var database:Database
     
+    //@State var isStarFilled:Bool = false
+
+    
     var body: some View {
         NavigationStack {
             ScrollView{
@@ -118,7 +121,6 @@ struct SingleOutfitGrid: View {
     @EnvironmentObject var database:Database
     
     private var outfit: Outfit
-    
     init(outfit: Outfit){
         self.outfit = outfit
     }
@@ -147,9 +149,18 @@ struct SingleOutfitGrid: View {
                 .background(Color.white)
                 .cornerRadius(10)
                 .contextMenu(menuItems: {
-                    Button("Elimina", role: .destructive, action: {
+                    Button(role: .destructive){
                         deleteOutfit(outfit: outfit)
-                    })
+                    }
+                label:{
+                    Label("Elimina", systemImage: "trash")
+
+                }
+                    Button{
+                    }
+                    label:{
+                    Label("Aggiungi ai preferiti", systemImage: "star")
+                }
                 })
                 .shadow(radius: 5)
                 .padding(10)

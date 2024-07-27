@@ -114,6 +114,7 @@ class Database:ObservableObject{
                     let shoesId = data["shoesId"] as? String ?? "Non specificato"
                     let nome = data["nome"] as? String ?? ""
                     let stile = data["stile"] as? String ?? ""
+                    let favourite = data["favourite"] as? String ?? ""
                     
                     var shirt: Cloth?
                     var trousers: Cloth?
@@ -138,7 +139,7 @@ class Database:ObservableObject{
                     }
                     
                     group.notify(queue: .main) {
-                        let outfit = Outfit(id: UUID(uuidString: id)!, shirt: shirt ?? Cloth(image: UIImage(imageLiteralResourceName: "imageNA")), trousers: trousers ?? Cloth(image: UIImage(imageLiteralResourceName: "imageNA")), shoes: shoes ?? Cloth(image: UIImage(imageLiteralResourceName: "imageNA")), nome: nome, stile: Stile(rawValue: stile) ?? .NA )
+                        let outfit = Outfit(id: UUID(uuidString: id)!, shirt: shirt ?? Cloth(image: UIImage(imageLiteralResourceName: "imageNA")), trousers: trousers ?? Cloth(image: UIImage(imageLiteralResourceName: "imageNA")), shoes: shoes ?? Cloth(image: UIImage(imageLiteralResourceName: "imageNA")), nome: nome, stile: Stile(rawValue: stile) ?? .NA)
                             self.outfits.append(outfit)
                     }
                 }
