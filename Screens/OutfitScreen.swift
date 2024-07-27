@@ -130,12 +130,10 @@ struct SingleOutfitGrid: View {
     @EnvironmentObject var database:Database
     
     private var outfit: Outfit
-    @State var isStarFilled : Bool
 
     
     init(outfit: Outfit){
         self.outfit = outfit
-        self._isStarFilled = State(initialValue: outfit.favourite)
     }
     
     var body: some View {
@@ -184,7 +182,6 @@ struct SingleOutfitGrid: View {
     func favouriteToggle(outfit:Outfit){
         
         outfit.favourite.toggle()
-        self.isStarFilled = outfit.favourite
 
         let db = Firestore.firestore()
         let ref = db.collection("Outfit").document(outfit.id.uuidString)
