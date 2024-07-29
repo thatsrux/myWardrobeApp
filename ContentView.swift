@@ -12,10 +12,11 @@ struct ContentView: View {
             TabView(selection: $selection) {
 
                 Group {
-                    if database.outfits.count > 0 {
-                        OutfitScreen()
+                    if database.outfits.isEmpty {
+                        NoOutfitsPage()
                     } else {
-                        NoOutfitPage()
+                        OutfitScreen()
+
                     }
                 }
                     .tabItem {
@@ -23,7 +24,13 @@ struct ContentView: View {
                         .accentColor(.primary)}
                     .tag (0)
                 
-                ClothesScreen(clothes: $clothes)
+                Group {
+                    if database.clothes.isEmpty {
+                        NoClothesPage()
+                    } else {
+                        ClothesScreen(clothes:$clothes)
+                    }
+                }
                     .tabItem {
                         Label ("Guardaroba", systemImage: "hanger")
                         .accentColor(.primary)}

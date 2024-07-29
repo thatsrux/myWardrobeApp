@@ -204,7 +204,7 @@ struct SingleOutfitGrid: View {
     }
 }
 
-struct NoOutfitPage: View {
+struct NoOutfitsPage: View {
     @State private var isAddOutfitScreenActive = false
     
     var body: some View {

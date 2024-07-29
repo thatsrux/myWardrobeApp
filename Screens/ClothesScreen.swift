@@ -164,3 +164,104 @@ struct ClothesScreen: View {
     }
 }
 
+struct NoClothesPage: View {
+    @State var isPresenting: Bool = false
+    @State var uiImage: UIImage?
+    @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    
+    @State private var loading = false
+    @State private var isInfoClothScreenActive = false
+    @State private var searchText = ""
+    @State private var searchIsActive = false
+    
+    @EnvironmentObject var database:Database
+    
+    @State private var selectedOption = "icone"
+    
+    
+    var body: some View {
+        NavigationStack {
+            Text("Inserisci il primo capo d'abbigliamento")
+                .navigationTitle("I tuoi capi")
+                .toolbar {
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        Menu {
+                            Button(action: {
+                                isPresenting = true
+                                sourceType = .photoLibrary
+                            }) {
+                                Text("Scegli foto")
+                                Image(systemName: "photo.on.rectangle")
+                            }
+                            
+                            Button(action: {
+                                isPresenting = true
+                                sourceType = .camera
+                            }) {
+                                Text("Scatta foto")
+                                Image(systemName: "camera")
+                            }
+                        } label: {
+                            Image(systemName: "camera")
+                        }
+                        
+                        Menu {
+                            Picker(selection: $selectedOption, label: Text("Options")) {
+                                HStack {
+                                    Text("Icone")
+                                    Image(systemName: "square.grid.2x2")
+                                }.tag("icone")
+                                
+                                HStack {
+                                    Text("Elenco")
+                                    Image(systemName: "list.bullet")
+                                }.tag("elenco")
+                            }
+                            
+                            Divider()
+                            Button(action: {
+                                for cloth in database.clothes {
+                                    Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete { err in
+                                        if let err = err {
+                                            print("Error removing document: \(err)")
+                                        } else {
+                                            print("Document successfully removed!")
+                                        }
+                                    }
+                                }
+                                database.fetchClothes()
+                                database.fetchCategorie()
+                            }) {
+                                Text("Svuota")
+                                Image(systemName: "trash")
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                        }
+                    }
+                }
+                .sheet(isPresented: $isPresenting){
+                    ImagePicker(uiImage: $uiImage, isPresenting:  $isPresenting, sourceType: $sourceType)
+                        .onDisappear {
+                            if uiImage != nil {
+                                isInfoClothScreenActive = true
+                                loading = true
+                            }
+                        }
+                }
+                .navigationDestination(isPresented: $isInfoClothScreenActive) {
+                    if uiImage != nil {
+                        InfoClothScreen(image: uiImage!)
+                            .onDisappear {
+                                uiImage = nil
+                                isInfoClothScreenActive = false
+                            }
+                            .onAppear {
+                                loading = false
+                            }
+                    }
+                }
+        }
+    }
+}
+
