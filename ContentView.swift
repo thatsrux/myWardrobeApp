@@ -24,13 +24,14 @@ struct ContentView: View {
                         .accentColor(.primary)}
                     .tag (0)
                 
-                Group {
-                    if database.clothes.isEmpty {
-                        NoClothesPage()
-                    } else {
-                        ClothesScreen(clothes:$clothes)
-                    }
-                }
+//                Group {
+//                    if database.clothes.isEmpty {
+//                        NoClothesPage()
+//                    } else {
+//                        ClothesScreen(clothes:$clothes)
+//                    }
+//                }
+                ClothesScreen(clothes:$clothes)
                     .tabItem {
                         Label ("Guardaroba", systemImage: "hanger")
                         .accentColor(.primary)}
