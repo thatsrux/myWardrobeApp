@@ -71,14 +71,7 @@ struct OutfitScreen: View {
                 .navigationTitle("I tuoi outfit")
                 .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca outfit")
                 .toolbar {
-                    ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Button {
-                            isAddOutfitScreenActive = true
-                        }
-                    label: {
-                        Image(systemName: "plus.circle")
-                    }
-                    }
+                    OutfitToolbar(isAddOutfitScreenActive: $isAddOutfitScreenActive)
                 }
                 .navigationDestination(isPresented: $isAddOutfitScreenActive){
                     AddOutfitScreen()
@@ -208,5 +201,36 @@ struct SingleOutfitGrid: View {
             }
         }
         database.fetchOutfits()
+    }
+}
+
+struct NoOutfitsPage: View {
+    @State private var isAddOutfitScreenActive = false
+    
+    var body: some View {
+        NavigationStack {
+            Text("Inserisci un outfit")
+                .navigationTitle("I tuoi outfit")
+                .toolbar {
+                    OutfitToolbar(isAddOutfitScreenActive: $isAddOutfitScreenActive)
+                }
+                .navigationDestination(isPresented: $isAddOutfitScreenActive) {
+                    AddOutfitScreen()
+                }
+        }
+    }
+}
+
+struct OutfitToolbar: ToolbarContent {
+    @Binding var isAddOutfitScreenActive: Bool
+    
+    var body: some ToolbarContent {
+        ToolbarItemGroup(placement: .navigationBarTrailing) {
+            Button {
+                isAddOutfitScreenActive = true
+            } label: {
+                Image(systemName: "plus.circle")
+            }
+        }
     }
 }
