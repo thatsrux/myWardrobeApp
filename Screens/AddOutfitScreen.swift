@@ -52,7 +52,7 @@ struct AddOutfitScreen: View {
                                 .clipped()
                                 .frame(width:150,height:150)
                         } else {
-                            Image(uiImage: UIImage(imageLiteralResourceName: "imageNA"))
+                            Image(uiImage: UIImage(imageLiteralResourceName: "shirt"))
                                 .resizable()
                         }
                     }
@@ -67,7 +67,7 @@ struct AddOutfitScreen: View {
                                 .clipped()
                                 .frame(width:150,height:150)
                         } else {
-                            Image(uiImage: UIImage(imageLiteralResourceName: "imageNA"))
+                            Image(uiImage: UIImage(imageLiteralResourceName: "trousers"))
                                 .resizable()
                         }
                     }
@@ -83,7 +83,7 @@ struct AddOutfitScreen: View {
                                 .frame(width:150,height:150)
                         } else {
                             
-                            Image(uiImage: UIImage(imageLiteralResourceName: "imageNA"))
+                            Image(uiImage: UIImage(imageLiteralResourceName: "shoes"))
                                 .resizable()
                         }
                     }

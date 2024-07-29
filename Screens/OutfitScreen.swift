@@ -139,17 +139,17 @@ struct SingleOutfitGrid: View {
     var body: some View {
         HStack{
             VStack(spacing:10){
-                Image(uiImage: outfit.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
+                Image(uiImage: outfit.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shirt"))
                     .resizable()
                     .scaledToFit()
                     .clipped()
                     .frame(width:100,height:100)
-                Image(uiImage: outfit.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
+                Image(uiImage: outfit.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "trousers"))
                     .resizable()
                     .scaledToFit()
                     .clipped()
                     .frame(width:100,height:100)
-                Image(uiImage: outfit.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
+                Image(uiImage: outfit.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shoes"))
                     .resizable()
                     .scaledToFit()
                     .clipped()
