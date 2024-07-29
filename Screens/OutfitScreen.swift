@@ -17,6 +17,18 @@ struct OutfitScreen: View {
             ScrollView{
                 VStack{
                     if !searchIsActive {
+                        if database.favOutfits.count > 0{
+                            Text("Outfit preferiti (\(database.favOutfits.count.description))").font(.headline)
+                            ScrollView(.horizontal,showsIndicators: false){
+                                HStack(spacing:25){
+                                    ForEach(database.favOutfits, id:\.self){ o in
+                                        NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                            SingleOutfitGrid(outfit: o)
+                                        }
+                                    }
+                                }.padding(.leading,20)
+                            }
+                        }
                         Text("Tutti gli outfit (\(database.outfits.count.description))").font(.headline)
                         ScrollView(.horizontal,showsIndicators: false){
                             HStack(spacing:25){
@@ -118,6 +130,7 @@ struct SingleOutfitGrid: View {
     @EnvironmentObject var database:Database
     
     private var outfit: Outfit
+
     
     init(outfit: Outfit){
         self.outfit = outfit
@@ -126,17 +139,17 @@ struct SingleOutfitGrid: View {
     var body: some View {
         HStack{
             VStack(spacing:10){
-                Image(uiImage: outfit.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
+                Image(uiImage: outfit.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shirt"))
                     .resizable()
                     .scaledToFit()
                     .clipped()
                     .frame(width:100,height:100)
-                Image(uiImage: outfit.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
+                Image(uiImage: outfit.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "trousers"))
                     .resizable()
                     .scaledToFit()
                     .clipped()
                     .frame(width:100,height:100)
-                Image(uiImage: outfit.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
+                Image(uiImage: outfit.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shoes"))
                     .resizable()
                     .scaledToFit()
                     .clipped()
@@ -147,14 +160,44 @@ struct SingleOutfitGrid: View {
                 .background(Color.white)
                 .cornerRadius(10)
                 .contextMenu(menuItems: {
-                    Button("Elimina", role: .destructive, action: {
+                    Button(role: .destructive){
                         deleteOutfit(outfit: outfit)
-                    })
+                    }
+                label:{
+                    Label("Elimina", systemImage: "trash")
+
+                }
+                    Button{
+                        favouriteToggle(outfit: outfit)
+                    }
+                    label:{
+                        Label(!database.favOutfits.contains(outfit) ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti", systemImage:!database.favOutfits.contains(outfit) ? "star" : "star.fill")
+                    }
                 })
                 .shadow(radius: 5)
                 .padding(10)
         }
     }
+    
+    func favouriteToggle(outfit:Outfit){
+        
+        outfit.favourite.toggle()
+
+        let db = Firestore.firestore()
+        let ref = db.collection("Outfit").document(outfit.id.uuidString)
+        ref.updateData([
+            "favourite": outfit.favourite
+        ]){
+            error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+        }
+        database.fetchOutfits()
+        database.fetchCategorieOutfit()
+    }
+    
+
     
     func deleteOutfit(outfit: Outfit){
         Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in

@@ -7,6 +7,7 @@ class Outfit: Identifiable, Hashable{
     var shoes:Cloth?
     var nome: String?
     var stile: Stile
+    var favourite:Bool = false
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
@@ -40,18 +41,6 @@ class Outfit: Identifiable, Hashable{
         self.nome = nome
         self.stile = stile
     }
-    
-//    init(shirt:Cloth){
-//        self.shirt = shirt
-//    }
-//    
-//    init(trousers:Cloth){
-//        self.trousers = trousers
-//    }
-//    
-//    init(shoes:Cloth){
-//        self.shoes = shoes
-//    }
     
     init(){
         self.shirt = Cloth(image: UIImage())
