@@ -1,9 +1,3 @@
-//
-//  ContentView.swift
-//  myWardrobe
-//
-//  Created by Studente on 02/07/24.
-//
 
 import SwiftUI
 import Firebase
@@ -12,11 +6,18 @@ struct ContentView: View {
     @State var clothes : [Cloth] = ([])
     @State var selection = 0
     let db = Firestore.firestore()
-    
+    @EnvironmentObject var database: Database
+
     var body: some View {
             TabView(selection: $selection) {
 
-                OutfitScreen()
+                Group {
+                    if database.outfits.count > 0 {
+                        OutfitScreen()
+                    } else {
+                        NoOutfitPage()
+                    }
+                }
                     .tabItem {
                         Label ("Galleria Outfit", systemImage: "tshirt")
                         .accentColor(.primary)}
