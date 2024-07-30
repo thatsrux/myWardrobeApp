@@ -11,14 +11,14 @@ struct ContentView: View {
     var body: some View {
             TabView(selection: $selection) {
 
-                Group {
-                    if database.outfits.isEmpty {
-                        NoOutfitsPage()
-                    } else {
+//                Group {
+//                    if database.outfits.isEmpty {
+//                        NoOutfitsPage()
+//                    } else {
                         OutfitScreen()
-
-                    }
-                }
+//
+//                    }
+//                }
                     .tabItem {
                         Label ("Galleria Outfit", systemImage: "tshirt")
                         .accentColor(.primary)}
