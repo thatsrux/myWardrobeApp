@@ -15,7 +15,6 @@ struct AdvicesScreen: View {
                     NavigationLink(destination: AddOutfitScreen(outfit: database.outfits[index])) {
                         SingleOutfitGrid(outfit: database.outfits[index])
                     }
-                    Text(dailyOutfitIndex?.description ?? "nothing")
                 } else {
                     Text("No outfit available").font(.subheadline).foregroundColor(.gray)
                 }
@@ -40,6 +39,7 @@ struct AdvicesScreen: View {
            calendar.isDate(today, inSameDayAs: lastUpdateDate) {
             // Same day, retrieve the stored outfit index
             dailyOutfitIndex = UserDefaults.standard.integer(forKey: "dailyOutfitIndex")
+            //print("Retrieved dailyOutfitIndex: \(String(describing: dailyOutfitIndex))")
         } else {
             // New day, update the outfit index
             if !database.outfits.isEmpty {
@@ -48,6 +48,7 @@ struct AdvicesScreen: View {
                 if let index = dailyOutfitIndex {
                     UserDefaults.standard.set(index, forKey: "dailyOutfitIndex")
                 }
+                //print("Generated new dailyOutfitIndex: \(String(describing: dailyOutfitIndex))")
             }
         }
     }
