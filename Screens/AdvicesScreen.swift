@@ -9,6 +9,8 @@ struct AdvicesScreen: View {
     @State private var isColorSeasonScreenActive = false
     @State private var isMagicOutfitScreenActive = false
     
+    @State var cloth: Cloth?
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -59,7 +61,7 @@ struct AdvicesScreen: View {
                         isMagicOutfitScreenActive.toggle()
                     }) {
                         RoundedRectangle(cornerRadius: 10)
-                            .fill(Color(.teal))
+                            .fill(Color(.purple))
                             .frame(height: 100)
                             .overlay(
                                 Text("Magic Outfit")
@@ -67,7 +69,7 @@ struct AdvicesScreen: View {
                                     .foregroundColor(.white)
                             )
                     }.sheet(isPresented: $isMagicOutfitScreenActive) {
-                        MagicOutfit()
+                        MagicOutfit(cloth: cloth)
                     }
                     
                     Button(action: {
@@ -160,12 +162,4 @@ struct AdvicesScreen: View {
             }
         }
     }
-}
-
-
-
-
-
-#Preview {
-    AdvicesScreen().environmentObject(Database())
 }

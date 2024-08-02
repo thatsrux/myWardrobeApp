@@ -1,54 +1,64 @@
 import SwiftUI
 
 struct MagicOutfit: View{
-
+    @State private var isClothGridScreenActive = false
+    @State private var createMagicOutfit = false
+    
+    @State var cloth: Cloth?
+    
+    var outfit:Outfit?
+    
     var body: some View{
-        NavigationView {
+        NavigationStack {
             ScrollView{
-                VStack(spacing:20){
-                    Text("Abbinamenti consentiti:")
-                    HStack(spacing: 40){
-                        Text("Rosso")
-                        Circle().fill(.red).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Circle().fill(.blue).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Text("Blu")
+                VStack{
+                    if let cloth = cloth {
+                        if let image = cloth.image?.toImage() {
+                            Spacer().frame(height:200)
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width:100,height:100)
+                            
+                            Button(action: {
+                               print("Crea outfit")
+                            }){
+                                Circle()
+                                    .fill(Color(.purple))
+                                    .frame(height: 100)
+                                    .overlay(
+                                        Text("Crea outfit")
+                                            .font(.headline)
+                                            .foregroundColor(.white)
+                                    )
+                            }
+                                
+                            
+                        } else {
+                            Text("No Image Available")
+                                .foregroundColor(.gray)
+                        }
+                        
+                        
                     }
-                    HStack(spacing: 40){
-                        Text("Giallo")
-                        Circle().fill(.yellow).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Circle().fill(.green).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Text("Verde")
-                    }
-                    HStack(spacing: 40){
-                        Text("Nero")
-                        Circle().fill(.black).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Circle().fill(.gray).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Text("Grigio")
+                    else{
+                        VStack(spacing:20){
+                            Spacer().frame(height:200)
+                            NavigationLink(destination: PickCloth(selectedCloth: $cloth)) {
+                                Circle()
+                                    .fill(Color(.purple))
+                                    .frame(height: 100)
+                                    .overlay(
+                                        Text("Scegli un capo")
+                                            .font(.headline)
+                                            .foregroundColor(.white)
+                                    )
+                            }
+                        }
                     }
                 }
-                VStack(spacing:20){
-                    Text("Abbinamenti sconsigliati:")
-                    HStack(spacing: 40){
-                        Text("Rosso")
-                        Circle().fill(.red).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Circle().fill(.blue).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Text("Blu")
-                    }
-                    HStack(spacing: 40){
-                        Text("Giallo")
-                        Circle().fill(.yellow).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Circle().fill(.green).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Text("Verde")
-                    }
-                    HStack(spacing: 40){
-                        Text("Nero")
-                        Circle().fill(.black).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Circle().fill(.gray).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Text("Grigio")
-                    }
-                }
-                
-                .navigationTitle("Abbinamento colori")
-            }}
+            }
+            .navigationTitle("Magic Outfit")
+        }
     }
 }
