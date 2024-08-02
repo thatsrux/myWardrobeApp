@@ -1,12 +1,4 @@
-//
-//  AdvicesScreen.swift
-//  myWardrobe
-//
-//  Created by Studente on 02/07/24.
-//
-
 import SwiftUI
-import ColorKit
 
 struct AdvicesScreen: View {
         
@@ -67,6 +59,7 @@ struct AdvicesScreen: View {
                     updateDailyOutfitIndexIfNeeded()
                 }
             }
+
         }
     }
     
@@ -265,9 +258,10 @@ struct SeasonSection: View {
                 }
             }
         }
+
     }
 }
 
 #Preview {
-    AdvicesScreen()
+    AdvicesScreen().environmentObject(Database())
 }

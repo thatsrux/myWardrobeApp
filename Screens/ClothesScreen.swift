@@ -1,10 +1,3 @@
-//
-//  ClothesScreen.swift
-//  myWardrobe
-//
-//  Created by Studente on 02/07/24.
-//
-
 import SwiftUI
 import Firebase
 
@@ -58,21 +51,32 @@ struct ClothesScreen: View {
                 ProgressView("Elaborazione immagine in corso").frame(maxHeight: .infinity, alignment: .center)
             } else {
                 if searchIsActive {
-                    List {
-                        ForEach(database.clothes) { cloth in
-                            if cloth.nome.lowercased().contains(searchText.lowercased()) {
-                                NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                    SingleClothList(cloth: cloth)
+                    if !database.clothes.isEmpty{
+                        List {
+                            ForEach(database.clothes) { cloth in
+                                if cloth.nome.lowercased().contains(searchText.lowercased()) {
+                                    NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                        SingleClothList(cloth: cloth)
+                                    }
                                 }
-                            }
-                        }.onDelete(perform: deleteClothSwipe)
+                            }.onDelete(perform: deleteClothSwipe)
+                        }
                     }
+                    else{
+                        Text("Inserisci un capo d'abbigliamento")
+                    }
+                    
                 }
                 else {
-                    if selectedOption == "elenco" {
+                    if !database.clothes.isEmpty{
+                        if selectedOption == "elenco" {
                         ClothesList()
                     } else {
                         ClothesGrid()
+                    }
+                }
+                    else{
+                        Text("Inserisci un capo d'abbigliamento")
                     }
                 }
             }
