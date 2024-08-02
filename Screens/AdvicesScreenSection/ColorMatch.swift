@@ -1,10 +1,3 @@
-//
-//  ColorMatch.swift
-//  myWardrobe
-//
-//  Created by Studente on 02/08/24.
-//
-
 import SwiftUI
 
 struct ColorMatch: View{
