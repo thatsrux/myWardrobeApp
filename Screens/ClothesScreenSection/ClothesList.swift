@@ -76,7 +76,7 @@ struct ClothesList: View {
             return
         }
         
-        let clothToDelete = database.clothes[index+1]
+        let clothToDelete = database.clothes[index]
         
         Firestore.firestore().collection("Cloth").document(clothToDelete.id.uuidString).delete() { err in
             if let err = err {
