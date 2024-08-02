@@ -11,8 +11,13 @@ struct AddOutfitScreen: View {
     @State var trousers: Cloth?
     @State var shoes: Cloth?
     
+    //@State var missingCloth: String?
+    @State private var missingCloth: [Categoria] = [.NA]
+    
     @State var nomeText = ""
     @State var stile = Stile.NA
+    
+    @State var compatibleClothes: [Cloth] = []
     
     @State var coloreValido = true
     @State var spiegazioneColore = ""
@@ -116,6 +121,31 @@ struct AddOutfitScreen: View {
                             .font(.system(size: 18, weight: .bold))
                     }
                     
+                    if missingCloth != [.NA] && !compatibleClothes.isEmpty {
+                        Text("Completa il tuo outfit con uno di questi capi: ")
+                        ScrollView {
+                            HStack(spacing:25){
+                                ForEach(compatibleClothes) { cloth in
+                                    SingleClothGrid(cloth: cloth)
+                                        .onTapGesture {
+                                            if upperCat.contains(cloth.categoria) {
+                                                shirt = cloth
+                                            }
+                                            else if lowerCat.contains(cloth.categoria) {
+                                                trousers = cloth
+                                            }
+                                            else if shoesCat.contains(cloth.categoria) {
+                                                shoes = cloth
+                                            }
+                                            updateOutfit()
+                                            spiegazioneColore=outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
+                                            spiegazioneStile=outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
+                                        }
+                                }
+                            }.padding(.bottom,20)
+                                .padding(.top,20)
+                        }
+                    }
                     if shirt != nil && trousers != nil && shoes != nil {
                         VStack {
                             Text("Valutazione Colori:")
@@ -185,7 +215,7 @@ struct AddOutfitScreen: View {
                         dismiss()
                     }) {
                         Text("Salva")
-                    }
+                    }.disabled(shirt == nil || trousers == nil || shoes == nil)
                     if edit {
                         Button(action: {
                             deleteOutfit(outfit: outfit!)
@@ -208,6 +238,16 @@ struct AddOutfitScreen: View {
     }
     
     func updateOutfit() {
+        if self.shirt == nil && self.trousers != nil && self.shoes != nil {
+            missingCloth = upperCat
+        } else if self.shirt != nil && self.trousers == nil && self.shoes != nil {
+            missingCloth = lowerCat
+        } else if self.shirt != nil && self.trousers != nil && self.shoes == nil {
+            missingCloth = shoesCat
+        } else {
+            missingCloth = [.NA]
+        }
+        checkCompatibleClothes()
         if first == true {
             guard let outfit = outfit else {return}
             
@@ -376,6 +416,75 @@ struct AddOutfitScreen: View {
         return valutazione
     }
     
+    func quickColorEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> Bool {
+        var coloreValido = true
+        
+        var shirtColors = [closestColor(to: shirt.mainColor.uiColor)]
+        if shirt.colorsNum > 1 {
+            shirtColors.append(closestColor(to: shirt.secondColor.uiColor))
+            if shirt.colorsNum > 2 {
+                shirtColors.append(closestColor(to: shirt.thirdColor.uiColor))
+            }
+        }
+        
+        var trousersColors = [closestColor(to: trousers.mainColor.uiColor)]
+        if trousers.colorsNum > 1 {
+            trousersColors.append(closestColor(to: trousers.secondColor.uiColor))
+            if trousers.colorsNum > 2 {
+                trousersColors.append(closestColor(to: trousers.thirdColor.uiColor))
+            }
+        }
+        
+        var shoesColors = [closestColor(to: shoes.mainColor.uiColor)]
+        if shoes.colorsNum > 1 {
+            shoesColors.append(closestColor(to: shoes.secondColor.uiColor))
+            if shoes.colorsNum > 2 {
+                shoesColors.append(closestColor(to: shoes.thirdColor.uiColor))
+            }
+        }
+        
+        for shirtColor in shirtColors {
+            for trousersColor in trousersColors {
+                if shirtColor == trousersColor {
+                    continue // Ignora la combinazione se i colori sono uguali
+                }
+                if let vietati = coloriVietati[shirtColor], vietati.contains(trousersColor) {
+                    coloreValido = false
+                } else if let consentiti = coloriConsentiti[shirtColor], !consentiti.contains(trousersColor) {
+                    coloreValido = false
+                }
+            }
+        }
+        
+        for shirtColor in shirtColors {
+            for shoesColor in shoesColors {
+                if shirtColor == shoesColor {
+                    continue // Ignora la combinazione se i colori sono uguali
+                }
+                if let vietati = coloriVietati[shirtColor], vietati.contains(shoesColor) {
+                    coloreValido = false
+                } else if let consentiti = coloriConsentiti[shirtColor], !consentiti.contains(shoesColor) {
+                    coloreValido = false
+                }
+            }
+        }
+        
+        for trousersColor in trousersColors {
+            for shoesColor in shoesColors {
+                if trousersColor == shoesColor {
+                    continue // Ignora la combinazione se i colori sono uguali
+                }
+                if let vietati = coloriVietati[trousersColor], vietati.contains(shoesColor) {
+                    coloreValido = false
+                } else if let consentiti = coloriConsentiti[trousersColor], !consentiti.contains(shoesColor) {
+                    coloreValido = false
+                }
+            }
+        }
+        
+        return coloreValido
+    }
+    
     func outfitStyleEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> String {
         let outfit = [shirt, trousers, shoes]
         
@@ -410,6 +519,38 @@ struct AddOutfitScreen: View {
         return valutazione
     }
     
+    func quickStyleEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> Bool {
+        let outfit = [shirt, trousers, shoes]
+        
+        var stileValido = true
+        
+        for c1 in outfit {
+            for c2 in outfit {
+                if c1.stile == Stile.formale && c1.stile != c2.stile && c1.stile != .NA && c2.stile != .NA {
+                    stileValido = false
+                }
+            }
+        }
+        
+        return stileValido
+    }
+    
+    func checkCompatibleClothes() {
+        compatibleClothes.removeAll()
+        for cat in missingCloth {
+            for cloth in database.clothes {
+                if cloth.categoria == cat {
+                    if missingCloth == upperCat && quickColorEvaluation(shirt: cloth, trousers: trousers!, shoes: shoes!) && quickStyleEvaluation(shirt: cloth, trousers: trousers!, shoes: shoes!)
+                        ||
+                        missingCloth == lowerCat && quickColorEvaluation(shirt: shirt!, trousers: cloth, shoes: shoes!) && quickStyleEvaluation(shirt: shirt!, trousers: cloth, shoes: shoes!)
+                        ||
+                        missingCloth == shoesCat && quickColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: cloth) && quickStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: cloth) {
+                        compatibleClothes.append(cloth)
+                    }
+                }
+            }
+        }
+    }
     
     func deleteOutfit(outfit: Outfit){
         Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
