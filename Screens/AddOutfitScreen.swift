@@ -26,16 +26,19 @@ struct AddOutfitScreen: View {
     @State var spiegazioneStile = ""
     
     var outfit: Outfit?
+    @State var isStarFilled : Bool
+    
     var edit = false
     @State var first = true
     
     init(outfit:Outfit) {
         self.outfit = outfit
         edit = true
+        self._isStarFilled = State(initialValue: outfit.favourite)
     }
     
     init(){
-        
+        self._isStarFilled = State(initialValue: false)
     }
     
     var body: some View {
@@ -54,7 +57,7 @@ struct AddOutfitScreen: View {
                                 .clipped()
                                 .frame(width:150,height:150)
                         } else {
-                            Image(uiImage: UIImage(imageLiteralResourceName: "imageNA"))
+                            Image(uiImage: UIImage(imageLiteralResourceName: "shirt"))
                                 .resizable()
                         }
                     }
@@ -69,7 +72,7 @@ struct AddOutfitScreen: View {
                                 .clipped()
                                 .frame(width:150,height:150)
                         } else {
-                            Image(uiImage: UIImage(imageLiteralResourceName: "imageNA"))
+                            Image(uiImage: UIImage(imageLiteralResourceName: "trousers"))
                                 .resizable()
                         }
                     }
@@ -85,14 +88,20 @@ struct AddOutfitScreen: View {
                                 .frame(width:150,height:150)
                         } else {
                             
-                            Image(uiImage: UIImage(imageLiteralResourceName: "imageNA"))
+                            Image(uiImage: UIImage(imageLiteralResourceName: "shoes"))
                                 .resizable()
                         }
                     }
-                }.frame(width:200, height: 550,alignment: Alignment.center)
-                    .border(Color.black)
+                }.frame(width: 200, height: 550)
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
+                    .padding(10)
                 
                 VStack(spacing: 20){
+            
+                    Text("Preferiti: \($isStarFilled.wrappedValue)")
+
                     LabeledContent {
                         TextField("Nome outfit", text: $nomeText)
                             .font(.system(size: 18))
@@ -177,16 +186,30 @@ struct AddOutfitScreen: View {
                                 .font(.system(size: 18))
                         }
                     }
+                }.onAppear{
+                    database.fetchOutfits()
+                    //print(database.favOutfits)
+
                 }
                 .padding(35)
             }.onAppear{
                 updateOutfit()
+                listenToOutfitChanges()
                 if shirt != nil && trousers != nil && shoes != nil {
                     spiegazioneColore=outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
                     spiegazioneStile=outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
                 }
-            }.toolbar {
+            }
+            .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
+        
+                    Button{
+                        favouriteToggle(outfit: outfit!)
+                    }
+                label:{
+                    Image(systemName: isStarFilled ? "star.fill" : "star")
+                }.disabled(!edit)
+                    
                     Button(action: {
                         saveOutfit()
                         dismiss()
@@ -236,6 +259,7 @@ struct AddOutfitScreen: View {
             self.shoes = shoes
             self.nomeText = outfit.nome!
             self.stile = outfit.stile
+            self.isStarFilled = outfit.favourite
             first = false
         }
         else {
@@ -278,7 +302,9 @@ struct AddOutfitScreen: View {
             "trousersId" : trousers?.id.uuidString ?? "00000000-0000-0000-0000-000000000000",
             "shoesId" : shoes?.id.uuidString ?? "00000000-0000-0000-0000-000000000000",
             "nome" : nomeText,
-            "stile" : stile.rawValue
+            "stile" : stile.rawValue,
+            "favourite": outfit.favourite
+
         ]){
             error in
             if let error = error {
@@ -298,7 +324,8 @@ struct AddOutfitScreen: View {
             "trousersId" : trousers!.id.uuidString,
             "shoesId" : shoes!.id.uuidString,
             "nome" : nomeText,
-            "stile" : stile.rawValue
+            "stile" : stile.rawValue,
+            "favourite": outfit!.favourite
         ]){
             error in
             if let error = error {
@@ -536,7 +563,52 @@ struct AddOutfitScreen: View {
         database.fetchOutfits()
         database.fetchCategorieOutfit()
     }
+    
+    func favouriteToggle(outfit:Outfit){
+        outfit.favourite.toggle()
+        self.isStarFilled = outfit.favourite
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("Outfit").document(outfit.id.uuidString)
+        ref.updateData([
+            "favourite": outfit.favourite
+        ]){
+            error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+        }
+        database.fetchOutfits()
+        database.fetchCategorieOutfit()
+    }
+    
+    func listenToOutfitChanges() {
+        guard let outfitId = outfit?.id.uuidString else { return }
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("Outfit").document(outfitId)
+        
+        ref.addSnapshotListener { documentSnapshot, error in
+            if let error = error {
+                print("Error listening to outfit changes: \(error)")
+                return
+            }
+            
+            guard let document = documentSnapshot, document.exists,
+                  let data = document.data() else {
+                print("Document does not exist")
+                return
+            }
+            
+            if let favourite = data["favourite"] as? Bool {
+                self.isStarFilled = favourite
+            }
+        }
+    }
+
 }
+
+
 //
 //#Preview {
 //    AddOutfitScreen()

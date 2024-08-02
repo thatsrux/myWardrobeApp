@@ -3,14 +3,20 @@ import Firebase
 class Database:ObservableObject{
     
     @Published var clothes:[Cloth]
+    @Published var favClothes:[Cloth]
     @Published var categorie:[String]
-    @Published var categorieOutfit:[String]
     @Published var outfits:[Outfit]
+    @Published var favOutfits:[Outfit]
+    @Published var categorieOutfit:[String]
+    
     init(){
         self.clothes = []
+        self.favClothes = []
         self.categorie = []
         self.outfits = []
+        self.favOutfits = []
         self.categorieOutfit = []
+        
         fetchClothes()
         fetchCategorie()
         fetchOutfits()
@@ -19,6 +25,7 @@ class Database:ObservableObject{
     
     func fetchClothes(){
         clothes.removeAll()
+        favClothes.removeAll()
         let db = Firestore.firestore()
         let ref = db.collection("Cloth")
         ref.getDocuments{ snapshot, error in
@@ -58,14 +65,22 @@ class Database:ObservableObject{
                     let stile = data["stile"] as? String ?? ""
                     let dataAgg = data["data"] as? String ?? ""
                     
+                    let favourite = data["favourite"] as? Bool ?? false
+                    
                     let cloth = Cloth(id: UUID(uuidString: id)!, image: image, mainColor: ColorData(red: color1r.CGFloatValue()! , green: color1g.CGFloatValue()!, blue: color1b.CGFloatValue()!, alpha: color1a.CGFloatValue()!), secondColor: ColorData(red: color2r.CGFloatValue()!, green: color2g.CGFloatValue()!, blue: color2b.CGFloatValue()!, alpha: color2a.CGFloatValue()!), thirdColor: ColorData(red: color3r.CGFloatValue()!, green: color3g.CGFloatValue()!, blue: color3b.CGFloatValue()!, alpha: color3a.CGFloatValue()!), colorsNum: colorsNum, categoria: Categoria(rawValue: categoria) ?? Categoria.NA, nome: nome, taglia: Taglia(rawValue: taglia) ?? Taglia.NA,stile: Stile(rawValue: stile) ?? Stile.NA, data: dataAgg.data(using: .utf8)!)
                     
                     self.clothes.append(cloth)
                     self.clothes.sort(by:{$0.data>$1.data})
+                    
+                    
+                    if favourite && !self.favClothes.contains(cloth){
+                        self.favClothes.append(cloth)
+                    }
                 }
             }
         }
     }
+    
     
     func fetchCategorie(){
         categorie.removeAll()
@@ -94,6 +109,7 @@ class Database:ObservableObject{
     
     func fetchOutfits(){
         outfits.removeAll()
+        favOutfits.removeAll()
         let db = Firestore.firestore()
         let ref = db.collection("Outfit")
         ref.getDocuments{ [self] snapshot, error in
@@ -114,6 +130,7 @@ class Database:ObservableObject{
                     let shoesId = data["shoesId"] as? String ?? "Non specificato"
                     let nome = data["nome"] as? String ?? ""
                     let stile = data["stile"] as? String ?? ""
+                    let favourite = data["favourite"] as? Bool ?? false
                     
                     var shirt: Cloth?
                     var trousers: Cloth?
@@ -138,13 +155,21 @@ class Database:ObservableObject{
                     }
                     
                     group.notify(queue: .main) {
-                        let outfit = Outfit(id: UUID(uuidString: id)!, shirt: shirt ?? Cloth(image: UIImage(imageLiteralResourceName: "imageNA")), trousers: trousers ?? Cloth(image: UIImage(imageLiteralResourceName: "imageNA")), shoes: shoes ?? Cloth(image: UIImage(imageLiteralResourceName: "imageNA")), nome: nome, stile: Stile(rawValue: stile) ?? .NA )
+                        let outfit = Outfit(id: UUID(uuidString: id)!, shirt: shirt ?? Cloth(image: UIImage(imageLiteralResourceName: "shirt")), trousers: trousers ?? Cloth(image: UIImage(imageLiteralResourceName: "trousers")), shoes: shoes ?? Cloth(image: UIImage(imageLiteralResourceName: "shoes")), nome: nome, stile: Stile(rawValue: stile) ?? .NA)
+                        
                             self.outfits.append(outfit)
+                        
+                        if favourite && !self.favOutfits.contains(outfit){
+                            self.favOutfits.append(outfit)
+                        }
+                        
+                        
                     }
                 }
             }
         }
     }
+    
     
     func fetchCategorieOutfit(){
         categorieOutfit.removeAll()
@@ -169,6 +194,7 @@ class Database:ObservableObject{
             }
         }
     }
+    
     
     func removeOutfits(){
         outfits.removeAll()

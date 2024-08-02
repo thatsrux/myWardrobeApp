@@ -7,12 +7,13 @@ class Outfit: Identifiable, Hashable{
     var shoes:Cloth?
     var nome: String?
     var stile: Stile
+    var favourite:Bool = false
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
     
-    static func ==(lhs: Outfit, rhs: Outfit) -> Bool {
+    static func == (lhs: Outfit, rhs: Outfit) -> Bool {
         return lhs.id == rhs.id
     }
     
@@ -41,18 +42,7 @@ class Outfit: Identifiable, Hashable{
         self.stile = stile
     }
     
-//    init(shirt:Cloth){
-//        self.shirt = shirt
-//    }
-//    
-//    init(trousers:Cloth){
-//        self.trousers = trousers
-//    }
-//    
-//    init(shoes:Cloth){
-//        self.shoes = shoes
-//    }
-    
+    // QUESTO è INUTILIZZATO
     init(){
         self.shirt = Cloth(image: UIImage())
         self.trousers = Cloth(image: UIImage())
@@ -61,8 +51,9 @@ class Outfit: Identifiable, Hashable{
         self.stile = .NA
     }
     
+    // QUESTO è INUTILIZZATO
     init(cloth:Cloth){
-        if cloth.categoria.rawValue == "T-Shirt"{
+        if cloth.categoria.rawValue == "T-Shirt" {
             self.shirt = cloth
         }
         else if cloth.categoria.rawValue == "Pantalone"{

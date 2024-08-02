@@ -2,7 +2,7 @@ import SwiftUI
 import Firebase
 
 struct OutfitScreen: View {
-    
+    @State private var selectedOption = Stile.NA.rawValue
     
     @State private var isAddOutfitScreenActive = false
     @State private var isInfoOutfitScreenActive = false
@@ -17,22 +17,58 @@ struct OutfitScreen: View {
             ScrollView{
                 VStack{
                     if !searchIsActive {
-                        Text("Tutti gli outfit (\(database.outfits.count.description))").font(.headline)
-                        ScrollView(.horizontal,showsIndicators: false){
-                            HStack(spacing:25){
-                                ForEach(database.outfits, id:\.self){ o in
-                                    NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                        SingleOutfitGrid(outfit: o)
-                                    }
+                        if selectedOption == "pref" {
+                            if !database.favOutfits.isEmpty{
+                                Text("Outfit preferiti (\(database.favOutfits.count.description))").font(.headline)
+                                ScrollView(.horizontal,showsIndicators: false){
+                                    HStack(spacing:25){
+                                        ForEach(database.favOutfits, id:\.self){ o in
+                                            NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                                SingleOutfitGrid(outfit: o)
+                                            }
+                                        }
+                                    }.padding(.leading,20)
                                 }
-                            }.padding(.leading,20)
+                            }
+                        } else {
+                            if !database.outfits.isEmpty {
+                                Text("Outfit \(selectedOption)").font(.headline)
+                                ForEach(database.outfits, id:\.self){ o in
+                                    if selectedOption == o.stile.rawValue {
+                                        ScrollView(.horizontal,showsIndicators: false){
+                                            HStack(spacing:25){
+                                                    NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                                        SingleOutfitGrid(outfit: o)
+                                                    }
+                                                    
+                                            }.padding(.leading,20)
+                                        }
+                                    } else if selectedOption == Stile.NA.rawValue {
+                                        ScrollView(.horizontal,showsIndicators: false){
+                                            HStack(spacing:25){
+                                                    NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                                        SingleOutfitGrid(outfit: o)
+                                                    }
+                                            }.padding(.leading,20)
+                                        }
+                                    }
+                                    
+                                    
+                                }
+                                
+                            }
+                            else {
+                                Text("inserisci outfit")
+                            }
                         }
-                        ForEach(database.categorieOutfit, id:\.self) { category in
-                            Text("Outfit \(category)").font(.headline)
+                        
+                    }
+                    else {
+                        if !database.outfits.isEmpty{
                             ScrollView(.horizontal,showsIndicators: false){
                                 HStack(spacing:25){
                                     ForEach(database.outfits, id:\.self){ o in
-                                        if o.stile.rawValue == category {
+                                        if o.nome!.lowercased().contains(searchText.lowercased()) {
                                             NavigationLink(destination: AddOutfitScreen(outfit: o)) {
                                                 SingleOutfitGrid(outfit: o)
                                             }
@@ -42,19 +78,6 @@ struct OutfitScreen: View {
                             }
                         }
                     }
-                    else {
-                        ScrollView(.horizontal,showsIndicators: false){
-                            HStack(spacing:25){
-                                ForEach(database.outfits, id:\.self){ o in
-                                    if o.nome!.lowercased().contains(searchText.lowercased()) {
-                                        NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                            SingleOutfitGrid(outfit: o)
-                                        }
-                                    }
-                                }
-                            }.padding(.leading,20)
-                        }
-                    }
                 }
                 .navigationTitle("I tuoi outfit")
                 .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca outfit")
@@ -62,10 +85,26 @@ struct OutfitScreen: View {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
                         Button {
                             isAddOutfitScreenActive = true
+                        } label: {
+                            Image(systemName: "plus.circle")
                         }
-                    label: {
-                        Image(systemName: "plus.circle")
-                    }
+                        
+                        Menu() {
+                            Picker(selection: $selectedOption, label: Text("Options")) {
+                                ForEach(Stile.allCases, id: \.self) { style in
+                                    Text(style.rawValue).tag(style.rawValue)
+                                }
+                                Divider()
+                                HStack{
+                                    Text("Preferiti")
+                                    Image(systemName: "star.fill")
+                                }.tag("pref")
+                                
+                            }
+                        } label:{
+                            Image(systemName: "ellipsis.circle")
+                        }
+                        
                     }
                 }
                 .navigationDestination(isPresented: $isAddOutfitScreenActive){
@@ -111,59 +150,91 @@ struct OutfitScreen: View {
             }
         }
     }
-}
-
-struct SingleOutfitGrid: View {
     
-    @EnvironmentObject var database:Database
     
-    private var outfit: Outfit
-    
-    init(outfit: Outfit){
-        self.outfit = outfit
-    }
-    
-    var body: some View {
-        HStack{
-            VStack(spacing:10){
-                Image(uiImage: outfit.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
-                    .resizable()
-                    .scaledToFit()
-                    .clipped()
-                    .frame(width:100,height:100)
-                Image(uiImage: outfit.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
-                    .resizable()
-                    .scaledToFit()
-                    .clipped()
-                    .frame(width:100,height:100)
-                Image(uiImage: outfit.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "imageNA"))
-                    .resizable()
-                    .scaledToFit()
-                    .clipped()
-                    .frame(width:100,height:100)
-                Text(outfit.nome!)
-                    .foregroundStyle(.black)
-            }.frame(width: 150, height: 370)
-                .background(Color.white)
-                .cornerRadius(10)
-                .contextMenu(menuItems: {
-                    Button("Elimina", role: .destructive, action: {
-                        deleteOutfit(outfit: outfit)
-                    })
-                })
-                .shadow(radius: 5)
-                .padding(10)
+    struct SingleOutfitGrid: View {
+        
+        @EnvironmentObject var database:Database
+        
+        private var outfit: Outfit
+        
+        
+        init(outfit: Outfit){
+            self.outfit = outfit
         }
-    }
-    
-    func deleteOutfit(outfit: Outfit){
-        Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
-            if let err = err {
-                print("Error removing document: \(err)")
-            } else {
-                print("Document \(outfit.id) successfully removed!")
+        
+        var body: some View {
+            HStack{
+                VStack(spacing:10){
+                    Image(uiImage: outfit.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shirt"))
+                        .resizable()
+                        .scaledToFit()
+                        .clipped()
+                        .frame(width:100,height:100)
+                    Image(uiImage: outfit.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "trousers"))
+                        .resizable()
+                        .scaledToFit()
+                        .clipped()
+                        .frame(width:100,height:100)
+                    Image(uiImage: outfit.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shoes"))
+                        .resizable()
+                        .scaledToFit()
+                        .clipped()
+                        .frame(width:100,height:100)
+                    Text(outfit.nome!)
+                        .foregroundStyle(.black)
+                }.frame(width: 150, height: 370)
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .contextMenu(menuItems: {
+                        Button(role: .destructive){
+                            deleteOutfit(outfit: outfit)
+                        }
+                    label:{
+                        Label("Elimina", systemImage: "trash")
+                        
+                    }
+                        Button{
+                            favouriteToggle(outfit: outfit)
+                        }
+                    label:{
+                        Label(!database.favOutfits.contains(outfit) ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti", systemImage:!database.favOutfits.contains(outfit) ? "star" : "star.fill")
+                    }
+                    })
+                    .shadow(radius: 5)
+                    .padding(10)
             }
         }
-        database.fetchOutfits()
+        
+        func favouriteToggle(outfit:Outfit){
+            
+            outfit.favourite.toggle()
+            
+            let db = Firestore.firestore()
+            let ref = db.collection("Outfit").document(outfit.id.uuidString)
+            ref.updateData([
+                "favourite": outfit.favourite
+            ]){
+                error in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+            }
+            database.fetchOutfits()
+            database.fetchCategorieOutfit()
+        }
+        
+        
+        
+        func deleteOutfit(outfit: Outfit){
+            Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
+                if let err = err {
+                    print("Error removing document: \(err)")
+                } else {
+                    print("Document \(outfit.id) successfully removed!")
+                }
+            }
+            database.fetchOutfits()
+        }
     }
 }

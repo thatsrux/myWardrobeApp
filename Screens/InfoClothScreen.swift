@@ -7,6 +7,8 @@ struct InfoClothScreen: View {
     var image: UIImage
     
     var cloth:Cloth
+    @State var isStarFilled : Bool
+    
     @State var nomeText = ""
     @State var tagliaText = Taglia.NA
     @State var categoriaClassificata = Categoria.NA
@@ -30,7 +32,8 @@ struct InfoClothScreen: View {
     
     init(cloth: Cloth){
         self.cloth = cloth
-        
+        self._isStarFilled = State(initialValue: cloth.favourite)
+
         self.nomeText = cloth.nome
         self.tagliaText = cloth.taglia
         self.categoriaClassificata = cloth.categoria
@@ -38,11 +41,13 @@ struct InfoClothScreen: View {
         
         self.image = (cloth.image?.toImage())!
         edit = true
+        
     }
     
     init(image: UIImage) {
+        self._isStarFilled = State(initialValue: false)
         let backgroundRemoval = BackgroundRemoval()
-        
+
         do {
             imageNoBackground = try backgroundRemoval.removeBackground(image: image)
             self.image = imageNoBackground!.croppedToBoundingBox() ?? imageNoBackground!
@@ -58,6 +63,7 @@ struct InfoClothScreen: View {
         } else {
             classifier.detect(uiImage: image)
         }
+
     }
     
     var body: some View {
@@ -269,6 +275,8 @@ struct InfoClothScreen: View {
             
         }
         .onAppear {
+            listenToClothChanges()
+        
             if !edit {
                 extractColorsAndClassify()
             }
@@ -281,6 +289,12 @@ struct InfoClothScreen: View {
         }
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
+                Button {
+                    favouriteToggle(cloth: cloth)
+                } label: {
+                    Image(systemName: isStarFilled ? "star.fill" : "star")
+                }.disabled(!edit)
+                
                 Button(action: {
                     saveCloth()
                     dismiss()
@@ -296,6 +310,7 @@ struct InfoClothScreen: View {
                 }
             }
         }
+
         .navigationTitle(cloth.nome)
     }
     
@@ -449,7 +464,8 @@ struct InfoClothScreen: View {
                          "color3b": cloth.thirdColor.blue.description,
                          "colorsnum" : cloth.colorsNum,
                          "stile": cloth.stile.rawValue,
-                         "data":dataString
+                         "data":dataString,
+                         "favourite": cloth.favourite
                         ]){
                 error in
                 if let error = error {
@@ -466,6 +482,51 @@ struct InfoClothScreen: View {
     func addColor() {
         colorsNum += 1
     }
+    
+    func favouriteToggle(cloth:Cloth){
+        
+        cloth.favourite.toggle()
+        self.isStarFilled = cloth.favourite
+
+        let db = Firestore.firestore()
+        let ref = db.collection("Cloth").document(cloth.id.uuidString)
+        ref.updateData([
+            "favourite": cloth.favourite
+        ]){
+            error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+        }
+        database.fetchClothes()
+        database.fetchCategorie()
+    }
+
+
+    
+    func listenToClothChanges() {
+        let db = Firestore.firestore()
+        let ref = db.collection("Cloth").document(cloth.id.uuidString)
+        
+        ref.addSnapshotListener { documentSnapshot, error in
+            if let error = error {
+                print("Error listening to cloth changes: \(error)")
+                return
+            }
+            
+            guard let document = documentSnapshot, document.exists, let data = document.data() else {
+                print("Document does not exist")
+                return
+            }
+            
+            if let favourite = data["favourite"] as? Bool {
+                DispatchQueue.main.async {
+                    self.isStarFilled = favourite
+                }
+            }
+        }
+    }
+
 }
 
 extension Array {
