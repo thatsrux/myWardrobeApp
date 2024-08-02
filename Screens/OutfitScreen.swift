@@ -2,7 +2,7 @@ import SwiftUI
 import Firebase
 
 struct OutfitScreen: View {
-    
+    @State private var selectedOption = Stile.NA.rawValue
     
     @State private var isAddOutfitScreenActive = false
     @State private var isInfoOutfitScreenActive = false
@@ -17,63 +17,66 @@ struct OutfitScreen: View {
             ScrollView{
                 VStack{
                     if !searchIsActive {
-                        if !database.favOutfits.isEmpty{
-                            Text("Outfit preferiti (\(database.favOutfits.count.description))").font(.headline)
-                            ScrollView(.horizontal,showsIndicators: false){
-                                HStack(spacing:25){
-                                    ForEach(database.favOutfits, id:\.self){ o in
-                                        NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                            SingleOutfitGrid(outfit: o)
-                                        }
-                                    }
-                                }.padding(.leading,20)
-                            }
-                        }
-                        if !database.outfits.isEmpty{
-                            Text("Tutti gli outfit (\(database.outfits.count.description))").font(.headline)
-                            ScrollView(.horizontal,showsIndicators: false){
-                                HStack(spacing:25){
-                                    ForEach(database.outfits, id:\.self){ o in
-                                        NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                            SingleOutfitGrid(outfit: o)
-                                        }
-                                    }
-                                }.padding(.leading,20)
-                            }
-                            
-                            ForEach(database.categorieOutfit, id:\.self) { category in
-                                Text("Outfit \(category)").font(.headline)
+                        if selectedOption == "pref" {
+                            if !database.favOutfits.isEmpty{
+                                Text("Outfit preferiti (\(database.favOutfits.count.description))").font(.headline)
                                 ScrollView(.horizontal,showsIndicators: false){
                                     HStack(spacing:25){
-                                        ForEach(database.outfits, id:\.self){ o in
-                                            if o.stile.rawValue == category {
-                                                NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                                    SingleOutfitGrid(outfit: o)
-                                                }
+                                        ForEach(database.favOutfits, id:\.self){ o in
+                                            NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                                SingleOutfitGrid(outfit: o)
                                             }
                                         }
                                     }.padding(.leading,20)
                                 }
                             }
+                        } else {
+                            if !database.outfits.isEmpty {
+                                Text("Outfit \(selectedOption)").font(.headline)
+                                ForEach(database.outfits, id:\.self){ o in
+                                    if selectedOption == o.stile.rawValue {
+                                        ScrollView(.horizontal,showsIndicators: false){
+                                            HStack(spacing:25){
+                                                    NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                                        SingleOutfitGrid(outfit: o)
+                                                    }
+                                                    
+                                            }.padding(.leading,20)
+                                        }
+                                    } else if selectedOption == Stile.NA.rawValue {
+                                        ScrollView(.horizontal,showsIndicators: false){
+                                            HStack(spacing:25){
+                                                    NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                                        SingleOutfitGrid(outfit: o)
+                                                    }
+                                            }.padding(.leading,20)
+                                        }
+                                    }
+                                    
+                                    
+                                }
+                                
+                            }
+                            else {
+                                Text("inserisci outfit")
+                            }
                         }
-                        else{
-                            Text("Inserisci un outfit")
-                        }
+                        
                     }
                     else {
                         if !database.outfits.isEmpty{
                             ScrollView(.horizontal,showsIndicators: false){
-                            HStack(spacing:25){
-                                ForEach(database.outfits, id:\.self){ o in
-                                    if o.nome!.lowercased().contains(searchText.lowercased()) {
-                                        NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                            SingleOutfitGrid(outfit: o)
+                                HStack(spacing:25){
+                                    ForEach(database.outfits, id:\.self){ o in
+                                        if o.nome!.lowercased().contains(searchText.lowercased()) {
+                                            NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                                SingleOutfitGrid(outfit: o)
+                                            }
                                         }
                                     }
-                                }
-                            }.padding(.leading,20)
+                                }.padding(.leading,20)
+                            }
                         }
-                    }
                     }
                 }
                 .navigationTitle("I tuoi outfit")
@@ -85,6 +88,23 @@ struct OutfitScreen: View {
                         } label: {
                             Image(systemName: "plus.circle")
                         }
+                        
+                        Menu() {
+                            Picker(selection: $selectedOption, label: Text("Options")) {
+                                ForEach(Stile.allCases, id: \.self) { style in
+                                    Text(style.rawValue).tag(style.rawValue)
+                                }
+                                Divider()
+                                HStack{
+                                    Text("Preferiti")
+                                    Image(systemName: "star.fill")
+                                }.tag("pref")
+                                
+                            }
+                        } label:{
+                            Image(systemName: "ellipsis.circle")
+                        }
+                        
                     }
                 }
                 .navigationDestination(isPresented: $isAddOutfitScreenActive){
