@@ -215,7 +215,7 @@ struct AddOutfitScreen: View {
                         dismiss()
                     }) {
                         Text("Salva")
-                    }.disabled(shirt == nil || trousers == nil || shoes == nil)
+                    }.disabled(shirt == nil && trousers == nil && shoes == nil)
                     if edit {
                         Button(action: {
                             deleteOutfit(outfit: outfit!)
