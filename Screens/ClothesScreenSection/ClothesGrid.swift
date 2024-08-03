@@ -18,46 +18,7 @@ struct ClothesGrid: View {
                         HStack(spacing:25){
                             ForEach(database.favClothes, id:\.self){ cloth in
                                 NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                    VStack{
-                                        VStack {
-                                            Image(uiImage: (cloth.image?.toImage())!)
-                                                .resizable()
-                                                .scaledToFit()
-                                                .clipped()
-                                                .cornerRadius(10)
-                                                .padding(5)
-                                            HStack{
-                                                Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                if cloth.colorsNum > 1 {
-                                                    Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                    if cloth.colorsNum > 2 {
-                                                        Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                    }
-                                                }
-                                            }
-                                            Text(cloth.nome)
-                                                .padding(5)
-                                                .foregroundStyle(.black)
-                                            if cloth.taglia != .NA {
-                                                Text(cloth.taglia.rawValue)
-                                            }
-                                        }
-                                    }.frame(width: 150, height: 200)
-                                        .background(Color.white)
-                                        .cornerRadius(10)
-                                        .shadow(radius: 5)
-                                        .contextMenu(menuItems: {
-                                            Button("Elimina", role: .destructive, action: {
-                                                deleteCloth(cloth: cloth)
-                                            })
-                                        
-                                    Button{
-                                        favouriteToggle(cloth: cloth)
-                                    }
-                                    label:{
-                                        Label(!database.favClothes.contains(cloth) ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti", systemImage:!database.favClothes.contains(cloth) ? "star" : "star.fill")
-                                    }
-                                        })
+                                    SingleClothGrid(cloth: cloth)
                                 }
                             }
                         }.padding(.leading,20)
@@ -70,46 +31,7 @@ struct ClothesGrid: View {
                         ForEach(database.clothes, id: \.self) { cloth in
                             if cloth.categoria.rawValue == category {
                                 NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                    VStack{
-                                        VStack {
-                                            Image(uiImage: (cloth.image?.toImage())!)
-                                                .resizable()
-                                                .scaledToFit()
-                                                .clipped()
-                                                .cornerRadius(10)
-                                                .padding(5)
-                                            HStack{
-                                                Circle().fill(cloth.mainColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                if cloth.colorsNum > 1 {
-                                                    Circle().fill(cloth.secondColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                    if cloth.colorsNum > 2 {
-                                                        Circle().fill(cloth.thirdColor.toColor()).frame(width: 20, height: 20).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                                                    }
-                                                }
-                                            }
-                                            Text(cloth.nome)
-                                                .padding(5)
-                                                .foregroundStyle(.black)
-                                            if cloth.taglia != .NA {
-                                                Text(cloth.taglia.rawValue)
-                                            }
-                                        }
-                                    }.frame(width: 150, height: 200)
-                                        .background(Color.white)
-                                        .cornerRadius(10)
-                                        .shadow(radius: 5)
-                                        .contextMenu(menuItems: {
-                                            Button("Elimina", role: .destructive, action: {
-                                                deleteCloth(cloth: cloth)
-                                            })
-                                        
-                                    Button{
-                                        favouriteToggle(cloth: cloth)
-                                    }
-                                    label:{
-                                        Label(!database.favClothes.contains(cloth) ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti", systemImage:!database.favClothes.contains(cloth) ? "star" : "star.fill")
-                                    }
-                                        })
+                                    SingleClothGrid(cloth: cloth)
                                 }
                             }
                         }
@@ -118,36 +40,6 @@ struct ClothesGrid: View {
             }
             .padding()
         }
-    }
-    
-    func deleteCloth(cloth:Cloth){
-        Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
-            if let err = err {
-                print("Error removing document: \(err)")
-            } else {
-                print("Document successfully removed!")
-            }
-        }
-        database.fetchClothes()
-        database.fetchCategorie()
-    }
-    
-    func favouriteToggle(cloth:Cloth){
-        
-        cloth.favourite.toggle()
-        
-        let db = Firestore.firestore()
-        let ref = db.collection("Cloth").document(cloth.id.uuidString)
-        ref.updateData([
-            "favourite": cloth.favourite
-        ]){
-            error in
-            if let error = error {
-                print(error.localizedDescription)
-            }
-        }
-        database.fetchClothes()
-        database.fetchCategorie()
     }
 }
 
@@ -212,8 +104,22 @@ struct SingleClothGrid: View {
                 print("Document successfully removed!")
             }
         }
+        for outfit in database.outfits {
+            print(outfit.shirt!.id, cloth.id)
+            if outfit.shirt!.id == cloth.id || outfit.trousers!.id == cloth.id || outfit.shoes!.id == cloth.id {
+                Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
+                    if let err = err {
+                        print("Error removing document: \(err)")
+                    } else {
+                        print("Document \(outfit.id) successfully removed!")
+                    }
+                }
+            }
+        }
         database.fetchClothes()
+        database.fetchOutfits()
         database.fetchCategorie()
+        database.fetchCategorieOutfit()
     }
     
     func favouriteToggle(cloth:Cloth){

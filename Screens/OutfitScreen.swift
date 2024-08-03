@@ -226,9 +226,6 @@ struct OutfitScreen: View {
                 }
             }
         }
-        
-        
-        
         func deleteOutfit(outfit: Outfit){
             Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
                 if let err = err {
