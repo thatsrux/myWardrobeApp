@@ -18,8 +18,8 @@ struct AdvicesScreen: View {
                     Text("Outfit del giorno").font(.headline)
                     
                     if let index = dailyOutfitIndex, !database.outfits.isEmpty {
-                        NavigationLink(destination: AddOutfitScreen(outfit: database.outfits[index])) {
-                            SingleOutfitGrid(outfit: database.outfits[index])
+                        NavigationLink(destination: AddOutfitScreen(outfit: database.outfits[0])) {
+                            SingleOutfitGrid(outfit: database.outfits[0])
                         }
                     } else {
                         Text("No outfit available").font(.subheadline).foregroundColor(.gray)

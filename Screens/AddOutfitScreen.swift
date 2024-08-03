@@ -11,7 +11,6 @@ struct AddOutfitScreen: View {
     @State var trousers: Cloth?
     @State var shoes: Cloth?
     
-    //@State var missingCloth: String?
     @State private var missingCloth: [Categoria] = [.NA]
     
     @State var nomeText = ""
@@ -58,11 +57,19 @@ struct AddOutfitScreen: View {
                         categoria = upperCat
                     }) {
                         if let shirt = shirt, let image = shirt.image?.toImage() {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .clipped()
-                                .frame(width:150,height:150)
+                            VStack(spacing:5){
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipped()
+                                    .frame(width:150,height:150)
+                                
+                                Button(action: {
+                                    
+                                }){
+                                    Image(systemName: "xmark").foregroundColor(.red)
+                                }
+                            }
                         } else {
                             Image(uiImage: UIImage(imageLiteralResourceName: "shirt"))
                                 .resizable()
@@ -73,11 +80,19 @@ struct AddOutfitScreen: View {
                         categoria = lowerCat
                     }) {
                         if let trousers = trousers, let image = trousers.image?.toImage() {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .clipped()
-                                .frame(width:150,height:150)
+                            VStack(spacing:5){
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipped()
+                                    .frame(width:150,height:150)
+                                
+                                Button(action: {
+                                    
+                                }){
+                                    Image(systemName: "xmark").foregroundColor(.red)
+                                }
+                            }
                         } else {
                             Image(uiImage: UIImage(imageLiteralResourceName: "trousers"))
                                 .resizable()
@@ -88,11 +103,19 @@ struct AddOutfitScreen: View {
                         categoria = shoesCat
                     }) {
                         if let shoes = shoes, let image = shoes.image?.toImage() {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .clipped()
-                                .frame(width:150,height:150)
+                            VStack(spacing:1){
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipped()
+                                    .frame(width:150,height:150)
+                                
+                                Button(action: {
+                                    
+                                }){
+                                    Image(systemName: "xmark").foregroundColor(.red)
+                                }
+                            }
                         } else {
                             
                             Image(uiImage: UIImage(imageLiteralResourceName: "shoes"))
@@ -195,7 +218,7 @@ struct AddOutfitScreen: View {
                     }
                 }.onAppear{
                     database.fetchOutfits()
-              }
+                }
                 .padding(35)
             }.onAppear{
                 updateOutfit()
@@ -213,7 +236,7 @@ struct AddOutfitScreen: View {
                     }
                 label:{
                     Image(systemName: isStarFilled ? "star.fill" : "star")
-                }.disabled(!edit)
+                }.disabled(shirt == nil && trousers == nil && shoes == nil)
                     
                     Button(action: {
                         saveOutfit()
