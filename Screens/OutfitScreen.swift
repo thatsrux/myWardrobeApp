@@ -36,7 +36,9 @@ struct OutfitScreen: View {
                             }
                         } else {
                             if !database.outfits.isEmpty {
-                                Text("Outfit \(selectedOption)").font(.headline)
+                               selectedOption == Stile.NA.rawValue ? Text("Tutti gli outfit").font(.headline)
+                                    : Text("Outfit \(selectedOption)").font(.headline)
+                                
                                 LazyVGrid(columns: columns, spacing: 10) {
                                 ForEach(database.outfits, id:\.self){ o in
                                     if selectedOption == o.stile.rawValue || selectedOption == Stile.NA.rawValue {
@@ -197,22 +199,32 @@ struct OutfitScreen: View {
             }
         }
         
-        func favouriteToggle(outfit:Outfit){
+        func favouriteToggle(outfit: Outfit) {
             
-            outfit.favourite.toggle()
+            if database.favOutfits.contains(outfit){
+                outfit.favourite = false
+            }
+            else{
+                outfit.favourite = true
+            }
             
             let db = Firestore.firestore()
             let ref = db.collection("Outfit").document(outfit.id.uuidString)
+            
             ref.updateData([
                 "favourite": outfit.favourite
-            ]){
-                error in
+            ]) { error in
                 if let error = error {
-                    print(error.localizedDescription)
+                    print("Errore nell'aggiornamento del database: \(error.localizedDescription)")
+                } else {
+                    print("Aggiornamento del database riuscito")
+                    // Aggiorna l'interfaccia utente dopo l'aggiornamento del database
+                    DispatchQueue.main.async {
+                        database.fetchOutfits()
+                        database.fetchCategorieOutfit()
+                    }
                 }
             }
-            database.fetchOutfits()
-            database.fetchCategorieOutfit()
         }
         
         
