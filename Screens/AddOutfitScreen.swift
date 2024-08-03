@@ -37,6 +37,13 @@ struct AddOutfitScreen: View {
         self._isStarFilled = State(initialValue: outfit.favourite)
     }
     
+    init(shirt: Cloth, trousers: Cloth, shoes: Cloth) {
+        self.shirt = shirt
+        self.trousers = trousers
+        self.shoes = shoes
+        self._isStarFilled = State(initialValue: false)
+    }
+    
     init(){
         self._isStarFilled = State(initialValue: false)
     }
@@ -99,9 +106,9 @@ struct AddOutfitScreen: View {
                     .padding(10)
                 
                 VStack(spacing: 20){
-            
+                    
                     Text("Preferiti: \($isStarFilled.wrappedValue)")
-
+                    
                     LabeledContent {
                         TextField("Nome outfit", text: $nomeText)
                             .font(.system(size: 18))
@@ -188,7 +195,7 @@ struct AddOutfitScreen: View {
                     }
                 }.onAppear{
                     database.fetchOutfits()
-                }
+              }
                 .padding(35)
             }.onAppear{
                 updateOutfit()
@@ -200,7 +207,7 @@ struct AddOutfitScreen: View {
             }
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
-        
+                    
                     Button{
                         favouriteToggle(outfit: outfit!)
                     }
@@ -302,7 +309,7 @@ struct AddOutfitScreen: View {
             "nome" : nomeText,
             "stile" : stile.rawValue,
             "favourite": outfit.favourite
-
+            
         ]){
             error in
             if let error = error {
@@ -414,75 +421,6 @@ struct AddOutfitScreen: View {
         return valutazione
     }
     
-    func quickColorEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> Bool {
-        var coloreValido = true
-        
-        var shirtColors = [closestColor(to: shirt.mainColor.uiColor)]
-        if shirt.colorsNum > 1 {
-            shirtColors.append(closestColor(to: shirt.secondColor.uiColor))
-            if shirt.colorsNum > 2 {
-                shirtColors.append(closestColor(to: shirt.thirdColor.uiColor))
-            }
-        }
-        
-        var trousersColors = [closestColor(to: trousers.mainColor.uiColor)]
-        if trousers.colorsNum > 1 {
-            trousersColors.append(closestColor(to: trousers.secondColor.uiColor))
-            if trousers.colorsNum > 2 {
-                trousersColors.append(closestColor(to: trousers.thirdColor.uiColor))
-            }
-        }
-        
-        var shoesColors = [closestColor(to: shoes.mainColor.uiColor)]
-        if shoes.colorsNum > 1 {
-            shoesColors.append(closestColor(to: shoes.secondColor.uiColor))
-            if shoes.colorsNum > 2 {
-                shoesColors.append(closestColor(to: shoes.thirdColor.uiColor))
-            }
-        }
-        
-        for shirtColor in shirtColors {
-            for trousersColor in trousersColors {
-                if shirtColor == trousersColor {
-                    continue // Ignora la combinazione se i colori sono uguali
-                }
-                if let vietati = coloriVietati[shirtColor], vietati.contains(trousersColor) {
-                    coloreValido = false
-                } else if let consentiti = coloriConsentiti[shirtColor], !consentiti.contains(trousersColor) {
-                    coloreValido = false
-                }
-            }
-        }
-        
-        for shirtColor in shirtColors {
-            for shoesColor in shoesColors {
-                if shirtColor == shoesColor {
-                    continue // Ignora la combinazione se i colori sono uguali
-                }
-                if let vietati = coloriVietati[shirtColor], vietati.contains(shoesColor) {
-                    coloreValido = false
-                } else if let consentiti = coloriConsentiti[shirtColor], !consentiti.contains(shoesColor) {
-                    coloreValido = false
-                }
-            }
-        }
-        
-        for trousersColor in trousersColors {
-            for shoesColor in shoesColors {
-                if trousersColor == shoesColor {
-                    continue // Ignora la combinazione se i colori sono uguali
-                }
-                if let vietati = coloriVietati[trousersColor], vietati.contains(shoesColor) {
-                    coloreValido = false
-                } else if let consentiti = coloriConsentiti[trousersColor], !consentiti.contains(shoesColor) {
-                    coloreValido = false
-                }
-            }
-        }
-        
-        return coloreValido
-    }
-    
     func outfitStyleEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> String {
         let outfit = [shirt, trousers, shoes]
         
@@ -515,22 +453,6 @@ struct AddOutfitScreen: View {
         }
         
         return valutazione
-    }
-    
-    func quickStyleEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> Bool {
-        let outfit = [shirt, trousers, shoes]
-        
-        var stileValido = true
-        
-        for c1 in outfit {
-            for c2 in outfit {
-                if c1.stile == Stile.formale && c1.stile != c2.stile && c1.stile != .NA && c2.stile != .NA {
-                    stileValido = false
-                }
-            }
-        }
-        
-        return stileValido
     }
     
     func checkCompatibleClothes() {
@@ -603,8 +525,94 @@ struct AddOutfitScreen: View {
             }
         }
     }
-
+    
 }
+
+func quickColorEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> Bool {
+    var coloreValido = true
+    
+    var shirtColors = [closestColor(to: shirt.mainColor.uiColor)]
+    if shirt.colorsNum > 1 {
+        shirtColors.append(closestColor(to: shirt.secondColor.uiColor))
+        if shirt.colorsNum > 2 {
+            shirtColors.append(closestColor(to: shirt.thirdColor.uiColor))
+        }
+    }
+    
+    var trousersColors = [closestColor(to: trousers.mainColor.uiColor)]
+    if trousers.colorsNum > 1 {
+        trousersColors.append(closestColor(to: trousers.secondColor.uiColor))
+        if trousers.colorsNum > 2 {
+            trousersColors.append(closestColor(to: trousers.thirdColor.uiColor))
+        }
+    }
+    
+    var shoesColors = [closestColor(to: shoes.mainColor.uiColor)]
+    if shoes.colorsNum > 1 {
+        shoesColors.append(closestColor(to: shoes.secondColor.uiColor))
+        if shoes.colorsNum > 2 {
+            shoesColors.append(closestColor(to: shoes.thirdColor.uiColor))
+        }
+    }
+    
+    for shirtColor in shirtColors {
+        for trousersColor in trousersColors {
+            if shirtColor == trousersColor {
+                continue // Ignora la combinazione se i colori sono uguali
+            }
+            if let vietati = coloriVietati[shirtColor], vietati.contains(trousersColor) {
+                coloreValido = false
+            } else if let consentiti = coloriConsentiti[shirtColor], !consentiti.contains(trousersColor) {
+                coloreValido = false
+            }
+        }
+    }
+    
+    for shirtColor in shirtColors {
+        for shoesColor in shoesColors {
+            if shirtColor == shoesColor {
+                continue // Ignora la combinazione se i colori sono uguali
+            }
+            if let vietati = coloriVietati[shirtColor], vietati.contains(shoesColor) {
+                coloreValido = false
+            } else if let consentiti = coloriConsentiti[shirtColor], !consentiti.contains(shoesColor) {
+                coloreValido = false
+            }
+        }
+    }
+    
+    for trousersColor in trousersColors {
+        for shoesColor in shoesColors {
+            if trousersColor == shoesColor {
+                continue // Ignora la combinazione se i colori sono uguali
+            }
+            if let vietati = coloriVietati[trousersColor], vietati.contains(shoesColor) {
+                coloreValido = false
+            } else if let consentiti = coloriConsentiti[trousersColor], !consentiti.contains(shoesColor) {
+                coloreValido = false
+            }
+        }
+    }
+    
+    return coloreValido
+}
+
+func quickStyleEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> Bool {
+    let outfit = [shirt, trousers, shoes]
+    
+    var stileValido = true
+    
+    for c1 in outfit {
+        for c2 in outfit {
+            if c1.stile == Stile.formale && c1.stile != c2.stile && c1.stile != .NA && c2.stile != .NA {
+                stileValido = false
+            }
+        }
+    }
+    
+    return stileValido
+}
+
 
 
 //
