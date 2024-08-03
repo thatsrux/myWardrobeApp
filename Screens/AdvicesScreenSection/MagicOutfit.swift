@@ -141,6 +141,8 @@ struct MagicOutfit: View{
     
     func generateOutfit(cloth: Cloth) {
         outfit.removeAll()
+        var selectedCloth: [Categoria] = []
+        
         if upperCat.contains(cloth.categoria) {
             selectedCloth = upperCat
         } else if lowerCat.contains(cloth.categoria) {
@@ -169,50 +171,60 @@ struct MagicOutfit: View{
             missingCategory1.append(contentsOf: upperCat)
             missingCategory2.append(contentsOf: lowerCat)
         }
-        for cloth in database.clothes {
-            if missingCategory1.contains(cloth.categoria) {
-                selectedOutfit.append(cloth)
-                break
+        
+        // Trova tutti i vestiti nelle categorie mancanti
+        let missingClothes1: [Cloth] = database.clothes.filter { missingCategory1.contains($0.categoria) }
+        let missingClothes2: [Cloth] = database.clothes.filter { missingCategory2.contains($0.categoria) }
+        
+        // Lista per memorizzare le combinazioni valide
+        var validOutfits: [[Cloth]] = []
+        
+        // Prova tutte le combinazioni possibili
+        for cloth1 in missingClothes1 {
+            for cloth2 in missingClothes2 {
+                let potentialOutfit = [selectedOutfit[0], cloth1, cloth2]
+                if quickColorEvaluation(shirt: potentialOutfit[0], trousers: potentialOutfit[1], shoes: potentialOutfit[2]) &&
+                    quickStyleEvaluation(shirt: potentialOutfit[0], trousers: potentialOutfit[1], shoes: potentialOutfit[2]) {
+                    validOutfits.append(potentialOutfit)
+                }
             }
         }
-        for cloth in database.clothes {
-            if missingCategory2.contains(cloth.categoria) {
-                selectedOutfit.append(cloth)
-                break
-            }
-        }
-        if quickColorEvaluation(shirt: selectedOutfit[0], trousers: selectedOutfit[1], shoes: selectedOutfit[2]) && quickStyleEvaluation(shirt: selectedOutfit[0], trousers: selectedOutfit[1], shoes: selectedOutfit[2]) {
-            print(selectedOutfit[0].nome, selectedOutfit[1].nome, selectedOutfit[2].nome)
+        
+        // Se ci sono outfit validi, seleziona il primo
+        if let bestOutfit = validOutfits.randomElement() {
+            print(bestOutfit[0].nome, bestOutfit[1].nome, bestOutfit[2].nome)
             
+            // Ordinamento degli outfit
             if selectedCloth == upperCat {
                 outfit.append(cloth)
-                if lowerCat.contains(selectedOutfit[1].categoria) && shoesCat.contains(selectedOutfit[2].categoria) {
-                    outfit.append(selectedOutfit[1])
-                    outfit.append(selectedOutfit[2])
+                if lowerCat.contains(bestOutfit[1].categoria) && shoesCat.contains(bestOutfit[2].categoria) {
+                    outfit.append(bestOutfit[1])
+                    outfit.append(bestOutfit[2])
                 } else {
-                    outfit.append(selectedOutfit[2])
-                    outfit.append(selectedOutfit[1])
+                    outfit.append(bestOutfit[2])
+                    outfit.append(bestOutfit[1])
                 }
             } else if selectedCloth == lowerCat {
-                if upperCat.contains(selectedOutfit[1].categoria) && shoesCat.contains(selectedOutfit[2].categoria) {
-                    outfit.append(selectedOutfit[1])
+                if upperCat.contains(bestOutfit[1].categoria) && shoesCat.contains(bestOutfit[2].categoria) {
+                    outfit.append(bestOutfit[1])
                     outfit.append(cloth)
-                    outfit.append(selectedOutfit[2])
+                    outfit.append(bestOutfit[2])
                 } else {
-                    outfit.append(selectedOutfit[2])
+                    outfit.append(bestOutfit[2])
                     outfit.append(cloth)
-                    outfit.append(selectedOutfit[1])
+                    outfit.append(bestOutfit[1])
                 }
             } else {
-                if upperCat.contains(selectedOutfit[1].categoria) && lowerCat.contains(selectedOutfit[2].categoria) {
-                    outfit.append(selectedOutfit[1])
-                    outfit.append(selectedOutfit[2])
+                if upperCat.contains(bestOutfit[1].categoria) && lowerCat.contains(bestOutfit[2].categoria) {
+                    outfit.append(bestOutfit[1])
+                    outfit.append(bestOutfit[2])
                 } else {
-                    outfit.append(selectedOutfit[2])
-                    outfit.append(selectedOutfit[1])
+                    outfit.append(bestOutfit[2])
+                    outfit.append(bestOutfit[1])
                 }
                 outfit.append(cloth)
             }
         }
     }
+
 }
