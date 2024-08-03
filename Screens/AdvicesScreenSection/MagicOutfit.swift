@@ -11,6 +11,9 @@ struct MagicOutfit: View{
     
     @State var outfit: [Cloth] = []
     
+    // Lista per memorizzare le combinazioni valide
+    @State var validOutfits: [[Cloth]] = []
+    
     @State var isOutfitCreated = false
     
     var body: some View{
@@ -85,7 +88,7 @@ struct MagicOutfit: View{
                                         )
                                 }
                                 Button(action: {
-                                    generateOutfit(cloth: cloth!)
+                                    outfit = validOutfits.randomElement()!
                                     isOutfitCreated = true
                                 }){
                                     Circle()
@@ -141,6 +144,7 @@ struct MagicOutfit: View{
     
     func generateOutfit(cloth: Cloth) {
         outfit.removeAll()
+        validOutfits.removeAll()
         var selectedCloth: [Categoria] = []
         
         if upperCat.contains(cloth.categoria) {
@@ -176,8 +180,6 @@ struct MagicOutfit: View{
         let missingClothes1: [Cloth] = database.clothes.filter { missingCategory1.contains($0.categoria) }
         let missingClothes2: [Cloth] = database.clothes.filter { missingCategory2.contains($0.categoria) }
         
-        // Lista per memorizzare le combinazioni valide
-        var validOutfits: [[Cloth]] = []
         
         // Prova tutte le combinazioni possibili
         for cloth1 in missingClothes1 {
@@ -191,7 +193,7 @@ struct MagicOutfit: View{
         }
         
         // Se ci sono outfit validi, seleziona il primo
-        if let bestOutfit = validOutfits.randomElement() {
+        if let bestOutfit = validOutfits.first {
             print(bestOutfit[0].nome, bestOutfit[1].nome, bestOutfit[2].nome)
             
             // Ordinamento degli outfit
