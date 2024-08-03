@@ -236,7 +236,7 @@ struct AddOutfitScreen: View {
                     }
                 label:{
                     Image(systemName: isStarFilled ? "star.fill" : "star")
-                }.disabled(shirt == nil && trousers == nil && shoes == nil)
+                }.disabled(!edit)
                     
                     Button(action: {
                         saveOutfit()
