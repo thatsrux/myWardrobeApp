@@ -89,7 +89,7 @@ struct MagicOutfit: View{
                                 }
                                 Button(action: {
                                     outfit = validOutfits.randomElement()!
-                                    isOutfitCreated = true
+                                    print("CAPO 1: \(outfit[0].nome)\nCAPO 2: \(outfit[1].nome)\nCAPO 3: \(outfit[2].nome)")
                                 }){
                                     Circle()
                                         .fill(Color(.purple))
@@ -155,12 +155,6 @@ struct MagicOutfit: View{
             selectedCloth = shoesCat
         }
         
-        // Array per memorizzare i vestiti selezionati
-        var selectedOutfit: [Cloth] = []
-        
-        // Aggiungi il vestito passato come parametro
-        selectedOutfit.append(cloth)
-        
         // Determina le categorie mancanti
         var missingCategory1: [Categoria] = []
         var missingCategory2: [Categoria] = []
@@ -180,53 +174,57 @@ struct MagicOutfit: View{
         let missingClothes1: [Cloth] = database.clothes.filter { missingCategory1.contains($0.categoria) }
         let missingClothes2: [Cloth] = database.clothes.filter { missingCategory2.contains($0.categoria) }
         
-        
         // Prova tutte le combinazioni possibili
         for cloth1 in missingClothes1 {
             for cloth2 in missingClothes2 {
-                let potentialOutfit = [selectedOutfit[0], cloth1, cloth2]
+                let potentialOutfit = [cloth, cloth1, cloth2]
                 if quickColorEvaluation(shirt: potentialOutfit[0], trousers: potentialOutfit[1], shoes: potentialOutfit[2]) &&
                     quickStyleEvaluation(shirt: potentialOutfit[0], trousers: potentialOutfit[1], shoes: potentialOutfit[2]) {
-                    validOutfits.append(potentialOutfit)
+                    validOutfits.append(orderOutfit(potentialOutfit, selectedCloth: selectedCloth))
                 }
             }
         }
         
         // Se ci sono outfit validi, seleziona il primo
         if let bestOutfit = validOutfits.first {
-            print(bestOutfit[0].nome, bestOutfit[1].nome, bestOutfit[2].nome)
-            
-            // Ordinamento degli outfit
-            if selectedCloth == upperCat {
-                outfit.append(cloth)
-                if lowerCat.contains(bestOutfit[1].categoria) && shoesCat.contains(bestOutfit[2].categoria) {
-                    outfit.append(bestOutfit[1])
-                    outfit.append(bestOutfit[2])
-                } else {
-                    outfit.append(bestOutfit[2])
-                    outfit.append(bestOutfit[1])
-                }
-            } else if selectedCloth == lowerCat {
-                if upperCat.contains(bestOutfit[1].categoria) && shoesCat.contains(bestOutfit[2].categoria) {
-                    outfit.append(bestOutfit[1])
-                    outfit.append(cloth)
-                    outfit.append(bestOutfit[2])
-                } else {
-                    outfit.append(bestOutfit[2])
-                    outfit.append(cloth)
-                    outfit.append(bestOutfit[1])
-                }
-            } else {
-                if upperCat.contains(bestOutfit[1].categoria) && lowerCat.contains(bestOutfit[2].categoria) {
-                    outfit.append(bestOutfit[1])
-                    outfit.append(bestOutfit[2])
-                } else {
-                    outfit.append(bestOutfit[2])
-                    outfit.append(bestOutfit[1])
-                }
-                outfit.append(cloth)
-            }
+            outfit = bestOutfit
         }
     }
 
+    func orderOutfit(_ bestOutfit: [Cloth], selectedCloth: [Categoria]) -> [Cloth] {
+        var outfit: [Cloth] = []
+        
+        if selectedCloth == upperCat {
+            if lowerCat.contains(bestOutfit[1].categoria) && shoesCat.contains(bestOutfit[2].categoria) {
+                outfit.append(bestOutfit[0])
+                outfit.append(bestOutfit[1])
+                outfit.append(bestOutfit[2])
+            } else {
+                outfit.append(bestOutfit[0])
+                outfit.append(bestOutfit[2])
+                outfit.append(bestOutfit[1])
+            }
+        } else if selectedCloth == lowerCat {
+            if upperCat.contains(bestOutfit[1].categoria) && shoesCat.contains(bestOutfit[2].categoria) {
+                outfit.append(bestOutfit[1])
+                outfit.append(bestOutfit[0])
+                outfit.append(bestOutfit[2])
+            } else {
+                outfit.append(bestOutfit[2])
+                outfit.append(bestOutfit[0])
+                outfit.append(bestOutfit[1])
+            }
+        } else {
+            if upperCat.contains(bestOutfit[1].categoria) && lowerCat.contains(bestOutfit[2].categoria) {
+                outfit.append(bestOutfit[1])
+                outfit.append(bestOutfit[2])
+                outfit.append(bestOutfit[0])
+            } else {
+                outfit.append(bestOutfit[2])
+                outfit.append(bestOutfit[1])
+                outfit.append(bestOutfit[0])
+            }
+        }
+        return outfit
+    }
 }
