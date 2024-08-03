@@ -12,6 +12,11 @@ struct OutfitScreen: View {
     
     @EnvironmentObject var database:Database
     
+    
+    let columns = [
+        GridItem(.adaptive(minimum: 160))
+    ]
+    
     var body: some View {
         NavigationStack {
             ScrollView{
@@ -20,40 +25,27 @@ struct OutfitScreen: View {
                         if selectedOption == "pref" {
                             if !database.favOutfits.isEmpty{
                                 Text("Outfit preferiti (\(database.favOutfits.count.description))").font(.headline)
-                                ScrollView(.horizontal,showsIndicators: false){
-                                    HStack(spacing:25){
-                                        ForEach(database.favOutfits, id:\.self){ o in
-                                            NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                                SingleOutfitGrid(outfit: o)
-                                            }
+                                LazyVGrid(columns: columns, spacing: 10) {
+                                    ForEach(database.favOutfits, id:\.self){ o in
+                                        NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                            SingleOutfitGrid(outfit: o)
                                         }
-                                    }.padding(.leading,20)
+                                    }.padding(.leading,10)
+                                        .padding(.trailing,10)
                                 }
                             }
                         } else {
                             if !database.outfits.isEmpty {
                                 Text("Outfit \(selectedOption)").font(.headline)
+                                LazyVGrid(columns: columns, spacing: 10) {
                                 ForEach(database.outfits, id:\.self){ o in
-                                    if selectedOption == o.stile.rawValue {
-                                        ScrollView(.horizontal,showsIndicators: false){
-                                            HStack(spacing:25){
-                                                    NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                                        SingleOutfitGrid(outfit: o)
-                                                    }
-                                                    
-                                            }.padding(.leading,20)
-                                        }
-                                    } else if selectedOption == Stile.NA.rawValue {
-                                        ScrollView(.horizontal,showsIndicators: false){
-                                            HStack(spacing:25){
-                                                    NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                                        SingleOutfitGrid(outfit: o)
-                                                    }
-                                            }.padding(.leading,20)
+                                    if selectedOption == o.stile.rawValue || selectedOption == Stile.NA.rawValue {
+                                            NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                                SingleOutfitGrid(outfit: o)
+                                            }.padding(.leading,10)
+                                                .padding(.trailing,10)
                                         }
                                     }
-                                    
-                                    
                                 }
                                 
                             }
@@ -65,16 +57,15 @@ struct OutfitScreen: View {
                     }
                     else {
                         if !database.outfits.isEmpty{
-                            ScrollView(.horizontal,showsIndicators: false){
-                                HStack(spacing:25){
-                                    ForEach(database.outfits, id:\.self){ o in
-                                        if o.nome!.lowercased().contains(searchText.lowercased()) {
-                                            NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                                SingleOutfitGrid(outfit: o)
-                                            }
+                            LazyVGrid(columns: columns, spacing: 10) {
+                                ForEach(database.outfits, id:\.self){ o in
+                                    if o.nome!.lowercased().contains(searchText.lowercased()) {
+                                        NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                            SingleOutfitGrid(outfit: o)
                                         }
                                     }
-                                }.padding(.leading,20)
+                                }.padding(.leading,10)
+                                    .padding(.trailing,10)
                             }
                         }
                     }
