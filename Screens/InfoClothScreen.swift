@@ -389,9 +389,8 @@ struct InfoClothScreen: View {
             newCloth.stile = stileClassificato
             
             newCloth.colorsNum = colorsNum
-            
-            database.clothes.append(newCloth)
-            InfoClothScreen.save(clothes: database.clothes)
+            newCloth.favourite = isStarFilled
+            InfoClothScreen.save(cloth: newCloth)
         }
         
         database.fetchClothes()
@@ -408,8 +407,7 @@ struct InfoClothScreen: View {
         cloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
         cloth.thirdColor = ColorData(uiColor: UIColor(cpColor3))
         cloth.colorsNum = colorsNum
-        database.clothes.append(cloth)
-        InfoClothScreen.save(clothes: database.clothes)
+        InfoClothScreen.save(cloth: cloth)
     }
     
     func deleteCloth(cloth:Cloth){
@@ -424,13 +422,10 @@ struct InfoClothScreen: View {
         database.fetchCategorie()
     }
     
-    static func save(clothes: [Cloth]) {
+    static func save(cloth:Cloth) {
         
         var img:UIImage?
         
-        
-        for cloth in clothes{
-            
             if let data = cloth.image?.toImage()!.compress(to: 100){
                 img = UIImage(data: data)!
             }
@@ -472,7 +467,7 @@ struct InfoClothScreen: View {
                     print(error.localizedDescription)
                 }
             }
-        }
+        
     }
     
     func removeColor() {
