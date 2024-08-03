@@ -36,7 +36,9 @@ struct OutfitScreen: View {
                             }
                         } else {
                             if !database.outfits.isEmpty {
-                                Text("Outfit \(selectedOption)").font(.headline)
+                               selectedOption == Stile.NA.rawValue ? Text("Tutti gli outfit").font(.headline)
+                                    : Text("Outfit \(selectedOption)").font(.headline)
+                                
                                 LazyVGrid(columns: columns, spacing: 10) {
                                 ForEach(database.outfits, id:\.self){ o in
                                     if selectedOption == o.stile.rawValue || selectedOption == Stile.NA.rawValue {
