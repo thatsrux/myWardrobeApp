@@ -134,7 +134,12 @@ struct ClothesGrid: View {
     
     func favouriteToggle(cloth:Cloth){
         
-        cloth.favourite.toggle()
+        if database.favClothes.contains(cloth){
+            cloth.favourite = false
+        }
+        else{
+            cloth.favourite = true
+        }
         
         let db = Firestore.firestore()
         let ref = db.collection("Cloth").document(cloth.id.uuidString)

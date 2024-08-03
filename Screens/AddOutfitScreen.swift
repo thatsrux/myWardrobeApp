@@ -195,9 +195,7 @@ struct AddOutfitScreen: View {
                     }
                 }.onAppear{
                     database.fetchOutfits()
-                    //print(database.favOutfits)
-                    
-                }
+              }
                 .padding(35)
             }.onAppear{
                 updateOutfit()
