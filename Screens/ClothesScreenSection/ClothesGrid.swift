@@ -84,7 +84,7 @@ struct SingleClothGrid: View {
             .shadow(radius: 5)
             .contextMenu(menuItems: {
                 Button("Elimina", role: .destructive, action: {
-                    deleteCloth(cloth: cloth)
+                    database.deleteCloth(cloth: cloth)
                 })
             
         Button{
@@ -94,32 +94,6 @@ struct SingleClothGrid: View {
             Label(!database.favClothes.contains(cloth) ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti", systemImage:!database.favClothes.contains(cloth) ? "star" : "star.fill")
         }
             })
-    }
-    
-    func deleteCloth(cloth:Cloth){
-        Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
-            if let err = err {
-                print("Error removing document: \(err)")
-            } else {
-                print("Document successfully removed!")
-            }
-        }
-        for outfit in database.outfits {
-            print(outfit.shirt!.id, cloth.id)
-            if outfit.shirt!.id == cloth.id || outfit.trousers!.id == cloth.id || outfit.shoes!.id == cloth.id {
-                Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
-                    if let err = err {
-                        print("Error removing document: \(err)")
-                    } else {
-                        print("Document \(outfit.id) successfully removed!")
-                    }
-                }
-            }
-        }
-        database.fetchClothes()
-        database.fetchOutfits()
-        database.fetchCategorie()
-        database.fetchCategorieOutfit()
     }
     
     func favouriteToggle(cloth:Cloth){

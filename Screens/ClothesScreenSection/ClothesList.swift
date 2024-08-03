@@ -63,7 +63,6 @@ struct ClothesList: View {
         }
     }
     
-    
     func deleteClothSwipe(at offsets:IndexSet){
         
         guard let index = offsets.first else {
@@ -78,15 +77,7 @@ struct ClothesList: View {
         
         let clothToDelete = database.clothes[index]
         
-        Firestore.firestore().collection("Cloth").document(clothToDelete.id.uuidString).delete() { err in
-            if let err = err {
-                print("Error removing document: \(err)")
-            } else {
-                print("Document successfully removed!")
-            }
-        }
-        database.fetchClothes()
-        database.fetchCategorie()
+        database.deleteCloth(cloth: clothToDelete)
     }
     
 }

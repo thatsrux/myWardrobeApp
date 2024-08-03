@@ -195,6 +195,30 @@ class Database:ObservableObject{
         }
     }
     
+    func deleteCloth(cloth:Cloth){
+        Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
+            if let err = err {
+                print("Error removing document: \(err)")
+            } else {
+                print("Document successfully removed!")
+            }
+        }
+        for outfit in outfits {
+            if outfit.shirt!.id == cloth.id || outfit.trousers!.id == cloth.id || outfit.shoes!.id == cloth.id {
+                Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
+                    if let err = err {
+                        print("Error removing document: \(err)")
+                    } else {
+                        print("Document \(outfit.id) successfully removed!")
+                    }
+                }
+            }
+        }
+        fetchClothes()
+        fetchOutfits()
+        fetchCategorie()
+        fetchCategorieOutfit()
+    }
     
     func removeOutfits(){
         outfits.removeAll()

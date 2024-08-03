@@ -32,17 +32,9 @@ struct ClothesScreen: View {
             return
         }
         
-        let clothToDelete = database.clothes[index+1]
+        let clothToDelete = database.clothes[index]
         
-        Firestore.firestore().collection("Cloth").document(clothToDelete.id.uuidString).delete() { err in
-            if let err = err {
-                print("Error removing document: \(err)")
-            } else {
-                print("Document successfully removed!")
-            }
-        }
-        database.fetchClothes()
-        database.fetchCategorie()
+        database.deleteCloth(cloth: clothToDelete)
     }
     
     var body: some View {
