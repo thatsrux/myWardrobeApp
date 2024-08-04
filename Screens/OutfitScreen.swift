@@ -2,7 +2,7 @@ import SwiftUI
 import Firebase
 
 struct OutfitScreen: View {
-    @State private var selectedOption = Stile.NA.rawValue
+    @State private var selectedOption = "AllOutfits"
     
     @State private var isAddOutfitScreenActive = false
     @State private var isInfoOutfitScreenActive = false
@@ -36,12 +36,12 @@ struct OutfitScreen: View {
                             }
                         } else {
                             if !database.outfits.isEmpty {
-                               selectedOption == Stile.NA.rawValue ? Text("Tutti gli outfit").font(.headline)
-                                    : Text("Outfit \(selectedOption)").font(.headline)
+                                selectedOption == "AllOutfits" ? Text("Tutti gli outfit").font(.headline)
+                                : Text("Outfit \(selectedOption)").font(.headline)
                                 
                                 LazyVGrid(columns: columns, spacing: 10) {
-                                ForEach(database.outfits, id:\.self){ o in
-                                    if selectedOption == o.stile.rawValue || selectedOption == Stile.NA.rawValue {
+                                    ForEach(database.outfits, id:\.self){ o in
+                                        if selectedOption == o.stile.rawValue || selectedOption == "AllOutfits" {
                                             NavigationLink(destination: AddOutfitScreen(outfit: o)) {
                                                 SingleOutfitGrid(outfit: o)
                                             }.padding(.leading,10)
@@ -84,6 +84,7 @@ struct OutfitScreen: View {
                         
                         Menu() {
                             Picker(selection: $selectedOption, label: Text("Options")) {
+                                Text("Tutti gli outfit").tag("AllOutfits")
                                 ForEach(Stile.allCases, id: \.self) { style in
                                     Text(style.rawValue).tag(style.rawValue)
                                 }
@@ -226,6 +227,9 @@ struct OutfitScreen: View {
                 }
             }
         }
+        
+        
+        
         func deleteOutfit(outfit: Outfit){
             Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
                 if let err = err {

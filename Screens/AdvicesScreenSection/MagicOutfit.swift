@@ -89,7 +89,6 @@ struct MagicOutfit: View{
                                 }
                                 Button(action: {
                                     outfit = validOutfits.randomElement()!
-                                    print("CAPO 1: \(outfit[0].nome)\nCAPO 2: \(outfit[1].nome)\nCAPO 3: \(outfit[2].nome)")
                                 }){
                                     Circle()
                                         .fill(Color(.purple))
@@ -180,7 +179,9 @@ struct MagicOutfit: View{
                 let potentialOutfit = [cloth, cloth1, cloth2]
                 if quickColorEvaluation(shirt: potentialOutfit[0], trousers: potentialOutfit[1], shoes: potentialOutfit[2]) &&
                     quickStyleEvaluation(shirt: potentialOutfit[0], trousers: potentialOutfit[1], shoes: potentialOutfit[2]) {
-                    validOutfits.append(orderOutfit(potentialOutfit, selectedCloth: selectedCloth))
+                    if let o = orderOutfit(potentialOutfit, selectedCloth: selectedCloth) {
+                        validOutfits.append(o)
+                    }
                 }
             }
         }
@@ -191,7 +192,7 @@ struct MagicOutfit: View{
         }
     }
 
-    func orderOutfit(_ bestOutfit: [Cloth], selectedCloth: [Categoria]) -> [Cloth] {
+    func orderOutfit(_ bestOutfit: [Cloth], selectedCloth: [Categoria]) -> [Cloth]? {
         var outfit: [Cloth] = []
         
         if selectedCloth == upperCat {
@@ -214,7 +215,7 @@ struct MagicOutfit: View{
                 outfit.append(bestOutfit[0])
                 outfit.append(bestOutfit[1])
             }
-        } else {
+        } else if selectedCloth == shoesCat {
             if upperCat.contains(bestOutfit[1].categoria) && lowerCat.contains(bestOutfit[2].categoria) {
                 outfit.append(bestOutfit[1])
                 outfit.append(bestOutfit[2])
@@ -224,6 +225,8 @@ struct MagicOutfit: View{
                 outfit.append(bestOutfit[1])
                 outfit.append(bestOutfit[0])
             }
+        } else {
+            return nil
         }
         return outfit
     }
