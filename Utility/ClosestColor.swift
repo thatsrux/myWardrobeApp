@@ -25,6 +25,7 @@ let colorMap: [String: UIColor] = [
     "Verde Fluo": UIColor.green,
     "Verde Foglia": UIColor(red: 0.23, green: 0.53, blue: 0.22, alpha: 1.0),
     "Verde Scuro": UIColor(red: 0.1, green: 0.28, blue: 0.13, alpha: 1.0),
+    "Verde Scuro2": UIColor(red: 0.34, green: 0.33, blue: 0.18, alpha: 1.0),
     "Verde Oliva": UIColor(red: 0.5, green: 0.5, blue: 0.0, alpha: 1.0),
     "Avio": UIColor(red: 0.43, green: 0.6, blue: 0.75, alpha: 1.0),
     "Avio Scuro": UIColor(red: 0.33, green: 0.43, blue: 0.62, alpha: 1.0),
@@ -56,6 +57,8 @@ let colorMap: [String: UIColor] = [
     // Variazioni del blu notte
     "Blu Notte2": UIColor(red: 0.058, green: 0.02, blue: 0.22, alpha: 1.0),
     "Blu Notte3": UIColor(red: 0.09, green: 0.1, blue: 0.2, alpha: 1.0),
+    "Blu Notte4": UIColor(red: 0, green: 0, blue: 0.2, alpha: 1.0),
+//    "Blu Notte5": UIColor(red: 0.1, green: 0.15, blue: 0.2, alpha: 1.0),
     "Viola": UIColor.purple,
     // Variazioni del viola
     "Viola2": UIColor(red: 0.2, green: 0.1, blue: 0.3, alpha: 1.0),
@@ -79,8 +82,9 @@ let colorMap: [String: UIColor] = [
     "Grigio": UIColor.gray,
     "Nero": UIColor.black,
     "Nero2": UIColor(red: 0.17, green: 0.17, blue: 0, alpha: 1.0),
-    "Nero3": UIColor(red: 0.176, green: 0.169, blue: 0.09, alpha: 1.0), // Se il nero e blu notte si confondono modificare questo
-    "Nero4": UIColor(red: 0.17, green: 0.12, blue: 0.05, alpha: 1.0),
+    //"Nero3": UIColor(red: 0.176, green: 0.169, blue: 0.09, alpha: 1.0), // Se il nero e blu notte si confondono modificare questo
+//    "Nero4": UIColor(red: 0.17, green: 0.12, blue: 0.05, alpha: 1.0),
+//    "Nero5": UIColor(red: 0.16, green: 0.16, blue: 0.16, alpha: 1.0),
     "Bianco": UIColor.white,
     "Bianco2": UIColor(red: 0.93, green: 0.92, blue: 0.92, alpha: 1.0),
     
@@ -121,6 +125,27 @@ func closestColor(to color: UIColor) -> Colore {
     var closestColorName: String?
     var smallestDifference = CGFloat.infinity
     
+    var red: CGFloat = 0
+    var green: CGFloat = 0
+    var blue: CGFloat = 0
+    var alpha: CGFloat = 0
+
+    color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+    
+    let blueConstant = 0.25
+    let differenceConstant = 0.035
+    
+    if blue <= blueConstant && red <= blueConstant && green <= blueConstant {
+        print("RED: \(red), BLUE: \(blue), GREEN: \(green), BLUE-RED: \(blue-red), BLUE-GREEN: \(blue-green), RED-GREEN: \(red-green), GREEN-RED: \(green-red)")
+        if (blue-red >= differenceConstant || blue-green >= differenceConstant) &&
+            (red-green <= 0.03 && red-green > 0 || green-red <= 0.03 && green-red > 0) {
+            return .bluNotte
+        }
+        if blue-red < differenceConstant && blue-green < differenceConstant {
+            return .nero
+        }
+    }
+    
     // Si valuta la differenza dei colori presi in esame con tutti i colori presenti nella mappa.
     // Viene restituito il colore con la differenza minore
     for (name, testColor) in colorMap {
@@ -136,7 +161,6 @@ func closestColor(to color: UIColor) -> Colore {
     
     // Se il colore ha molte variazioni o colori simili, viene utilizzato l'algoritmo CIEDE2000, che risulta più preciso nelle piccole variazioni
     if closestColorName == "Blu Navy" || closestColorName == "Blu Notte" || closestColorName == "Viola" || closestColorName == "Nero" || closestColorName == "Grigio" || closestColorName == "Beige" || closestColorName == "Celeste Scuro" || closestColorName == "Avio Scuro"  {
-        
         for (name, testColor) in colorMap {
             let diff = color.CIEDE2000(compare: testColor)
             if diff < smallestDifference {
