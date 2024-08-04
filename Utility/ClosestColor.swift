@@ -57,8 +57,6 @@ let colorMap: [String: UIColor] = [
     // Variazioni del blu notte
     "Blu Notte2": UIColor(red: 0.058, green: 0.02, blue: 0.22, alpha: 1.0),
     "Blu Notte3": UIColor(red: 0.09, green: 0.1, blue: 0.2, alpha: 1.0),
-    "Blu Notte4": UIColor(red: 0, green: 0, blue: 0.2, alpha: 1.0),
-//    "Blu Notte5": UIColor(red: 0.1, green: 0.15, blue: 0.2, alpha: 1.0),
     "Viola": UIColor.purple,
     // Variazioni del viola
     "Viola2": UIColor(red: 0.2, green: 0.1, blue: 0.3, alpha: 1.0),
@@ -81,15 +79,17 @@ let colorMap: [String: UIColor] = [
     "Marrone Scuro": UIColor(red: 0.32, green: 0.2, blue: 0.05, alpha: 1.0),
     "Grigio": UIColor.gray,
     "Nero": UIColor.black,
-    "Nero2": UIColor(red: 0.17, green: 0.17, blue: 0, alpha: 1.0),
-    //"Nero3": UIColor(red: 0.176, green: 0.169, blue: 0.09, alpha: 1.0), // Se il nero e blu notte si confondono modificare questo
-//    "Nero4": UIColor(red: 0.17, green: 0.12, blue: 0.05, alpha: 1.0),
-//    "Nero5": UIColor(red: 0.16, green: 0.16, blue: 0.16, alpha: 1.0),
+    "Nero2": UIColor(red: 0.17, green: 0.12, blue: 0.05, alpha: 1.0),
     "Bianco": UIColor.white,
     "Bianco2": UIColor(red: 0.93, green: 0.92, blue: 0.92, alpha: 1.0),
     
     // COLORI RIMOSSI
     
+    //"Blu Notte4": UIColor(red: 0, green: 0, blue: 0.2, alpha: 1.
+    //"Blu Notte5": UIColor(red: 0.1, green: 0.15, blue: 0.2, alpha: 1.0),
+    //"Nero2": UIColor(red: 0.17, green: 0.17, blue: 0, alpha: 1.0),
+    //"Nero3": UIColor(red: 0.176, green: 0.169, blue: 0.09, alpha: 1.0), // Se il nero e blu notte si confondono modificare questo
+    //"Nero5": UIColor(red: 0.16, green: 0.16, blue: 0.16, alpha: 1.0),
     //"Viola3": UIColor(red: 0.25, green: 0.18, blue: 0.25, alpha: 1.0),
     //"Viola7": UIColor(red: 0.27, green: 0, blue: 0.4, alpha: 1.0),
     //"Rosa carne": UIColor(red: 0.8, green: 0.3, blue: 0.5, alpha: 1.0),
@@ -136,12 +136,11 @@ func closestColor(to color: UIColor) -> Colore {
     let differenceConstant = 0.035
     
     if blue <= blueConstant && red <= blueConstant && green <= blueConstant {
-        print("RED: \(red), BLUE: \(blue), GREEN: \(green), BLUE-RED: \(blue-red), BLUE-GREEN: \(blue-green), RED-GREEN: \(red-green), GREEN-RED: \(green-red)")
         if (blue-red >= differenceConstant || blue-green >= differenceConstant) &&
             (red-green <= 0.03 && red-green > 0 || green-red <= 0.03 && green-red > 0) {
             return .bluNotte
         }
-        if blue-red < differenceConstant && blue-green < differenceConstant {
+        if blue-red < differenceConstant && blue-green < differenceConstant && blue-red > 0 && blue-green > 0 {
             return .nero
         }
     }
