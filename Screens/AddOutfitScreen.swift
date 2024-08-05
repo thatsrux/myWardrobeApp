@@ -462,6 +462,11 @@ struct AddOutfitScreen: View {
                     combinazionePerfetta = false
                     valutazione += "Stile non coordinato! \(c1.categoria) \(c1.stile) con \(c2.categoria) \(c2.stile).\n"
                 }
+                if (c1.categoria == .giacca || c1.categoria == .giubbino) && c2.categoria == .pantaloncini {
+                    stileValido = false
+                    combinazionePerfetta = false
+                    valutazione += "Stile non coordinato! \(c1.categoria) con \(c2.categoria).\n"
+                }
                 if c1.stile != c2.stile && c1.stile != .NA && c2.stile != .NA {
                     combinazionePerfetta = false
                 }
@@ -632,6 +637,9 @@ func quickStyleEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> Bool {
     for c1 in outfit {
         for c2 in outfit {
             if c1.stile == Stile.formale && c1.stile != c2.stile && c1.stile != .NA && c2.stile != .NA {
+                stileValido = false
+            }
+            if (c1.categoria == .giacca || c1.categoria == .giubbino) && c2.categoria == .pantaloncini {
                 stileValido = false
             }
         }
