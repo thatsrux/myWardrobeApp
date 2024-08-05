@@ -29,6 +29,7 @@ struct AddOutfitScreen: View {
     
     var edit = false
     @State var first = true
+    @State var updateStyle = false
     
     init(outfit:Outfit) {
         self.outfit = outfit
@@ -477,10 +478,17 @@ struct AddOutfitScreen: View {
             valutazione = "L'outfit è ben coordinato\n"
             if combinazionePerfetta {
                 valutazione.append("(stile " + shirt.stile.rawValue+")")
-                stile = shirt.stile
+                if updateStyle {
+                    stile = shirt.stile
+                }
             } else {
                 valutazione.append("(stile sportivo e casual)")
-                stile = .casual
+                if updateStyle {
+                    stile = .casual
+                }
+            }
+            if !updateStyle {
+                updateStyle = true
             }
         }
         
