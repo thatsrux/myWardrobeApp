@@ -39,11 +39,13 @@ let colorMap: [String: UIColor] = [
     // Variazioni del celeste
     "Celeste2": UIColor(red: 0.65, green: 0.9, blue: 0.98, alpha: 1.0),
     "Celeste3": UIColor(red: 0.25, green: 0.56, blue: 0.8, alpha: 1.0),
+    "Celeste4": UIColor(red: 0.75, green: 0.8, blue: 0.9, alpha: 1.0), //NUOVO
     "Celeste Scuro": UIColor(red: 0, green: 0.83, blue: 1, alpha: 1.0),
     // Variazioni del celeste scuro
     "Celeste Scuro2": UIColor(red: 0.32, green: 0.75, blue: 0.84, alpha: 1.0),
     "Celeste Scuro3": UIColor(red: 0.2, green: 0.46, blue: 0.75, alpha: 1.0),
     "Celeste Scuro4": UIColor(red: 0.54, green: 0.8, blue: 0.9, alpha: 1.0),
+    "Celeste Scuro5": UIColor(red: 0.4, green: 0.6, blue: 0.8, alpha: 1.0), //NUOVO, PREVALENTEMENTE PER LE JORDAN UNIVERSITY
     "Blu": UIColor.blue,
     // Variazioni del blu
     "Blu2": UIColor(red: 0.063, green: 0.18, blue: 0.46, alpha: 1.0),
