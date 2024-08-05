@@ -9,7 +9,7 @@ let colorMap: [String: UIColor] = [
     "Bordeaux": UIColor(red: 0.5, green: 0, blue: 0, alpha: 1.0),
     "Bordeaux2": UIColor(red: 0.3, green: 0.1, blue: 0.1, alpha: 1.0),
     "Rosa": UIColor(red: 1.0, green: 0.75, blue: 0.8, alpha: 1.0),
-    "Rosa2": UIColor(red: 1.0, green: 0.78, blue: 0.7, alpha: 1.0),
+    "Rosa2": UIColor(red: 1.0, green: 0.72, blue: 0.7, alpha: 1.0),
     "Arancione": UIColor.orange,
     // Variazioni dell'arancione
     "Arancione2": UIColor(red: 0.76, green: 0.4, blue: 0.2, alpha: 1.0),
