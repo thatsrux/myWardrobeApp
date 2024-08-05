@@ -39,123 +39,124 @@ struct ClothesScreen: View {
     
     var body: some View {
         NavigationStack {
-            if loading {
-                ProgressView("Elaborazione immagine in corso").frame(maxHeight: .infinity, alignment: .center)
-            } else {
-                if searchIsActive {
-                    if !database.clothes.isEmpty{
-                        List {
-                            ForEach(database.clothes) { cloth in
-                                if cloth.nome.lowercased().contains(searchText.lowercased()) {
-                                    NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                        SingleClothList(cloth: cloth)
+            VStack {
+                if loading {
+                    ProgressView("Elaborazione immagine in corso").frame(maxHeight: .infinity, alignment: .center)
+                } else {
+                    if searchIsActive {
+                        if !database.clothes.isEmpty{
+                            List {
+                                ForEach(database.clothes) { cloth in
+                                    if cloth.nome.lowercased().contains(searchText.lowercased()) {
+                                        NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                            SingleClothList(cloth: cloth)
+                                        }
                                     }
-                                }
-                            }.onDelete(perform: deleteClothSwipe)
+                                }.onDelete(perform: deleteClothSwipe)
+                            }
                         }
+                        else{
+                            Text("Inserisci un capo d'abbigliamento")
+                        }
+                        
                     }
-                    else{
-                        Text("Inserisci un capo d'abbigliamento")
-                    }
-                    
-                }
-                else {
-                    if !database.clothes.isEmpty{
-                        if selectedOption == "elenco" {
-                        ClothesList()
-                    } else {
-                        ClothesGrid()
-                    }
-                }
-                    else{
-                        Text("Inserisci un capo d'abbigliamento")
+                    else {
+                        if !database.clothes.isEmpty{
+                            if selectedOption == "elenco" {
+                                ClothesList()
+                            } else {
+                                ClothesGrid()
+                            }
+                        }
+                        else{
+                            Text("Inserisci un capo d'abbigliamento")
+                        }
                     }
                 }
             }
-            Spacer()
-                .navigationTitle("I tuoi capi")
-                .toolbar {
-                    ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Menu() {
-                            Button(action: {
-                                isPresenting = true
-                                sourceType = .photoLibrary
-                            }) {
-                                Text("Scegli foto")
-                                Image(systemName: "photo.on.rectangle")
-                            }
-                            
-                            Button(action: {
-                                isPresenting = true
-                                sourceType = .camera
-                            }) {
-                                Text("Scatta foto")
-                                Image(systemName: "camera")
-                            }
+            .navigationTitle("I tuoi capi")
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Menu() {
+                        Button(action: {
+                            isPresenting = true
+                            sourceType = .photoLibrary
+                        }) {
+                            Text("Scegli foto")
+                            Image(systemName: "photo.on.rectangle")
                         }
-                    label:{
-                        Image(systemName: "camera")
-                    }
                         
-                        Menu() {
-                            Picker(selection: $selectedOption, label: Text("Options")) {
-                                HStack{
-                                    Text("Icone")
-                                    Image(systemName: "square.grid.2x2")
-                                }.tag("icone")
-                                
-                                HStack{
-                                    Text("Elenco")
-                                    Image(systemName: "list.bullet")
-                                }.tag("elenco")
-                            }
+                        Button(action: {
+                            isPresenting = true
+                            sourceType = .camera
+                        }) {
+                            Text("Scatta foto")
+                            Image(systemName: "camera")
+                        }
+                    }
+                label:{
+                    Image(systemName: "camera")
+                }
+                    
+                    Menu() {
+                        Picker(selection: $selectedOption, label: Text("Options")) {
+                            HStack{
+                                Text("Icone")
+                                Image(systemName: "square.grid.2x2")
+                            }.tag("icone")
                             
-                            Divider()
-                            Button(action: {
-                                for cloth in database.clothes{
-                                    Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
-                                        if let err = err {
-                                            print("Error removing document: \(err)")
-                                        } else {
-                                            print("Document successfully removed!")
-                                        }
+                            HStack{
+                                Text("Elenco")
+                                Image(systemName: "list.bullet")
+                            }.tag("elenco")
+                        }
+                        
+                        Divider()
+                        Button(action: {
+                            for cloth in database.clothes{
+                                Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
+                                    if let err = err {
+                                        print("Error removing document: \(err)")
+                                    } else {
+                                        print("Document successfully removed!")
                                     }
                                 }
-                                database.fetchClothes()
-                                database.fetchCategorie()
-                            }) {
-                                Text("Svuota")
-                                Image(systemName: "trash")
                             }
+                            database.fetchClothes()
+                            database.fetchCategorie()
+                        }) {
+                            Text("Svuota")
+                            Image(systemName: "trash")
                         }
-                    label:{
-                        Image(systemName: "ellipsis.circle")
                     }
-                    }
+                label:{
+                    Image(systemName: "ellipsis.circle")
                 }
-                .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
-                .sheet(isPresented: $isPresenting){
-                    ImagePicker(uiImage: $uiImage, isPresenting:  $isPresenting, sourceType: $sourceType)
-                        .onDisappear {
-                            if uiImage != nil {
-                                isInfoClothScreenActive = true
-                                loading = true
-                            }
+                }
+            }
+            .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
+            .sheet(isPresented: $isPresenting){
+                ImagePicker(uiImage: $uiImage, isPresenting:  $isPresenting, sourceType: $sourceType)
+                    .onDisappear {
+                        if uiImage != nil {
+                            isInfoClothScreenActive = true
+                            loading = true
                         }
-                }
+                    }
+            }
             
-                .navigationDestination(isPresented: $isInfoClothScreenActive) {
-                    if uiImage != nil {
-                        InfoClothScreen(image: uiImage!)
-                            .onDisappear {
-                                uiImage = nil
-                                isInfoClothScreenActive = false
-                            }
-                            .onAppear {
-                                loading = false
-                            }
-                    }
+            .navigationDestination(isPresented: $isInfoClothScreenActive) {
+                if uiImage != nil {
+                    InfoClothScreen(image: uiImage!)
+                        .onDisappear {
+                            uiImage = nil
+                            isInfoClothScreenActive = false
+                        }
+                        .onAppear {
+                            loading = false
+                        }
                 }
+            }
         }
     }
 }
