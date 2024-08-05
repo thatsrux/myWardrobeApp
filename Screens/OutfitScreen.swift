@@ -79,18 +79,6 @@ struct OutfitScreen: View {
                 .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca outfit")
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Menu() {
-                            Picker(selection: $selectedOption, label: Text("Options")) {
-                                Text("Tutti gli outfit").tag("AllOutfits")
-                                ForEach(Stile.allCases, id: \.self) { style in
-                                    if style != .NA {
-                                        Text(style.rawValue).tag(style.rawValue)
-                                    }
-                                }
-                            }
-                        } label:{
-                            Text("Stile")
-                        }
                         Button {
                             isAddOutfitScreenActive = true
                         } label: {
@@ -108,6 +96,18 @@ struct OutfitScreen: View {
                             } else {
                                 Image(systemName: "star.fill")
                             }
+                        }
+                        Menu() {
+                            Picker(selection: $selectedOption, label: Text("Options")) {
+                                Text("Tutti gli outfit").tag("AllOutfits")
+                                ForEach(Stile.allCases, id: \.self) { style in
+                                    if style != .NA {
+                                        Text(style.rawValue).tag(style.rawValue)
+                                    }
+                                }
+                            }
+                        } label:{
+                            Text("Stile")
                         }
                     }
                 }
