@@ -151,31 +151,6 @@ struct AddOutfitScreen: View {
                             .font(.system(size: 18, weight: .bold))
                     }
                     
-                    if missingCloth != [.NA] && !compatibleClothes.isEmpty {
-                        Text("Completa il tuo outfit con uno di questi capi: ")
-                        ScrollView {
-                            HStack(spacing:25){
-                                ForEach(compatibleClothes) { cloth in
-                                    SingleClothGrid(cloth: cloth)
-                                        .onTapGesture {
-                                            if upperCat.contains(cloth.categoria) {
-                                                shirt = cloth
-                                            }
-                                            else if lowerCat.contains(cloth.categoria) {
-                                                trousers = cloth
-                                            }
-                                            else if shoesCat.contains(cloth.categoria) {
-                                                shoes = cloth
-                                            }
-                                            updateOutfit()
-                                            spiegazioneColore=outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
-                                            spiegazioneStile=outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
-                                        }
-                                }
-                            }.padding(.bottom,20)
-                                .padding(.top,20)
-                        }
-                    }
                     if shirt != nil && trousers != nil && shoes != nil {
                         VStack {
                             Text("Valutazione Colori:")
@@ -220,6 +195,35 @@ struct AddOutfitScreen: View {
                     database.fetchOutfits()
                 }
                 .padding(35)
+                VStack {
+                    if missingCloth != [.NA] && !compatibleClothes.isEmpty {
+                        Text("Completa il tuo outfit con uno di questi capi: ")
+                        ScrollView(.horizontal,showsIndicators: false){
+                            HStack(spacing:25){
+                                ForEach(compatibleClothes) { cloth in
+                                    SingleClothGrid(cloth: cloth)
+                                        .onTapGesture {
+                                            if upperCat.contains(cloth.categoria) {
+                                                shirt = cloth
+                                            }
+                                            else if lowerCat.contains(cloth.categoria) {
+                                                trousers = cloth
+                                            }
+                                            else if shoesCat.contains(cloth.categoria) {
+                                                shoes = cloth
+                                            }
+                                            updateOutfit()
+                                            spiegazioneColore=outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
+                                            spiegazioneStile=outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
+                                        }
+                                }
+                            }
+                            .padding(.leading,20)
+                            .padding(.bottom,20)
+                            .padding(.top,20)
+                        }
+                    }
+                }
             }.onAppear{
                 updateOutfit()
                 listenToOutfitChanges()
