@@ -9,6 +9,7 @@ struct OutfitScreen: View {
     
     @State private var searchText = ""
     @State private var searchIsActive = false
+    @State private var favouriteActive = false
     
     @EnvironmentObject var database:Database
     
@@ -22,23 +23,25 @@ struct OutfitScreen: View {
             ScrollView{
                 VStack{
                     if !searchIsActive {
-                        if selectedOption == "pref" {
+                        if favouriteActive {
                             if !database.favOutfits.isEmpty{
-                                Text("Outfit preferiti (\(database.favOutfits.count.description))").font(.headline)
+                                selectedOption == "AllOutfits" ? Text("Tutti gli outfit").font(.headline)
+                                : Text("Outfit \(selectedOption)").font(.headline)
                                 LazyVGrid(columns: columns, spacing: 10) {
                                     ForEach(database.favOutfits, id:\.self){ o in
-                                        NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                            SingleOutfitGrid(outfit: o)
+                                        if selectedOption == o.stile.rawValue || selectedOption == "AllOutfits" {
+                                            NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                                SingleOutfitGrid(outfit: o)
+                                            }.padding(.leading,10)
+                                                .padding(.trailing,10)
                                         }
-                                    }.padding(.leading,10)
-                                        .padding(.trailing,10)
+                                    }
                                 }
                             }
                         } else {
                             if !database.outfits.isEmpty {
                                 selectedOption == "AllOutfits" ? Text("Tutti gli outfit").font(.headline)
                                 : Text("Outfit \(selectedOption)").font(.headline)
-                                
                                 LazyVGrid(columns: columns, spacing: 10) {
                                     ForEach(database.outfits, id:\.self){ o in
                                         if selectedOption == o.stile.rawValue || selectedOption == "AllOutfits" {
@@ -81,22 +84,30 @@ struct OutfitScreen: View {
                         } label: {
                             Image(systemName: "plus.circle")
                         }
-                        
+                        Button {
+                            if !favouriteActive {
+                                favouriteActive = true
+                            } else {
+                                favouriteActive = false
+                            }
+                        } label: {
+                            if !favouriteActive {
+                                Image(systemName: "star")
+                            } else {
+                                Image(systemName: "star.fill")
+                            }
+                        }
                         Menu() {
                             Picker(selection: $selectedOption, label: Text("Options")) {
                                 Text("Tutti gli outfit").tag("AllOutfits")
                                 ForEach(Stile.allCases, id: \.self) { style in
-                                    Text(style.rawValue).tag(style.rawValue)
+                                    if style != .NA {
+                                        Text(style.rawValue).tag(style.rawValue)
+                                    }
                                 }
-                                Divider()
-                                HStack{
-                                    Text("Preferiti")
-                                    Image(systemName: "star.fill")
-                                }.tag("pref")
-                                
                             }
                         } label:{
-                            Image(systemName: "ellipsis.circle")
+                            Text("Stile")
                         }
                         
                     }
