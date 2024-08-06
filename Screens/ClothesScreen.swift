@@ -19,6 +19,7 @@ struct ClothesScreen: View {
     @EnvironmentObject var database:Database
     
     @State private var selectedOption = "icone"
+    @State private var selectedOption2 = "AllTypes"
     
     func deleteClothSwipe(at offsets:IndexSet){
         
@@ -47,6 +48,7 @@ struct ClothesScreen: View {
     
     var body: some View {
         NavigationStack {
+<<<<<<< Updated upstream
             if loading {
                 ProgressView("Elaborazione immagine in corso").frame(maxHeight: .infinity, alignment: .center)
             } else {
@@ -57,6 +59,113 @@ struct ClothesScreen: View {
                                 if cloth.nome.lowercased().contains(searchText.lowercased()) {
                                     NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
                                         SingleClothList(cloth: cloth)
+=======
+            VStack {
+                if loading {
+                    ProgressView("Elaborazione immagine in corso").frame(maxHeight: .infinity, alignment: .center)
+                } else {
+                    if searchIsActive {
+                        if !database.clothes.isEmpty{
+                            List {
+                                ForEach(database.clothes) { cloth in
+                                    if cloth.nome.lowercased().contains(searchText.lowercased()) {
+                                        NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                            SingleClothList(cloth: cloth)
+                                        }
+                                    }
+                                }.onDelete(perform: deleteClothSwipe)
+                            }
+                        }
+                        else{
+                            Text("Inserisci un capo d'abbigliamento")
+                        }
+                        
+                    }
+                    else {
+                        if !database.clothes.isEmpty{
+                            selectedOption2 == "AllTypes" ? Text("Tutti i capi").font(.headline)
+                            : Text(selectedOption2).font(.headline)
+                            
+                            if selectedOption == "icone"{
+                                ScrollView{
+                                    LazyVGrid(columns: columns, spacing: 10) {
+                                                ForEach(database.clothes, id: \.self) { cloth in
+                                                    if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes" {
+                                                        NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                                            SingleClothGrid(cloth: cloth)
+                                                        }
+                                                    }
+                                                }
+                                    }
+                                    .padding()
+                                }
+                            }
+                            else{
+                                List{
+                                    ForEach(database.clothes, id: \.self) { cloth in
+                                        if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes"{
+                                            NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                                SingleClothList(cloth: cloth)
+                                            }
+                                        }
+                                    }.onDelete(perform: deleteClothSwipe)
+                                }
+                                
+                            }
+                            
+                        }
+                        else{
+                            Text("Inserisci un capo d'abbigliamento")
+                        }
+                    }
+                }
+            }
+            .navigationTitle("I tuoi capi")
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Menu() {
+                        Button(action: {
+                            isPresenting = true
+                            sourceType = .photoLibrary
+                        }) {
+                            Text("Scegli foto")
+                            Image(systemName: "photo.on.rectangle")
+                        }
+                        
+                        Button(action: {
+                            isPresenting = true
+                            sourceType = .camera
+                        }) {
+                            Text("Scatta foto")
+                            Image(systemName: "camera")
+                        }
+                    }
+                label:{
+                    Image(systemName: "camera")
+                }
+                    
+                    Menu() {
+                        Picker(selection: $selectedOption, label: Text("Options")) {
+                            HStack{
+                                Text("Icone")
+                                Image(systemName: "square.grid.2x2")
+                            }.tag("icone")
+                            
+                            HStack{
+                                Text("Elenco")
+                                Image(systemName: "list.bullet")
+                            }.tag("elenco")
+                        }
+                        
+                        Divider()
+                        Button(action: {
+                            for cloth in database.clothes{
+                                Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
+                                    if let err = err {
+                                        print("Error removing document: \(err)")
+                                    } else {
+                                        print("Document successfully removed!")
+>>>>>>> Stashed changes
                                     }
                                 }
                             }.onDelete(perform: deleteClothSwipe)
@@ -104,6 +213,7 @@ struct ClothesScreen: View {
                     label:{
                         Image(systemName: "camera")
                     }
+<<<<<<< Updated upstream
                         
                         Menu() {
                             Picker(selection: $selectedOption, label: Text("Options")) {
@@ -135,6 +245,32 @@ struct ClothesScreen: View {
                                 Text("Svuota")
                                 Image(systemName: "trash")
                             }
+=======
+                label:{
+                    Image(systemName: "ellipsis.circle")
+                }
+                    Menu() {
+                        Picker(selection: $selectedOption2, label: Text("Options")) {
+                            Text("Tutti i tipi").tag("AllTypes")
+                            ForEach(Categoria.allCases, id: \.self) { cat in
+                                if cat != .NA {
+                                    Text(cat.rawValue).tag(cat.rawValue)
+                                }
+                            }
+                        }
+                    } label:{
+                        Text("Stile")
+                    }
+                }
+            }
+            .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
+            .sheet(isPresented: $isPresenting){
+                ImagePicker(uiImage: $uiImage, isPresenting:  $isPresenting, sourceType: $sourceType)
+                    .onDisappear {
+                        if uiImage != nil {
+                            isInfoClothScreenActive = true
+                            loading = true
+>>>>>>> Stashed changes
                         }
                     label:{
                         Image(systemName: "ellipsis.circle")
