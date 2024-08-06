@@ -19,6 +19,11 @@ struct ClothesScreen: View {
     @EnvironmentObject var database:Database
     
     @State private var selectedOption = "icone"
+    @State private var selectedOption2 = "AllTypes"
+    
+    @State private var favouriteActive = false
+
+
     
     func deleteClothSwipe(at offsets:IndexSet){
         
@@ -62,10 +67,31 @@ struct ClothesScreen: View {
                     }
                     else {
                         if !database.clothes.isEmpty{
+                            selectedOption2 == "AllTypes" ? Text("Tutti i capi").font(.headline)
+                            : Text(selectedOption2).font(.headline)
+                            
                             if selectedOption == "elenco" {
-                                ClothesList()
+                                List{
+                                    ForEach(database.clothes, id: \.self) { cloth in
+                                        if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes"{
+                                            NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                                SingleClothList(cloth: cloth)
+                                            }
+                                        }
+                                    }.onDelete(perform: deleteClothSwipe)
+                                }
                             } else {
-                                ClothesGrid()
+                                ScrollView{
+                                    LazyVGrid(columns: columns, spacing: 10) {
+                                        ForEach(database.clothes, id: \.self) { cloth in
+                                            if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes" {
+                                                NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                                    SingleClothGrid(cloth: cloth)
+                                                }
+                                            }
+                                        }
+                                    }.padding()
+                                }
                             }
                         }
                         else{
@@ -132,6 +158,33 @@ struct ClothesScreen: View {
                 label:{
                     Image(systemName: "ellipsis.circle")
                 }
+                    
+                    Button {
+                        if !favouriteActive {
+                            favouriteActive = true
+                        } else {
+                            favouriteActive = false
+                        }
+                    } label: {
+                        if !favouriteActive {
+                            Image(systemName: "star")
+                        } else {
+                            Image(systemName: "star.fill")
+                        }
+                    }
+                    
+                    Menu() {
+                        Picker(selection: $selectedOption2, label: Text("Options")) {
+                            Text("Tutti i tipi").tag("AllTypes")
+                            ForEach(Categoria.allCases, id: \.self) { cat in
+                                if cat != .NA {
+                                    Text(cat.rawValue).tag(cat.rawValue)
+                                }
+                            }
+                        }
+                    } label:{
+                        Text("Tipi")
+                    }
                 }
             }
             .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
