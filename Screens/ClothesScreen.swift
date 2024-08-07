@@ -126,12 +126,14 @@ struct ClothesScreen: View {
                                     if !database.favClothes.isEmpty{
                                         ScrollView{
                                             LazyVGrid(columns: columns, spacing: 10) {
-                                                ForEach(database.favClothes, id: \.self) { cloth in
-                                                    if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes" {
-                                                        NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                                            SingleClothGrid(cloth: cloth)
-                                                        }
-                                                    }
+                                                        ForEach(database.favClothes, id: \.self) { cloth in
+                                                            if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes" {
+                                                                NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                                                    SingleClothGrid(cloth: cloth)
+                                                                }
+                                                            }
+                                                        
+                                                    
                                                 }
                                             }.padding()
                                         }
@@ -161,7 +163,7 @@ struct ClothesScreen: View {
                     }
                 }
             }
-            .navigationTitle(selectedOption2 == "AllTypes" ? Text("I tuoi capi") : Text(categoriePlurale[Categoria(rawValue: selectedOption2) ?? .NA]!))
+            .navigationTitle(getNavigationTitle())
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Menu() {
@@ -271,6 +273,19 @@ struct ClothesScreen: View {
                         }
                 }
             }
+        }
+    }
+    func getNavigationTitle() -> Text {
+        if selectedOption2 == "AllTypes" && !favouriteActive {
+            return Text("I tuoi capi")
+        } else if selectedOption2 != "AllTypes" && !favouriteActive {
+            return Text(categoriePlurale[Categoria(rawValue: selectedOption2) ?? .NA]!)
+        } else if selectedOption2 != "AllTypes" && favouriteActive {
+            return Text(categoriePlurale[Categoria(rawValue: selectedOption2) ?? .NA] == "Camicie" || categoriePlurale[Categoria(rawValue: selectedOption2) ?? .NA] == "Canotte" || categoriePlurale[Categoria(rawValue: selectedOption2) ?? .NA] == "Giacche" || categoriePlurale[Categoria(rawValue: selectedOption2) ?? .NA] == "Felpe" || categoriePlurale[Categoria(rawValue: selectedOption2) ?? .NA] == "Scarpe" || categoriePlurale[Categoria(rawValue: selectedOption2) ?? .NA] == "T-Shirts" ? "\(categoriePlurale[Categoria(rawValue: selectedOption2) ?? .NA]!) preferite": "\(categoriePlurale[Categoria(rawValue: selectedOption2) ?? .NA]!) preferiti")
+        } else if selectedOption2 == "AllTypes" && favouriteActive{
+            return Text("I tuoi capi preferiti")
+        } else {
+            return Text(categoriePlurale[Categoria(rawValue: selectedOption2) ?? .NA]!)
         }
     }
 }
