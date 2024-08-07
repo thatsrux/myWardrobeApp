@@ -93,8 +93,7 @@ struct ClothesScreen: View {
                     else {
                         
                         if !database.clothes.isEmpty{
-                            selectedOption2 == "AllTypes" ? Text("Tutti i capi").font(.headline)
-                            : Text(selectedOption2).font(.headline)
+                            
                             
                             if selectedOption == "elenco" {
                                 if favouriteActive{
