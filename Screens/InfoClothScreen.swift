@@ -78,15 +78,14 @@ struct InfoClothScreen: View {
                         if classifier.typeConfidence > 0.5 {
                             HStack {
                                 Text("Capo di abbigliamento:")
-                                    .font(.caption)
                                 Text(classifier.typeClass)
                                     .bold()
-                                Text("(\(classifier.typeConfidence))")
+                                Text("(sicurezza: \(classifier.typeConfidence * 100, specifier: "%.0f")%)")
                             }
                         } else {
                             HStack {
-                                Text("Capo di abbigliamento: NA")
-                                    .font(.caption)
+                                Text("Capo di abbigliamento non riconosciuto")
+                                    .bold()
                             }
                         }
                     }
@@ -94,15 +93,14 @@ struct InfoClothScreen: View {
                         if classifier.styleConfidence > 0.5 {
                             HStack {
                                 Text("Stile:")
-                                    .font(.caption)
                                 Text(classifier.styleClass)
                                     .bold()
-                                Text("(\(classifier.styleConfidence))")
+                                Text("(sicurezza: \(classifier.styleConfidence * 100, specifier: "%.0f")%)")
                             }
                         } else {
                             HStack {
-                                Text("Stile: NA")
-                                    .font(.caption)
+                                Text("Stile non riconosciuto")
+                                    .bold()
                             }
                         }
                     }
@@ -361,8 +359,17 @@ struct InfoClothScreen: View {
             if colors[2].makeUIColor() == colors[0].makeUIColor() || colors[2].makeUIColor() == colors[1].makeUIColor() {
                 cloth.thirdColor = ColorData(uiColor: colors[2].makeUIColor())
             }
+        }
+        if classifier.typeConfidence > 0.5 {
             self.categoriaClassificata = Categoria(fromRawValue: classifier.typeClass)
+        } else {
+            self.categoriaClassificata = .NA
+        }
+        
+        if classifier.styleConfidence > 0.5 {
             self.stileClassificato = Stile(fromRawValue: classifier.styleClass)
+        } else {
+            self.stileClassificato = .NA
         }
     }
     
