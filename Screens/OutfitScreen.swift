@@ -60,7 +60,7 @@ struct OutfitScreen: View {
                         if !database.outfits.isEmpty{
                             LazyVGrid(columns: columns, spacing: 10) {
                                 ForEach(database.outfits, id:\.self){ o in
-                                    if o.nome!.lowercased().contains(searchText.lowercased()) {
+                                    if o.nome!.lowercased().contains(searchText.lowercased()) || searchText == "" {
                                         NavigationLink(destination: AddOutfitScreen(outfit: o)) {
                                             SingleOutfitGrid(outfit: o)
                                         }

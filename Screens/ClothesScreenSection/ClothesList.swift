@@ -15,15 +15,6 @@ struct ClothesList: View {
     
     var body: some View {
         List {
-            if database.favClothes.count > 0{
-                Section(header: Text("Capi preferiti").font(.headline)){
-                    ForEach(database.favClothes, id: \.self){ cloth in
-                        NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                            SingleClothList(cloth: cloth)
-                        }
-                    }
-                }
-            }
             ForEach(database.categorie.sorted(), id: \.self){ category in
                 Section(header: Text(categoriePlurale[Categoria(rawValue: category)!]!).font(.headline)){
                     ForEach(database.clothes, id: \.self) { cloth in

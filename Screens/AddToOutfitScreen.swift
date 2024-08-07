@@ -83,11 +83,10 @@ struct AddToOutfitScreen: View {
     var body: some View {
         
         NavigationStack {
-            
             if searchIsActive {
                 List {
                     ForEach(database.clothes) { cloth in
-                        if cloth.nome.lowercased().contains(searchText.lowercased()) {
+                        if cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "" {
                             SingleClothList(cloth: cloth)
                                 .onTapGesture {
                                     if upperCat.contains(cloth.categoria) {
