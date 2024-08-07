@@ -11,23 +11,6 @@ struct ClothesGrid: View {
     
     var body: some View {
         ScrollView {
-            if database.favClothes.count > 0{
-                VStack(){
-                    Text("Capi preferiti (\(database.favClothes.count.description))").font(.headline)
-                    ScrollView(.horizontal,showsIndicators: false){
-                        HStack(spacing:25){
-                            ForEach(database.favClothes, id:\.self){ cloth in
-                                NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                    SingleClothGrid(cloth: cloth)
-                                }
-                            }
-                        }
-                        .padding(.leading,20)
-                        .padding(.top,10)
-                        .padding(.bottom,10)
-                    }
-                }
-            }
             LazyVGrid(columns: columns, spacing: 10) {
                 ForEach(database.categorie.sorted(), id: \.self){ category in
                     Section(header: Text(categoriePlurale[Categoria(rawValue: category) ?? .NA]!).font(.headline)){
