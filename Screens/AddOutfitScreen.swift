@@ -11,6 +11,10 @@ struct AddOutfitScreen: View {
     @State var trousers: Cloth?
     @State var shoes: Cloth?
     
+    let defaultShirt = Cloth(image: UIImage(named: "shirt")!)
+    let defaultTrousers = Cloth(image: UIImage(named: "trousers")!)
+    let defaultShoes = Cloth(image: UIImage(named: "shoes")!)
+    
     @State private var missingCloth: [Categoria] = [.NA]
     
     @State var nomeText = ""
@@ -52,7 +56,7 @@ struct AddOutfitScreen: View {
         NavigationStack {
             ScrollView{
                 Spacer().frame(height: 50)
-                VStack(spacing:20){
+                VStack(){
                     Button(action: {
                         isAddToOutfitScreenActive = true
                         categoria = upperCat
@@ -66,10 +70,9 @@ struct AddOutfitScreen: View {
                                     .frame(width:150,height:150)
                                 
                                 Button(action: {
-                                    
+                                    self.shirt = defaultShirt
                                 }){
-                                    Image(systemName: "xmark").foregroundColor(.red)
-                                }
+                                    Text("Rimuovi")                                }
                             }
                         } else {
                             Image(uiImage: UIImage(imageLiteralResourceName: "shirt"))
@@ -89,9 +92,10 @@ struct AddOutfitScreen: View {
                                     .frame(width:150,height:150)
                                 
                                 Button(action: {
+                                    self.trousers = defaultTrousers
                                     
                                 }){
-                                    Image(systemName: "xmark").foregroundColor(.red)
+                                    Text("Rimuovi")
                                 }
                             }
                         } else {
@@ -112,9 +116,9 @@ struct AddOutfitScreen: View {
                                     .frame(width:150,height:150)
                                 
                                 Button(action: {
-                                    
+                                    self.shoes = defaultShoes
                                 }){
-                                    Image(systemName: "xmark").foregroundColor(.red)
+                                    Text("Rimuovi")
                                 }
                             }
                         } else {
