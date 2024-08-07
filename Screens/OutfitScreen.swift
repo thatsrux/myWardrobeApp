@@ -25,8 +25,6 @@ struct OutfitScreen: View {
                     if !searchIsActive {
                         if favouriteActive {
                             if !database.favOutfits.isEmpty{
-                                selectedOption == "AllOutfits" ? Text("Tutti gli outfit").font(.headline)
-                                : Text("Outfit \(selectedOption)").font(.headline)
                                 LazyVGrid(columns: columns, spacing: 10) {
                                     ForEach(database.favOutfits, id:\.self){ o in
                                         if selectedOption == o.stile.rawValue || selectedOption == "AllOutfits" {
@@ -40,8 +38,6 @@ struct OutfitScreen: View {
                             }
                         } else {
                             if !database.outfits.isEmpty {
-                                selectedOption == "AllOutfits" ? Text("Tutti gli outfit").font(.headline)
-                                : Text("Outfit \(selectedOption)").font(.headline)
                                 LazyVGrid(columns: columns, spacing: 10) {
                                     ForEach(database.outfits, id:\.self){ o in
                                         if selectedOption == o.stile.rawValue || selectedOption == "AllOutfits" {
@@ -75,7 +71,7 @@ struct OutfitScreen: View {
                         }
                     }
                 }
-                .navigationTitle("I tuoi outfit")
+                .navigationTitle(getNavigationTitle())
                 .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca outfit")
                 .toolbar {
                     ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -115,6 +111,20 @@ struct OutfitScreen: View {
                     AddOutfitScreen()
                 }
             }
+        }
+    }
+    
+    func getNavigationTitle() -> Text {
+        if selectedOption == "AllOutfits" && !favouriteActive {
+            return Text("I tuoi outfit")
+        } else if selectedOption != "AllOutfits" && !favouriteActive {
+            return Text("Outfit \(stilePlurale[Stile(rawValue: selectedOption) ?? .NA]!)")
+        } else if selectedOption != "AllOutfits" && favouriteActive {
+            return Text("Outfit \(stilePlurale[Stile(rawValue: selectedOption) ?? .NA]!) preferiti")
+        } else if selectedOption == "AllOutfits" && favouriteActive{
+            return Text("I tuoi outfit preferiti")
+        } else {
+            return Text("Outfit \(stilePlurale[Stile(rawValue: selectedOption) ?? .NA]!)")
         }
     }
     
