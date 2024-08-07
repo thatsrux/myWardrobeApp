@@ -8,3 +8,10 @@ enum Stile: String, Codable, CaseIterable {
         self = Stile(rawValue: fromRawValue) ?? .NA
     }
 }
+
+let stilePlurale: [Stile: String] = [
+    .casual: "casual",
+    .formale: "formali",
+    .sportivo: "sportivi",
+    .NA: "Altro"
+]
