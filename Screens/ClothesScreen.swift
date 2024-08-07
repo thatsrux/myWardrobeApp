@@ -22,8 +22,8 @@ struct ClothesScreen: View {
     @State private var selectedOption2 = "AllTypes"
     
     @State private var favouriteActive = false
-
-
+    
+    
     
     func deleteClothSwipe(at offsets:IndexSet){
         
@@ -65,32 +65,65 @@ struct ClothesScreen: View {
                         }
                         
                     }
+                    
                     else {
+                        
                         if !database.clothes.isEmpty{
                             selectedOption2 == "AllTypes" ? Text("Tutti i capi").font(.headline)
                             : Text(selectedOption2).font(.headline)
                             
                             if selectedOption == "elenco" {
-                                List{
-                                    ForEach(database.clothes, id: \.self) { cloth in
-                                        if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes"{
-                                            NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                                SingleClothList(cloth: cloth)
-                                            }
-                                        }
-                                    }.onDelete(perform: deleteClothSwipe)
-                                }
-                            } else {
-                                ScrollView{
-                                    LazyVGrid(columns: columns, spacing: 10) {
-                                        ForEach(database.clothes, id: \.self) { cloth in
-                                            if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes" {
+                                if favouriteActive{
+                                    List{
+                                        ForEach(database.favClothes, id: \.self) { cloth in
+                                            if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes"{
                                                 NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                                    SingleClothGrid(cloth: cloth)
+                                                    SingleClothList(cloth: cloth)
                                                 }
                                             }
+                                        }.onDelete(perform: deleteClothSwipe)
+                                    }
+                                }
+                                else{
+                                    List{
+                                        ForEach(database.clothes, id: \.self) { cloth in
+                                            if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes"{
+                                                NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                                    SingleClothList(cloth: cloth)
+                                                }
+                                            }
+                                        }.onDelete(perform: deleteClothSwipe)
+                                    }
+                                }
+                                
+                            } else {
+                                if favouriteActive{
+                                    if !database.favClothes.isEmpty{
+                                        ScrollView{
+                                            LazyVGrid(columns: columns, spacing: 10) {
+                                                ForEach(database.favClothes, id: \.self) { cloth in
+                                                    if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes" {
+                                                        NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                                            SingleClothGrid(cloth: cloth)
+                                                        }
+                                                    }
+                                                }
+                                            }.padding()
                                         }
-                                    }.padding()
+                                    }
+                                }
+                                else{
+                                    ScrollView{
+                                        LazyVGrid(columns: columns, spacing: 10) {
+                                            ForEach(database.clothes, id: \.self) { cloth in
+                                                if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes" {
+                                                    NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                                        SingleClothGrid(cloth: cloth)
+                                                    }
+                                                }
+                                            }
+                                        }.padding()
+                                    }
                                 }
                             }
                         }
