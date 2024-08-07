@@ -70,7 +70,8 @@ struct AddOutfitScreen: View {
                                     .frame(width:150,height:150)
                                 
                                 Button(action: {
-                                    self.shirt = defaultShirt
+                                    self.shirt = nil
+                                    updateOutfit()
                                 }){
                                     Text("Rimuovi")                                }
                             }
@@ -92,8 +93,8 @@ struct AddOutfitScreen: View {
                                     .frame(width:150,height:150)
                                 
                                 Button(action: {
-                                    self.trousers = defaultTrousers
-                                    
+                                    self.trousers = nil
+                                    updateOutfit()
                                 }){
                                     Text("Rimuovi")
                                 }
@@ -116,7 +117,8 @@ struct AddOutfitScreen: View {
                                     .frame(width:150,height:150)
                                 
                                 Button(action: {
-                                    self.shoes = defaultShoes
+                                    self.shoes = nil
+                                    updateOutfit()
                                 }){
                                     Text("Rimuovi")
                                 }
@@ -288,9 +290,12 @@ struct AddOutfitScreen: View {
         if first == true {
             guard let outfit = outfit else {return}
             
+            print(outfit.shirt!.id.uuidString)
+            
             guard let shirt = outfit.shirt, let trousers = outfit.trousers, let shoes = outfit.shoes else {
                 print("error shirt/trousers/shoes")
                 return}
+            
             self.shirt = shirt
             self.trousers = trousers
             self.shoes = shoes
