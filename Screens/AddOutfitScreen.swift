@@ -56,7 +56,7 @@ struct AddOutfitScreen: View {
         NavigationStack {
             ScrollView{
                 Spacer().frame(height: 50)
-                VStack(spacing:20){
+                VStack(){
                     Button(action: {
                         isAddToOutfitScreenActive = true
                         categoria = upperCat
