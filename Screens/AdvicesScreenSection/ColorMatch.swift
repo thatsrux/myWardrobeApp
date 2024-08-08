@@ -4,53 +4,62 @@ struct ColorMatch: View{
     
     var body: some View{
         NavigationView {
-            ScrollView{
-                VStack(spacing:20){
-                    Text("Abbinamenti consentiti:")
-                    HStack(spacing: 40){
-                        Text("Rosso")
-                        Circle().fill(.red).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Circle().fill(.blue).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Text("Blu")
+            ScrollView {
+                VStack(spacing: 20) {
+                    VStack(spacing: 20) {
+                        Text("Abbinamenti consentiti:")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        colorPairsView(colorPairs: coloriConsentiti)
                     }
-                    HStack(spacing: 40){
-                        Text("Giallo")
-                        Circle().fill(.yellow).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Circle().fill(.green).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Text("Verde")
+                    .padding()
+
+                    VStack(spacing: 20) {
+                        Text("Abbinamenti sconsigliati:")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        colorPairsView(colorPairs: coloriVietati)
                     }
-                    HStack(spacing: 40){
-                        Text("Nero")
-                        Circle().fill(.black).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Circle().fill(.gray).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Text("Grigio")
-                    }
+                    .padding()
                 }
-                VStack(spacing:20){
-                    Text("Abbinamenti sconsigliati:")
-                    HStack(spacing: 40){
-                        Text("Rosso")
-                        Circle().fill(.red).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Circle().fill(.blue).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Text("Blu")
-                    }
-                    HStack(spacing: 40){
-                        Text("Giallo")
-                        Circle().fill(.yellow).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Circle().fill(.green).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Text("Verde")
-                    }
-                    HStack(spacing: 40){
-                        Text("Nero")
-                        Circle().fill(.black).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Circle().fill(.gray).frame(width: 60, height: 60).overlay(Circle().stroke(Color.black, lineWidth:0.5))
-                        Text("Grigio")
-                    }
-                }
-                
                 .navigationTitle("Abbinamento colori")
-            }}
+            }
+        }
     }
+    
+    func colorPairsView(colorPairs: [Colore: [Colore]]) -> some View {
+        ForEach(colorPairs.keys.sorted(by: { $0.rawValue < $1.rawValue }), id: \.self) { baseColor in
+            VStack(alignment: .center, spacing: 5) {
+                HStack(spacing: 15) {
+                    VStack {
+                        Color(colorMap[baseColor.rawValue]!)
+                            .frame(width: 50, height: 50)
+                            .cornerRadius(8)
+                            .border(Color.black, width: 2)
+                        Text(baseColor.rawValue.capitalized)
+                            .font(.headline)
+                            //.foregroundColor(Color(colorMap[baseColor.rawValue]!))
+                    }
+                }
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 15) {
+                        ForEach(colorPairs[baseColor]!, id: \.self) { color in
+                            VStack {
+                                Color(colorMap[color.rawValue]!)
+                                    .frame(width: 50, height: 50)
+                                    .cornerRadius(8)
+                                    .border(Color.black, width: 2)
+                                Text(color.rawValue.capitalized)
+                                    .font(.caption)
+                            }
+                        }
+                    }
+                }
+            }
+            .padding(.vertical)
+        }
+    }
+
 }
 
 #Preview {

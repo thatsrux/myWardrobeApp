@@ -42,20 +42,20 @@ struct AdvicesScreen: View {
                         ColorMatch()
                     }
                     
-                    Button(action: {
-                        isColorSeasonScreenActive.toggle()
-                    }) {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color(.teal))
-                            .frame(height: 100)
-                            .overlay(
-                                Text("Color Season")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                            )
-                    }.sheet(isPresented: $isColorSeasonScreenActive) {
-                        ColorSeason()
-                    }
+//                    Button(action: {
+//                        isColorSeasonScreenActive.toggle()
+//                    }) {
+//                        RoundedRectangle(cornerRadius: 10)
+//                            .fill(Color(.teal))
+//                            .frame(height: 100)
+//                            .overlay(
+//                                Text("Color Season")
+//                                    .font(.headline)
+//                                    .foregroundColor(.white)
+//                            )
+//                    }.sheet(isPresented: $isColorSeasonScreenActive) {
+//                        ColorSeason()
+//                    }
                     
                     Button(action: {
                         isMagicOutfitScreenActive.toggle()
@@ -72,20 +72,20 @@ struct AdvicesScreen: View {
                         MagicOutfit(cloth: cloth)
                     }
                     
-                    Button(action: {
-                        isColorSeasonScreenActive.toggle()
-                    }) {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color(.teal))
-                            .frame(height: 100)
-                            .overlay(
-                                Text("Color Season")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                            )
-                    }.sheet(isPresented: $isColorSeasonScreenActive) {
-                        ColorSeason()
-                    }
+//                    Button(action: {
+//                        isColorSeasonScreenActive.toggle()
+//                    }) {
+//                        RoundedRectangle(cornerRadius: 10)
+//                            .fill(Color(.teal))
+//                            .frame(height: 100)
+//                            .overlay(
+//                                Text("Color Season")
+//                                    .font(.headline)
+//                                    .foregroundColor(.white)
+//                            )
+//                    }.sheet(isPresented: $isColorSeasonScreenActive) {
+//                        ColorSeason()
+//                    }
                 }
                 .padding()
                 
