@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct AdvicesScreen: View {
-        
+    
     @EnvironmentObject var database: Database
     
-    @State private var dailyOutfitIndex: Int?
+    @State private var dailyOutfitID: UUID?
     @State private var isColorMatchScreenActive = false
     @State private var isColorSeasonScreenActive = false
     @State private var isMagicOutfitScreenActive = false
@@ -16,13 +16,13 @@ struct AdvicesScreen: View {
             ScrollView {
                 VStack {
                     Text("Outfit del giorno").font(.headline)
-                    
-                    if let index = dailyOutfitIndex, !database.outfits.isEmpty {
-                        NavigationLink(destination: AddOutfitScreen(outfit: database.outfits[0])) {
-                            SingleOutfitGrid(outfit: database.outfits[0])
-                        }
+
+                    // Se esiste un dailyOutfitID, mostra l'outfit del giorno
+                    if let dailyOutfitID = dailyOutfitID,
+                       let outfit = database.outfits.first(where: { $0.id == dailyOutfitID }) {
+                        SingleOutfitGrid(outfit: outfit)
                     } else {
-                        Text("No outfit available").font(.subheadline).foregroundColor(.gray)
+                        Text("Nessun outfit disponibile")
                     }
                 }
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
@@ -42,21 +42,6 @@ struct AdvicesScreen: View {
                         ColorMatch()
                     }
                     
-//                    Button(action: {
-//                        isColorSeasonScreenActive.toggle()
-//                    }) {
-//                        RoundedRectangle(cornerRadius: 10)
-//                            .fill(Color(.teal))
-//                            .frame(height: 100)
-//                            .overlay(
-//                                Text("Color Season")
-//                                    .font(.headline)
-//                                    .foregroundColor(.white)
-//                            )
-//                    }.sheet(isPresented: $isColorSeasonScreenActive) {
-//                        ColorSeason()
-//                    }
-                    
                     Button(action: {
                         isMagicOutfitScreenActive.toggle()
                     }) {
@@ -71,60 +56,57 @@ struct AdvicesScreen: View {
                     }.sheet(isPresented: $isMagicOutfitScreenActive) {
                         MagicOutfit(cloth: cloth)
                     }
-                    
-//                    Button(action: {
-//                        isColorSeasonScreenActive.toggle()
-//                    }) {
-//                        RoundedRectangle(cornerRadius: 10)
-//                            .fill(Color(.teal))
-//                            .frame(height: 100)
-//                            .overlay(
-//                                Text("Color Season")
-//                                    .font(.headline)
-//                                    .foregroundColor(.white)
-//                            )
-//                    }.sheet(isPresented: $isColorSeasonScreenActive) {
-//                        ColorSeason()
-//                    }
                 }
                 .padding()
-                
                 .navigationTitle("Consigli per te")
-                .onAppear {
-                    updateDailyOutfitIndexIfNeeded()
-                }
             }
-
+            .onAppear {
+                selectDailyOutfit()
+            }
+            .onChange(of: database.outfits) {
+                retrieveDailyOutfit()
+            }
         }
     }
     
-    private func updateDailyOutfitIndexIfNeeded() {
-        let today = Date()
+    // Funzione per selezionare l'outfit del giorno
+    func selectDailyOutfit() {
         let calendar = Calendar.current
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        let todayString = dateFormatter.string(from: today)
-        
-        if let lastUpdateString = UserDefaults.standard.string(forKey: "lastUpdateDate"),
-           let lastUpdateDate = dateFormatter.date(from: lastUpdateString),
-           calendar.isDate(today, inSameDayAs: lastUpdateDate) {
-            // Same day, retrieve the stored outfit index
-            dailyOutfitIndex = UserDefaults.standard.integer(forKey: "dailyOutfitIndex")
-            //print("Retrieved dailyOutfitIndex: \(String(describing: dailyOutfitIndex))")
+        let today = Date()
+
+        // Controlla se è stato già selezionato un outfit oggi
+        if let savedDate = UserDefaults.standard.object(forKey: "dailyOutfitDate") as? Date,
+           calendar.isDate(savedDate, inSameDayAs: today),
+           let savedID = UserDefaults.standard.uuid(forKey: "dailyOutfitID") {
+            // Se è lo stesso giorno, usa l'outfit salvato
+            dailyOutfitID = savedID
         } else {
-            // New day, update the outfit index
-            if !database.outfits.isEmpty {
-                dailyOutfitIndex = Int.random(in: 0..<database.outfits.count)
-                UserDefaults.standard.set(todayString, forKey: "lastUpdateDate")
-                if let index = dailyOutfitIndex {
-                    UserDefaults.standard.set(index, forKey: "dailyOutfitIndex")
-                }
-                //print("Generated new dailyOutfitIndex: \(String(describing: dailyOutfitIndex))")
+            // Prima di selezionare un nuovo outfit, salva l'outfit del giorno precedente
+            let previousOutfitID = UserDefaults.standard.uuid(forKey: "dailyOutfitID")
+            UserDefaults.standard.set(previousOutfitID, forKey: "previousOutfitID")
+            
+            // Seleziona un nuovo outfit casuale diverso dall'outfit del giorno precedente
+            var availableOutfits = database.outfits
+            if let previousID = previousOutfitID {
+                availableOutfits.removeAll(where: { $0.id == previousID })
+            }
+            
+            if let randomOutfit = availableOutfits.randomElement() {
+                dailyOutfitID = randomOutfit.id
+                // Salva l'UUID e la data di oggi
+                UserDefaults.standard.set(dailyOutfitID, forKey: "dailyOutfitID")
+                UserDefaults.standard.set(today, forKey: "dailyOutfitDate")
             }
         }
     }
-    
+
+    // Funzione per recuperare l'outfit del giorno dopo l'aggiornamento degli outfits
+    func retrieveDailyOutfit() {
+        if let savedID = UserDefaults.standard.uuid(forKey: "dailyOutfitID") {
+            dailyOutfitID = savedID
+        }
+    }
+
     struct SingleOutfitGrid: View {
         
         private var outfit: Outfit
@@ -151,7 +133,7 @@ struct AdvicesScreen: View {
                         .scaledToFit()
                         .clipped()
                         .frame(width: 100, height: 100)
-                    Text(outfit.nome!)
+                    Text(outfit.nome ?? "")
                         .foregroundStyle(.black)
                 }
                 .frame(width: 150, height: 370)
@@ -161,5 +143,19 @@ struct AdvicesScreen: View {
                 .padding(10)
             }
         }
+    }
+}
+
+// Estensione per salvare e recuperare UUID in UserDefaults
+extension UserDefaults {
+    func set(_ value: UUID?, forKey defaultName: String) {
+        set(value?.uuidString, forKey: defaultName)
+    }
+
+    func uuid(forKey defaultName: String) -> UUID? {
+        if let uuidString = string(forKey: defaultName) {
+            return UUID(uuidString: uuidString)
+        }
+        return nil
     }
 }
