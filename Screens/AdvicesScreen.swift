@@ -23,6 +23,7 @@ struct AdvicesScreen: View {
                         SingleOutfitGrid(outfit: outfit)
                     } else {
                         Text("Nessun outfit disponibile")
+                        Spacer(minLength: 300)
                     }
                 }
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
@@ -63,7 +64,7 @@ struct AdvicesScreen: View {
             .onAppear {
                 selectDailyOutfit()
             }
-            .onChange(of: database.outfits) {
+            .onChange(of: database.outfits) { _ in
                 retrieveDailyOutfit()
             }
         }
@@ -74,12 +75,12 @@ struct AdvicesScreen: View {
         let calendar = Calendar.current
         let today = Date()
 
-        // Controlla se è stato già selezionato un outfit oggi
+        // Controlla se è stato già selezionato un outfit valido oggi
         if let savedDate = UserDefaults.standard.object(forKey: "dailyOutfitDate") as? Date,
            calendar.isDate(savedDate, inSameDayAs: today),
-           let savedID = UserDefaults.standard.uuid(forKey: "dailyOutfitID") {
-            // Se è lo stesso giorno, usa l'outfit salvato
-            dailyOutfitID = savedID
+           UserDefaults.standard.bool(forKey: "validOutfitSelected") {
+            // Se è lo stesso giorno e un outfit valido è stato selezionato, usa l'outfit salvato
+            dailyOutfitID = UserDefaults.standard.uuid(forKey: "dailyOutfitID")
         } else {
             // Prima di selezionare un nuovo outfit, salva l'outfit del giorno precedente
             let previousOutfitID = UserDefaults.standard.uuid(forKey: "dailyOutfitID")
@@ -96,14 +97,24 @@ struct AdvicesScreen: View {
                 // Salva l'UUID e la data di oggi
                 UserDefaults.standard.set(dailyOutfitID, forKey: "dailyOutfitID")
                 UserDefaults.standard.set(today, forKey: "dailyOutfitDate")
+                UserDefaults.standard.set(true, forKey: "validOutfitSelected")
+            } else {
+                // Se non ci sono outfit disponibili, segna che non è stato selezionato un outfit valido
+                UserDefaults.standard.set(false, forKey: "validOutfitSelected")
             }
         }
     }
 
     // Funzione per recuperare l'outfit del giorno dopo l'aggiornamento degli outfits
     func retrieveDailyOutfit() {
+        // Recupera l'outfit salvato
         if let savedID = UserDefaults.standard.uuid(forKey: "dailyOutfitID") {
             dailyOutfitID = savedID
+        }
+        
+        // Se l'array degli outfits è stato aggiornato ed è non vuoto ma il dailyOutfitID è nil o un outfit valido non è stato selezionato, seleziona un nuovo outfit
+        if dailyOutfitID == nil || !UserDefaults.standard.bool(forKey: "validOutfitSelected"), !database.outfits.isEmpty {
+            selectDailyOutfit()
         }
     }
 
