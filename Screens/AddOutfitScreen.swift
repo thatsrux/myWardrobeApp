@@ -220,8 +220,8 @@ struct AddOutfitScreen: View {
                                                 shoes = cloth
                                             }
                                             updateOutfit()
-                                            spiegazioneColore=outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
-                                            spiegazioneStile=outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
+                                            spiegazioneColore = outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
+                                            spiegazioneStile = outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
                                         }
                                 }
                             }
@@ -235,8 +235,8 @@ struct AddOutfitScreen: View {
                 updateOutfit()
                 listenToOutfitChanges()
                 if shirt != nil && trousers != nil && shoes != nil {
-                    spiegazioneColore=outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
-                    spiegazioneStile=outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
+                    spiegazioneColore = outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
+                    spiegazioneStile = outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
                 }
             }
             .toolbar {

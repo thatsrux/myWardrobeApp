@@ -145,44 +145,6 @@ struct OutfitScreen: View {
             }
         }
         
-        
-        func deleteAllOutfits() {
-            let db = Firestore.firestore()
-            let ref = db.collection("Outfit")
-            
-            ref.getDocuments { snapshot, error in
-                if let error = error {
-                    print("Error fetching documents: \(error.localizedDescription)")
-                    return
-                }
-                
-                guard let snapshot = snapshot else {
-                    print("No documents found")
-                    return
-                }
-                
-                let group = DispatchGroup()
-                
-                for document in snapshot.documents {
-                    group.enter()
-                    document.reference.delete { error in
-                        if let error = error {
-                            print("Error removing document \(document.documentID): \(error.localizedDescription)")
-                        } else {
-                            print("Document \(document.documentID) successfully removed!")
-                        }
-                        group.leave()
-                    }
-                }
-                
-                group.notify(queue: .main) {
-                    print("All documents have been processed.")
-                    database.fetchOutfits()
-                }
-            }
-        }
-        
-        
         struct SingleOutfitGrid: View {
             
             @EnvironmentObject var database:Database
@@ -264,8 +226,6 @@ struct OutfitScreen: View {
                     }
                 }
             }
-            
-            
             
             func deleteOutfit(outfit: Outfit){
                 Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in

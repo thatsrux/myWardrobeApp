@@ -43,44 +43,6 @@ struct AddToOutfitScreen: View {
     //        self.category = category
     //    }
     
-    func deleteCloth(cloth:Cloth){
-        Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
-            if let err = err {
-                print("Error removing document: \(err)")
-            } else {
-                print("Document successfully removed!")
-            }
-        }
-        database.fetchClothes()
-        database.fetchCategorie()
-    }
-    
-    func deleteClothSwipe(at offsets:IndexSet){
-        
-        guard let index = offsets.first else {
-            print("No index available to delete")
-            return
-        }
-        
-        guard index >= 0 && index < database.clothes.count else {
-            print("Index \(index) out of range")
-            return
-        }
-        
-        let clothToDelete = database.clothes[index+1]
-        
-        Firestore.firestore().collection("Cloth").document(clothToDelete.id.uuidString).delete() { err in
-            if let err = err {
-                print("Error removing document: \(err)")
-            } else {
-                print("Document successfully removed!")
-            }
-        }
-        database.fetchClothes()
-        database.fetchCategorie()
-    }
-    
-    
     var body: some View {
         NavigationStack {
             VStack {
