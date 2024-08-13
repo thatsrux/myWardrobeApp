@@ -182,6 +182,7 @@ struct OutfitScreen: View {
                         .contextMenu(menuItems: {
                             Button(role: .destructive){
                                 deleteOutfit(outfit: outfit)
+                                database.fetchOutfits()
                             }
                         label:{
                             Label("Elimina", systemImage: "trash")
@@ -235,7 +236,7 @@ struct OutfitScreen: View {
                         print("Document \(outfit.id) successfully removed!")
                     }
                 }
-                database.fetchOutfits()
+                
             }
         }
     }

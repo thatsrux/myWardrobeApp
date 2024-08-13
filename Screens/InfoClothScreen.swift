@@ -289,12 +289,16 @@ struct InfoClothScreen: View {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button {
                     favouriteToggle(cloth: cloth)
+                    database.fetchClothes()
+                    database.fetchCategorie()
                 } label: {
                     Image(systemName: isStarFilled ? "star.fill" : "star")
                 }
                 
                 Button(action: {
                     saveCloth()
+                    database.fetchClothes()
+                    database.fetchCategorie()
                     dismiss()
                 }) {
                     Text("Salva")
@@ -302,6 +306,8 @@ struct InfoClothScreen: View {
                 
                 Button(action: {
                     deleteCloth(cloth: cloth)
+                    database.fetchClothes()
+                    database.fetchCategorie()
                     dismiss()
                 }) {
                     Text("Elimina")
@@ -400,8 +406,6 @@ struct InfoClothScreen: View {
             InfoClothScreen.save(cloth: newCloth)
         }
         
-        database.fetchClothes()
-        database.fetchCategorie()
     }
     
     private func editCloth(){
@@ -425,8 +429,6 @@ struct InfoClothScreen: View {
                 print("Document successfully removed!")
             }
         }
-        database.fetchClothes()
-        database.fetchCategorie()
     }
     
     static func save(cloth:Cloth) {
@@ -500,8 +502,7 @@ struct InfoClothScreen: View {
                 print(error.localizedDescription)
             }
         }
-        database.fetchClothes()
-        database.fetchCategorie()
+        
     }
 
 

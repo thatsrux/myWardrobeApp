@@ -244,6 +244,8 @@ struct AddOutfitScreen: View {
                     
                     Button{
                         favouriteToggle(outfit: outfit!)
+                        database.fetchOutfits()
+                        database.fetchCategorieOutfit()
                     }
                 label:{
                     Image(systemName: isStarFilled ? "star.fill" : "star")
@@ -251,6 +253,8 @@ struct AddOutfitScreen: View {
                     
                     Button(action: {
                         saveOutfit()
+                        database.fetchOutfits()
+                        database.fetchCategorieOutfit()
                         dismiss()
                     }) {
                         Text("Salva")
@@ -258,6 +262,10 @@ struct AddOutfitScreen: View {
                     if edit {
                         Button(action: {
                             deleteOutfit(outfit: outfit!)
+                            
+                            database.fetchOutfits()
+                            database.fetchCategorieOutfit()
+                            
                             dismiss()
                         }) {
                             Text("Elimina")
@@ -353,8 +361,7 @@ struct AddOutfitScreen: View {
                 print(error.localizedDescription)
             }
         }
-        database.fetchOutfits()
-        database.fetchCategorieOutfit()
+        
     }
     
     func editOutfit() {
@@ -374,8 +381,6 @@ struct AddOutfitScreen: View {
                 print(error.localizedDescription)
             }
         }
-        database.fetchOutfits()
-        database.fetchCategorieOutfit()
     }
     
     func outfitColorEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> String {
@@ -529,8 +534,6 @@ struct AddOutfitScreen: View {
                 print("Document \(outfit.id) successfully removed!")
             }
         }
-        database.fetchOutfits()
-        database.fetchCategorieOutfit()
     }
     
     func favouriteToggle(outfit:Outfit){
@@ -547,8 +550,6 @@ struct AddOutfitScreen: View {
                 print(error.localizedDescription)
             }
         }
-        database.fetchOutfits()
-        database.fetchCategorieOutfit()
     }
     
     func listenToOutfitChanges() {
