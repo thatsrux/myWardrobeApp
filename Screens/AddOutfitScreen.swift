@@ -29,7 +29,7 @@ struct AddOutfitScreen: View {
     @State var spiegazioneStile = ""
     
     var outfit: Outfit?
-    @State var isStarFilled : Bool
+    @State var isOutfitFavourite : Bool
     
     var edit = false
     @State var first = true
@@ -38,18 +38,18 @@ struct AddOutfitScreen: View {
     init(outfit:Outfit) {
         self.outfit = outfit
         edit = true
-        self._isStarFilled = State(initialValue: outfit.favourite)
+        self.isOutfitFavourite = outfit.favourite
     }
     
     init(shirt: Cloth, trousers: Cloth, shoes: Cloth) {
         self.shirt = shirt
         self.trousers = trousers
         self.shoes = shoes
-        self._isStarFilled = State(initialValue: false)
+        self.isOutfitFavourite = false
     }
     
     init(){
-        self._isStarFilled = State(initialValue: false)
+        self.isOutfitFavourite = false
     }
     
     var body: some View {
@@ -137,7 +137,7 @@ struct AddOutfitScreen: View {
                 
                 VStack(spacing: 20){
                     
-                    Text("Preferiti: \($isStarFilled.wrappedValue)")
+                    Text("Preferiti: \($isOutfitFavourite.wrappedValue)")
                     
                     LabeledContent {
                         TextField("Nome outfit", text: $nomeText)
@@ -243,13 +243,11 @@ struct AddOutfitScreen: View {
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     
                     Button{
-                        favouriteToggle(outfit: outfit!)
-                        database.fetchOutfits()
-                        database.fetchCategorieOutfit()
+                        isOutfitFavourite.toggle()
                     }
                 label:{
-                    Image(systemName: isStarFilled ? "star.fill" : "star")
-                }.disabled(!edit)
+                    Image(systemName: isOutfitFavourite ? "star.fill" : "star")
+                }
                     
                     Button(action: {
                         saveOutfit()
@@ -309,7 +307,7 @@ struct AddOutfitScreen: View {
             self.shoes = shoes
             self.nomeText = outfit.nome!
             self.stile = outfit.stile
-            self.isStarFilled = outfit.favourite
+            self.isOutfitFavourite = outfit.favourite
             first = false
         }
         else {
@@ -353,8 +351,7 @@ struct AddOutfitScreen: View {
             "shoesId" : shoes?.id.uuidString ?? "00000000-0000-0000-0000-000000000000",
             "nome" : nomeText,
             "stile" : stile.rawValue,
-            "favourite": outfit.favourite
-            
+            "favourite": isOutfitFavourite
         ]){
             error in
             if let error = error {
@@ -374,7 +371,7 @@ struct AddOutfitScreen: View {
             "shoesId" : shoes!.id.uuidString,
             "nome" : nomeText,
             "stile" : stile.rawValue,
-            "favourite": outfit!.favourite
+            "favourite": isOutfitFavourite
         ]){
             error in
             if let error = error {
@@ -536,22 +533,6 @@ struct AddOutfitScreen: View {
         }
     }
     
-    func favouriteToggle(outfit:Outfit){
-        outfit.favourite.toggle()
-        self.isStarFilled = outfit.favourite
-        
-        let db = Firestore.firestore()
-        let ref = db.collection("Outfit").document(outfit.id.uuidString)
-        ref.updateData([
-            "favourite": outfit.favourite
-        ]){
-            error in
-            if let error = error {
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
     func listenToOutfitChanges() {
         guard let outfitId = outfit?.id.uuidString else { return }
         
@@ -571,7 +552,7 @@ struct AddOutfitScreen: View {
             }
             
             if let favourite = data["favourite"] as? Bool {
-                self.isStarFilled = favourite
+                self.isOutfitFavourite = favourite
             }
         }
     }
