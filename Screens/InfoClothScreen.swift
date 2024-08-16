@@ -3,7 +3,7 @@ import BackgroundRemoval
 import ColorThiefSwift
 import Firebase
 
-struct InfoClothScreen: View {
+struct InfoClothScreen: View, Deletable {
     var image: UIImage
     
     var cloth:Cloth
@@ -421,15 +421,15 @@ struct InfoClothScreen: View {
         InfoClothScreen.save(cloth: cloth)
     }
     
-    func deleteCloth(cloth:Cloth){
-        Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
-            if let err = err {
-                print("Error removing document: \(err)")
-            } else {
-                print("Document successfully removed!")
-            }
-        }
-    }
+//    func deleteCloth(cloth:Cloth){
+//        Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
+//            if let err = err {
+//                print("Error removing document: \(err)")
+//            } else {
+//                print("Document successfully removed!")
+//            }
+//        }
+//    }
     
     static func save(cloth:Cloth) {
         

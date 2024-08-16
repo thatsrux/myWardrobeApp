@@ -1,7 +1,7 @@
 import SwiftUI
 import Firebase
 
-struct AddOutfitScreen: View {
+struct AddOutfitScreen: View, Deletable {
     @State private var isAddToOutfitScreenActive = false
     @EnvironmentObject var database: Database
     @Environment(\.dismiss) private var dismiss
@@ -526,15 +526,7 @@ struct AddOutfitScreen: View {
         }
     }
     
-    func deleteOutfit(outfit: Outfit){
-        Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
-            if let err = err {
-                print("Error removing document: \(err)")
-            } else {
-                print("Document \(outfit.id) successfully removed!")
-            }
-        }
-    }
+    
     
     func favouriteToggle(outfit:Outfit){
         outfit.favourite.toggle()
