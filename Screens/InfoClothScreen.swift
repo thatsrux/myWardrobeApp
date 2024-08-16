@@ -3,7 +3,7 @@ import BackgroundRemoval
 import ColorThiefSwift
 import Firebase
 
-struct InfoClothScreen: View, Deletable {
+struct InfoClothScreen: View, Deletable, Favourable {
     var image: UIImage
     
     var cloth:Cloth
@@ -289,6 +289,7 @@ struct InfoClothScreen: View, Deletable {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button {
                     favouriteToggle(cloth: cloth)
+                    isStarFilled = cloth.favourite
                     database.fetchClothes()
                     database.fetchCategorie()
                 } label: {
@@ -486,26 +487,6 @@ struct InfoClothScreen: View, Deletable {
     func addColor() {
         colorsNum += 1
     }
-    
-    func favouriteToggle(cloth:Cloth){
-        
-        cloth.favourite.toggle()
-        self.isStarFilled = cloth.favourite
-
-        let db = Firestore.firestore()
-        let ref = db.collection("Cloth").document(cloth.id.uuidString)
-        ref.updateData([
-            "favourite": cloth.favourite
-        ]){
-            error in
-            if let error = error {
-                print(error.localizedDescription)
-            }
-        }
-        
-    }
-
-
     
     func listenToClothChanges() {
         let db = Firestore.firestore()

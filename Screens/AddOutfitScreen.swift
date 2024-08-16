@@ -1,7 +1,7 @@
 import SwiftUI
 import Firebase
 
-struct AddOutfitScreen: View, Deletable {
+struct AddOutfitScreen: View, Deletable, Favourable {
     @State private var isAddToOutfitScreenActive = false
     @EnvironmentObject var database: Database
     @Environment(\.dismiss) private var dismiss
@@ -244,6 +244,7 @@ struct AddOutfitScreen: View, Deletable {
                     
                     Button{
                         favouriteToggle(outfit: outfit!)
+                        isStarFilled = outfit!.favourite
                         database.fetchOutfits()
                         database.fetchCategorieOutfit()
                     }
@@ -522,24 +523,6 @@ struct AddOutfitScreen: View, Deletable {
                         compatibleClothes.append(cloth)
                     }
                 }
-            }
-        }
-    }
-    
-    
-    
-    func favouriteToggle(outfit:Outfit){
-        outfit.favourite.toggle()
-        self.isStarFilled = outfit.favourite
-        
-        let db = Firestore.firestore()
-        let ref = db.collection("Outfit").document(outfit.id.uuidString)
-        ref.updateData([
-            "favourite": outfit.favourite
-        ]){
-            error in
-            if let error = error {
-                print(error.localizedDescription)
             }
         }
     }

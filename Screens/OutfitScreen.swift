@@ -145,7 +145,7 @@ struct OutfitScreen: View {
             }
         }
         
-        struct SingleOutfitGrid: View, Deletable {
+        struct SingleOutfitGrid: View, Deletable, Favourable {
             
             @EnvironmentObject var database:Database
             
@@ -190,6 +190,8 @@ struct OutfitScreen: View {
                         }
                             Button{
                                 favouriteToggle(outfit: outfit)
+                                database.fetchOutfits()
+                                database.fetchCategorieOutfit()
                             }
                         label:{
                             Label(!database.favOutfits.contains(outfit) ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti", systemImage:!database.favOutfits.contains(outfit) ? "star" : "star.fill")
@@ -200,33 +202,28 @@ struct OutfitScreen: View {
                 }
             }
             
-            func favouriteToggle(outfit: Outfit) {
-                
-                if database.favOutfits.contains(outfit){
-                    outfit.favourite = false
-                }
-                else{
-                    outfit.favourite = true
-                }
-                
-                let db = Firestore.firestore()
-                let ref = db.collection("Outfit").document(outfit.id.uuidString)
-                
-                ref.updateData([
-                    "favourite": outfit.favourite
-                ]) { error in
-                    if let error = error {
-                        print("Errore nell'aggiornamento del database: \(error.localizedDescription)")
-                    } else {
-                        print("Aggiornamento del database riuscito")
-                        // Aggiorna l'interfaccia utente dopo l'aggiornamento del database
-                        DispatchQueue.main.async {
-                            database.fetchOutfits()
-                            database.fetchCategorieOutfit()
-                        }
-                    }
-                }
-            }
+//            func favouriteToggle(outfit: Outfit) {
+//                
+//                outfit.favourite.toggle()
+//                
+//                let db = Firestore.firestore()
+//                let ref = db.collection("Outfit").document(outfit.id.uuidString)
+//                
+//                ref.updateData([
+//                    "favourite": outfit.favourite
+//                ]) { error in
+//                    if let error = error {
+//                        print("Errore nell'aggiornamento del database: \(error.localizedDescription)")
+//                    } else {
+//                        print("Aggiornamento del database riuscito")
+//                        // Aggiorna l'interfaccia utente dopo l'aggiornamento del database
+//                        DispatchQueue.main.async {
+//                            database.fetchOutfits()
+//                            database.fetchCategorieOutfit()
+//                        }
+//                    }
+//                }
+//            }
             
 //            func deleteOutfit(outfit: Outfit){
 //                Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
