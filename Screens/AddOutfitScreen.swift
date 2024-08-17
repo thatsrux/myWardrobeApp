@@ -137,8 +137,6 @@ struct AddOutfitScreen: View {
                 
                 VStack(spacing: 20){
                     
-                    Text("Preferiti: \($isOutfitFavourite.wrappedValue)")
-                    
                     LabeledContent {
                         TextField("Nome outfit", text: $nomeText)
                             .font(.system(size: 18))

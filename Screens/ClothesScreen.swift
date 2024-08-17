@@ -48,35 +48,17 @@ struct ClothesScreen: View {
                 if loading {
                     ProgressView("Elaborazione immagine in corso").frame(maxHeight: .infinity, alignment: .center)
                 } else {
-                    if searchIsActive {
-                        if !database.clothes.isEmpty{
-                            if favouriteActive{
-                                List{
-                                    ForEach(database.clothes, id: \.self) { cloth in
-                                        if (favouriteActive && cloth.favourite || !favouriteActive ) &&
-                                            (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") && (cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "") {
-                                            NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                                SingleClothList(cloth: cloth)
-                                            }
-                                        }
-                                    }.onDelete(perform: deleteClothSwipe)
-                                }
-                            }
-                            else if selectedOption2 != "AllTypes" {
-                                List{
-                                    ForEach(database.clothes, id: \.self) { cloth in
-                                        if (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") && (cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "") {
-                                            NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                                SingleClothList(cloth: cloth)
-                                            }
-                                        }
-                                    }.onDelete(perform: deleteClothSwipe)
-                                }
+                    if !database.clothes.isEmpty {
+                        if selectedOption == "elenco" {
+                            if selectedOption2 == "AllTypes" && !favouriteActive && searchText == "" {
+                                ClothesList()
                             }
                             else {
-                                List {
-                                    ForEach(database.clothes) { cloth in
-                                        if cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "" {
+                                List{
+                                    ForEach(database.clothes, id: \.self) { cloth in
+                                        if (favouriteActive && cloth.favourite || !favouriteActive ) && // Filtraggio preferiti
+                                            (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") && // Filtraggio tipo
+                                            (cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "") { // Ricerca
                                             NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
                                                 SingleClothList(cloth: cloth)
                                             }
@@ -84,83 +66,29 @@ struct ClothesScreen: View {
                                     }.onDelete(perform: deleteClothSwipe)
                                 }
                             }
-                        }
-                        else{
-                            Text("Inserisci un capo d'abbigliamento")
-                        }
-                        
-                    }
-                    
-                    else {
-                        
-                        if !database.clothes.isEmpty{
-                            
-                            
-                            if selectedOption == "elenco" {
-                                if favouriteActive{
-                                    List{
+                        } else {
+                            if selectedOption2 == "AllTypes" && !favouriteActive && searchText == "" {
+                                ClothesGrid()
+                            }
+                            else {
+                                ScrollView{
+                                    LazyVGrid(columns: columns, spacing: 10) {
                                         ForEach(database.clothes, id: \.self) { cloth in
-                                            if cloth.favourite && (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") {
+                                            if (favouriteActive && cloth.favourite || !favouriteActive ) && // Filtraggio preferiti
+                                                (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") && // Filtraggio tipo
+                                                (cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "") { // Ricerca
                                                 NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                                    SingleClothList(cloth: cloth)
+                                                    SingleClothGrid(cloth: cloth)
                                                 }
                                             }
-                                        }.onDelete(perform: deleteClothSwipe)
-                                    }
-                                }
-                                else if selectedOption2 != "AllTypes" {
-                                    List{
-                                        ForEach(database.clothes, id: \.self) { cloth in
-                                            if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes"{
-                                                NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                                    SingleClothList(cloth: cloth)
-                                                }
-                                            }
-                                        }.onDelete(perform: deleteClothSwipe)
-                                    }
-                                }
-                                else {
-                                    ClothesList()
-                                }
-                            } else {
-                                if favouriteActive{
-                                    if !database.clothes.isEmpty{
-                                        ScrollView{
-                                            LazyVGrid(columns: columns, spacing: 10) {
-                                                        ForEach(database.clothes, id: \.self) { cloth in
-                                                            if cloth.favourite && (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") {
-                                                                NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                                                    SingleClothGrid(cloth: cloth)
-                                                                }
-                                                            }
-                                                        
-                                                    
-                                                }
-                                            }.padding()
                                         }
-                                    }
-                                }
-                                else if selectedOption2 != "AllTypes" {
-                                    ScrollView{
-                                        LazyVGrid(columns: columns, spacing: 10) {
-                                            ForEach(database.clothes, id: \.self) { cloth in
-                                                if selectedOption2 == cloth.categoria.rawValue {
-                                                    NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                                        SingleClothGrid(cloth: cloth)
-                                                    }
-                                                }
-                                            }
-                                        }.padding()
-                                    }
-                                }
-                                else {
-                                    ClothesGrid()
+                                    }.padding()
                                 }
                             }
                         }
-                        else{
-                            Text("Inserisci un capo d'abbigliamento")
-                        }
+                    }
+                    else{
+                        Text("Inserisci un capo d'abbigliamento")
                     }
                 }
             }

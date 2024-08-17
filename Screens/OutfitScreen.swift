@@ -25,9 +25,9 @@ struct OutfitScreen: View {
                     if !database.outfits.isEmpty{
                         LazyVGrid(columns: columns, spacing: 10) {
                             ForEach(database.outfits, id:\.self){ o in
-                                if (o.favourite && favouriteActive || !favouriteActive) &&
-                                    (selectedOption == o.stile.rawValue || selectedOption == "AllOutfits") &&
-                                    (o.nome!.lowercased().contains(searchText.lowercased()) || searchText == "") {
+                                if (o.favourite && favouriteActive || !favouriteActive) && // Filtraggio preferiti
+                                    (selectedOption == o.stile.rawValue || selectedOption == "AllOutfits") && // Filtraggio stile
+                                    (o.nome!.lowercased().contains(searchText.lowercased()) || searchText == "") { // Ricerca
                                     NavigationLink(destination: AddOutfitScreen(outfit: o)) {
                                         SingleOutfitGrid(outfit: o)
                                     }.padding(.leading,10)
