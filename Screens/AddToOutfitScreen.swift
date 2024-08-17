@@ -125,14 +125,6 @@ struct AddToOutfitScreen: View {
                 }
             }
             .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
-            //            .navigationDestination(isPresented: $returnCloth){
-            //                if let clothToAdd = clothToAdd{
-            //                    AddOutfitScreen(cloth:clothToAdd)
-            //                }
-            //                else{
-            //
-            //                }
-            //            }
         }
     }
     func chooseClothType(cloth: Cloth) {
