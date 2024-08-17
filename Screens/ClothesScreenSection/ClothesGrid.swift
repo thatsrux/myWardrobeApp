@@ -76,7 +76,6 @@ struct SingleClothGrid: View {
         Button{
             favouriteToggle(cloth: cloth)
             database.fetchClothes()
-            database.fetchCategorie()
         }
         label:{
             Label(!cloth.favourite ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti", systemImage:!cloth.favourite ? "star" : "star.fill")
