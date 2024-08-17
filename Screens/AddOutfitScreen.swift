@@ -198,8 +198,6 @@ struct AddOutfitScreen: View {
                                 .font(.system(size: 18))
                         }
                     }
-                }.onAppear{
-                    database.fetchOutfits()
                 }
                 .padding(35)
                 VStack {
@@ -233,7 +231,6 @@ struct AddOutfitScreen: View {
                 }
             }.onAppear{
                 updateOutfit()
-                listenToOutfitChanges()
                 if shirt != nil && trousers != nil && shoes != nil {
                     spiegazioneColore = outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
                     spiegazioneStile = outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
@@ -532,31 +529,6 @@ struct AddOutfitScreen: View {
             }
         }
     }
-    
-    func listenToOutfitChanges() {
-        guard let outfitId = outfit?.id.uuidString else { return }
-        
-        let db = Firestore.firestore()
-        let ref = db.collection("Outfit").document(outfitId)
-        
-        ref.addSnapshotListener { documentSnapshot, error in
-            if let error = error {
-                print("Error listening to outfit changes: \(error)")
-                return
-            }
-            
-            guard let document = documentSnapshot, document.exists,
-                  let data = document.data() else {
-                print("Document does not exist")
-                return
-            }
-            
-            if let favourite = data["favourite"] as? Bool {
-                self.isOutfitFavourite = favourite
-            }
-        }
-    }
-    
 }
 
 func quickColorEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> Bool {

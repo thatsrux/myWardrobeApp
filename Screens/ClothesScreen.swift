@@ -52,8 +52,9 @@ struct ClothesScreen: View {
                         if !database.clothes.isEmpty{
                             if favouriteActive{
                                 List{
-                                    ForEach(database.favClothes, id: \.self) { cloth in
-                                        if (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") && (cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "") {
+                                    ForEach(database.clothes, id: \.self) { cloth in
+                                        if (favouriteActive && cloth.favourite || !favouriteActive ) &&
+                                            (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") && (cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "") {
                                             NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
                                                 SingleClothList(cloth: cloth)
                                             }
@@ -98,8 +99,8 @@ struct ClothesScreen: View {
                             if selectedOption == "elenco" {
                                 if favouriteActive{
                                     List{
-                                        ForEach(database.favClothes, id: \.self) { cloth in
-                                            if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes"{
+                                        ForEach(database.clothes, id: \.self) { cloth in
+                                            if cloth.favourite && (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") {
                                                 NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
                                                     SingleClothList(cloth: cloth)
                                                 }
@@ -123,11 +124,11 @@ struct ClothesScreen: View {
                                 }
                             } else {
                                 if favouriteActive{
-                                    if !database.favClothes.isEmpty{
+                                    if !database.clothes.isEmpty{
                                         ScrollView{
                                             LazyVGrid(columns: columns, spacing: 10) {
-                                                        ForEach(database.favClothes, id: \.self) { cloth in
-                                                            if selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes" {
+                                                        ForEach(database.clothes, id: \.self) { cloth in
+                                                            if cloth.favourite && (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") {
                                                                 NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
                                                                     SingleClothGrid(cloth: cloth)
                                                                 }

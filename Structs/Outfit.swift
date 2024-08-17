@@ -33,13 +33,14 @@ class Outfit: Identifiable, Hashable{
         self.stile = stile
     }
     
-    init(id: UUID, shirt: Cloth, trousers: Cloth, shoes: Cloth, nome: String, stile: Stile) {
+    init(id: UUID, shirt: Cloth, trousers: Cloth, shoes: Cloth, nome: String, stile: Stile, favourite: Bool) {
         self.id = id
         self.shirt = shirt
         self.trousers = trousers
         self.shoes = shoes
         self.nome = nome
         self.stile = stile
+        self.favourite = favourite
     }
     
     // QUESTO è INUTILIZZATO

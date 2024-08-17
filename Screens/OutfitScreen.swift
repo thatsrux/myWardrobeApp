@@ -24,10 +24,10 @@ struct OutfitScreen: View {
                 VStack{
                     if !searchIsActive {
                         if favouriteActive {
-                            if !database.favOutfits.isEmpty{
+                            if !database.outfits.isEmpty{
                                 LazyVGrid(columns: columns, spacing: 10) {
-                                    ForEach(database.favOutfits, id:\.self){ o in
-                                        if selectedOption == o.stile.rawValue || selectedOption == "AllOutfits" {
+                                    ForEach(database.outfits, id:\.self){ o in
+                                        if o.favourite && (selectedOption == o.stile.rawValue || selectedOption == "AllOutfits") {
                                             NavigationLink(destination: AddOutfitScreen(outfit: o)) {
                                                 SingleOutfitGrid(outfit: o)
                                             }.padding(.leading,10)
@@ -58,10 +58,10 @@ struct OutfitScreen: View {
                     }
                     else {
                         if favouriteActive {
-                            if !database.favOutfits.isEmpty{
+                            if !database.outfits.isEmpty{
                                 LazyVGrid(columns: columns, spacing: 10) {
-                                    ForEach(database.favOutfits, id:\.self){ o in
-                                        if (selectedOption == o.stile.rawValue || selectedOption == "AllOutfits") &&
+                                    ForEach(database.outfits, id:\.self){ o in
+                                        if o.favourite && (selectedOption == o.stile.rawValue || selectedOption == "AllOutfits") &&
                                             (o.nome!.lowercased().contains(searchText.lowercased()) || searchText == "") {
                                             NavigationLink(destination: AddOutfitScreen(outfit: o)) {
                                                 SingleOutfitGrid(outfit: o)
@@ -192,7 +192,7 @@ struct OutfitScreen: View {
                                 favouriteToggle(outfit: outfit)
                             }
                         label:{
-                            Label(!database.favOutfits.contains(outfit) ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti", systemImage:!database.favOutfits.contains(outfit) ? "star" : "star.fill")
+                            Label(!outfit.favourite ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti", systemImage:!outfit.favourite ? "star" : "star.fill")
                         }
                         })
                         .shadow(radius: 5)
