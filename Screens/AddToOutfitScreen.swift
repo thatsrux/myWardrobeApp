@@ -46,166 +46,85 @@ struct AddToOutfitScreen: View {
     var body: some View {
         NavigationStack {
             VStack {
-                if searchIsActive {
-                    if !database.clothes.isEmpty{
-                        if favouriteActive{
-                            List{
+                if !database.clothes.isEmpty{
+                    if selectedOption2 == "AllTypes" && !favouriteActive && searchText == "" {
+                        ScrollView {
+                            LazyVGrid(columns: columns, spacing: 10) {
                                 ForEach(category, id: \.self){
                                     cat in
-                                    ForEach(database.favClothes, id: \.self) { cloth in
-                                        if (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") && (cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "")
-                                            && cloth.categoria == cat {
-                                            SingleClothList(cloth: cloth)
-                                                .onTapGesture {
-                                                    chooseClothType(cloth: cloth)
-                                                }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if selectedOption2 != "AllTypes" {
-                            List{
-                                ForEach(category, id: \.self){
-                                    cat in
-                                ForEach(database.clothes, id: \.self) { cloth in
-                                    if (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") && (cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "")
-                                        && cloth.categoria == cat {
-                                        SingleClothList(cloth: cloth)
-                                            .onTapGesture {
-                                                chooseClothType(cloth: cloth)
+                                    Section(header: Text(categoriePlurale[Categoria(rawValue: cat.rawValue) ?? .NA]!).font(.headline)){
+                                        ForEach(database.clothes) { cloth in
+                                            if cloth.categoria == cat {
+                                                SingleClothGrid(cloth: cloth)
+                                                    .onTapGesture {
+                                                        chooseClothType(cloth: cloth)
+                                                    }
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                        else {
-                            List {
+                    }
+                    else {
+                        ScrollView{
+                            LazyVGrid(columns: columns, spacing: 10) {
                                 ForEach(category, id: \.self){
                                     cat in
-                                    ForEach(database.clothes) { cloth in
-                                        if (cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "")
+                                    ForEach(database.clothes, id: \.self) { cloth in
+                                        if (favouriteActive && cloth.favourite || !favouriteActive ) && // Filtraggio preferiti
+                                            (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") && // Filtraggio tipo
+                                            (cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "") // Ricerca
                                             && cloth.categoria == cat {
-                                            SingleClothList(cloth: cloth)
-                                                .onTapGesture {
-                                                    chooseClothType(cloth: cloth)
-                                                }
+                                            NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                                SingleClothGrid(cloth: cloth)
+                                            }
                                         }
                                     }
                                 }
-                            }
+                            }.padding()
                         }
-                    }
-                    else{
-                        Text("Inserisci un capo d'abbigliamento")
                     }
                 }
-                else {
-                    if !database.clothes.isEmpty{
-                        if favouriteActive{
-                            ScrollView{
-                                LazyVGrid(columns: columns, spacing: 10) {
-                                    ForEach(category, id: \.self){
-                                        cat in
-                                        ForEach(database.favClothes, id: \.self) { cloth in
-                                            if (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes")
-                                                && cloth.categoria == cat {
-                                                SingleClothGrid(cloth: cloth)
-                                                    .onTapGesture {
-                                                        chooseClothType(cloth: cloth)
-                                                    }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                else{
+                    Text("Inserisci un capo d'abbigliamento")
+                }
+            }
+            .navigationTitle(
+                category == upperCat ? "Parte superiore" :
+                    category == lowerCat ? "Parte inferiore" :
+                    "Scarpe"
+            )
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button {
+                        if !favouriteActive {
+                            favouriteActive = true
+                        } else {
+                            favouriteActive = false
                         }
-                        else if selectedOption2 != "AllTypes" {
-                            ScrollView{
-                                LazyVGrid(columns: columns, spacing: 10) {
-                                    ForEach(category, id: \.self){
-                                        cat in
-                                        ForEach(database.clothes) { cloth in
-                                            if cloth.categoria == cat && selectedOption2 == cloth.categoria.rawValue {
-                                                SingleClothGrid(cloth: cloth)
-                                                    .onTapGesture {
-                                                        chooseClothType(cloth: cloth)
-                                                    }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else {
-                            ScrollView {
-                                LazyVGrid(columns: columns, spacing: 10) {
-                                    ForEach(category, id: \.self){
-                                        cat in
-                                        Section(header: Text(categoriePlurale[Categoria(rawValue: cat.rawValue) ?? .NA]!).font(.headline)){
-                                            ForEach(database.clothes) { cloth in
-                                                if cloth.categoria == cat {
-                                                    SingleClothGrid(cloth: cloth)
-                                                        .onTapGesture {
-                                                            chooseClothType(cloth: cloth)
-                                                        }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                    } label: {
+                        if !favouriteActive {
+                            Image(systemName: "star")
+                        } else {
+                            Image(systemName: "star.fill")
                         }
                     }
-                    else{
-                        Text("Inserisci un capo d'abbigliamento")
+                    Menu() {
+                        Picker(selection: $selectedOption2, label: Text("Options")) {
+                            Text("Tutti i tipi").tag("AllTypes")
+                            ForEach(category, id: \.self) { cat in
+                                if cat != .NA {
+                                    Text(categoriePlurale[Categoria(rawValue: cat.rawValue) ?? .NA]!).tag(cat.rawValue)
+                                }
+                            }
+                        }
+                    } label:{
+                        Text("Tipi")
                     }
                 }
             }
-                .navigationTitle(
-                    category == upperCat ? "Parte superiore" :
-                        category == lowerCat ? "Parte inferiore" :
-                        "Scarpe"
-                )
-                .toolbar {
-                    ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Button {
-                            if !favouriteActive {
-                                favouriteActive = true
-                            } else {
-                                favouriteActive = false
-                            }
-                        } label: {
-                            if !favouriteActive {
-                                Image(systemName: "star")
-                            } else {
-                                Image(systemName: "star.fill")
-                            }
-                        }
-                        Menu() {
-                            Picker(selection: $selectedOption2, label: Text("Options")) {
-                                Text("Tutti i tipi").tag("AllTypes")
-                                ForEach(category, id: \.self) { cat in
-                                    if cat != .NA {
-                                        Text(categoriePlurale[Categoria(rawValue: cat.rawValue) ?? .NA]!).tag(cat.rawValue)
-                                    }
-                                }
-                            }
-                        } label:{
-                            Text("Tipi")
-                        }
-                    }
-                }
-                .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
-            //            .navigationDestination(isPresented: $returnCloth){
-            //                if let clothToAdd = clothToAdd{
-            //                    AddOutfitScreen(cloth:clothToAdd)
-            //                }
-            //                else{
-            //
-            //                }
-            //            }
+            .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
         }
     }
     func chooseClothType(cloth: Cloth) {

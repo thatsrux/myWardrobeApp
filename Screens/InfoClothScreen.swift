@@ -32,8 +32,9 @@ struct InfoClothScreen: View, Deletable, Favourable {
     
     init(cloth: Cloth){
         self.cloth = cloth
-        self._isStarFilled = State(initialValue: cloth.favourite)
-
+        
+        self.isStarFilled = cloth.favourite
+        
         self.nomeText = cloth.nome
         self.tagliaText = cloth.taglia
         self.categoriaClassificata = cloth.categoria
@@ -41,11 +42,10 @@ struct InfoClothScreen: View, Deletable, Favourable {
         
         self.image = (cloth.image?.toImage())!
         edit = true
-        
     }
     
     init(image: UIImage) {
-        self._isStarFilled = State(initialValue: false)
+        self.isStarFilled = false
         let backgroundRemoval = BackgroundRemoval()
 
         do {
@@ -273,8 +273,6 @@ struct InfoClothScreen: View, Deletable, Favourable {
             
         }
         .onAppear {
-            listenToClothChanges()
-        
             if !edit {
                 extractColorsAndClassify()
             }
@@ -288,10 +286,7 @@ struct InfoClothScreen: View, Deletable, Favourable {
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button {
-                    favouriteToggle(cloth: cloth)
-                    isStarFilled = cloth.favourite
-                    database.fetchClothes()
-                    database.fetchCategorie()
+                    isStarFilled.toggle()
                 } label: {
                     Image(systemName: isStarFilled ? "star.fill" : "star")
                 }
@@ -414,6 +409,7 @@ struct InfoClothScreen: View, Deletable, Favourable {
         cloth.taglia = tagliaText
         cloth.categoria = categoriaClassificata
         cloth.stile = stileClassificato
+        cloth.favourite = isStarFilled
         
         cloth.mainColor = ColorData(uiColor: UIColor(cpColor1))
         cloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
@@ -487,40 +483,4 @@ struct InfoClothScreen: View, Deletable, Favourable {
     func addColor() {
         colorsNum += 1
     }
-    
-    func listenToClothChanges() {
-        let db = Firestore.firestore()
-        let ref = db.collection("Cloth").document(cloth.id.uuidString)
-        
-        ref.addSnapshotListener { documentSnapshot, error in
-            if let error = error {
-                print("Error listening to cloth changes: \(error)")
-                return
-            }
-            
-            guard let document = documentSnapshot, document.exists, let data = document.data() else {
-                print("Document does not exist")
-                return
-            }
-            
-            if let favourite = data["favourite"] as? Bool {
-                DispatchQueue.main.async {
-                    self.isStarFilled = favourite
-                }
-            }
-        }
-    }
-
-}
-
-extension Array {
-
-    subscript(safe index: Int) -> Element? {
-        guard indices.contains(index) else {
-            return nil
-        }
-
-        return self[index]
-    }
-
 }

@@ -29,7 +29,7 @@ class Cloth: Identifiable, Codable, Hashable{
         return lhs.id == rhs.id
     }
     
-    init(id:UUID, image:String,mainColor:ColorData,secondColor:ColorData,thirdColor:ColorData,colorsNum:Int, categoria:Categoria,nome:String,taglia:Taglia,stile:Stile,data:Data){
+    init(id:UUID, image:String,mainColor:ColorData,secondColor:ColorData,thirdColor:ColorData,colorsNum:Int, categoria:Categoria,nome:String,taglia:Taglia,stile:Stile,data:Data,favourite:Bool){
         self.id = id
         self.image = image
         self.mainColor = mainColor
@@ -41,6 +41,7 @@ class Cloth: Identifiable, Codable, Hashable{
         self.taglia = taglia
         self.stile = stile
         self.data = Date.now
+        self.favourite = favourite
     }
     
     init(image: UIImage){

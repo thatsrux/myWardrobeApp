@@ -29,7 +29,7 @@ struct AddOutfitScreen: View, Deletable, Favourable {
     @State var spiegazioneStile = ""
     
     var outfit: Outfit?
-    @State var isStarFilled : Bool
+    @State var isOutfitFavourite : Bool
     
     var edit = false
     @State var first = true
@@ -38,18 +38,18 @@ struct AddOutfitScreen: View, Deletable, Favourable {
     init(outfit:Outfit) {
         self.outfit = outfit
         edit = true
-        self._isStarFilled = State(initialValue: outfit.favourite)
+        self.isOutfitFavourite = outfit.favourite
     }
     
     init(shirt: Cloth, trousers: Cloth, shoes: Cloth) {
         self.shirt = shirt
         self.trousers = trousers
         self.shoes = shoes
-        self._isStarFilled = State(initialValue: false)
+        self.isOutfitFavourite = false
     }
     
     init(){
-        self._isStarFilled = State(initialValue: false)
+        self.isOutfitFavourite = false
     }
     
     var body: some View {
@@ -137,8 +137,6 @@ struct AddOutfitScreen: View, Deletable, Favourable {
                 
                 VStack(spacing: 20){
                     
-                    Text("Preferiti: \($isStarFilled.wrappedValue)")
-                    
                     LabeledContent {
                         TextField("Nome outfit", text: $nomeText)
                             .font(.system(size: 18))
@@ -198,8 +196,6 @@ struct AddOutfitScreen: View, Deletable, Favourable {
                                 .font(.system(size: 18))
                         }
                     }
-                }.onAppear{
-                    database.fetchOutfits()
                 }
                 .padding(35)
                 VStack {
@@ -233,7 +229,6 @@ struct AddOutfitScreen: View, Deletable, Favourable {
                 }
             }.onAppear{
                 updateOutfit()
-                listenToOutfitChanges()
                 if shirt != nil && trousers != nil && shoes != nil {
                     spiegazioneColore = outfitColorEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
                     spiegazioneStile = outfitStyleEvaluation(shirt: shirt!, trousers: trousers!, shoes: shoes!)
@@ -243,14 +238,11 @@ struct AddOutfitScreen: View, Deletable, Favourable {
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     
                     Button{
-                        favouriteToggle(outfit: outfit!)
-                        isStarFilled = outfit!.favourite
-                        database.fetchOutfits()
-                        database.fetchCategorieOutfit()
+                        isOutfitFavourite.toggle()
                     }
                 label:{
-                    Image(systemName: isStarFilled ? "star.fill" : "star")
-                }.disabled(!edit)
+                    Image(systemName: isOutfitFavourite ? "star.fill" : "star")
+                }
                     
                     Button(action: {
                         saveOutfit()
@@ -310,7 +302,7 @@ struct AddOutfitScreen: View, Deletable, Favourable {
             self.shoes = shoes
             self.nomeText = outfit.nome!
             self.stile = outfit.stile
-            self.isStarFilled = outfit.favourite
+            self.isOutfitFavourite = outfit.favourite
             first = false
         }
         else {
@@ -354,8 +346,7 @@ struct AddOutfitScreen: View, Deletable, Favourable {
             "shoesId" : shoes?.id.uuidString ?? "00000000-0000-0000-0000-000000000000",
             "nome" : nomeText,
             "stile" : stile.rawValue,
-            "favourite": outfit.favourite
-            
+            "favourite": isOutfitFavourite
         ]){
             error in
             if let error = error {
@@ -375,7 +366,7 @@ struct AddOutfitScreen: View, Deletable, Favourable {
             "shoesId" : shoes!.id.uuidString,
             "nome" : nomeText,
             "stile" : stile.rawValue,
-            "favourite": outfit!.favourite
+            "favourite": isOutfitFavourite
         ]){
             error in
             if let error = error {
@@ -527,30 +518,15 @@ struct AddOutfitScreen: View, Deletable, Favourable {
         }
     }
     
-    func listenToOutfitChanges() {
-        guard let outfitId = outfit?.id.uuidString else { return }
-        
-        let db = Firestore.firestore()
-        let ref = db.collection("Outfit").document(outfitId)
-        
-        ref.addSnapshotListener { documentSnapshot, error in
-            if let error = error {
-                print("Error listening to outfit changes: \(error)")
-                return
-            }
-            
-            guard let document = documentSnapshot, document.exists,
-                  let data = document.data() else {
-                print("Document does not exist")
-                return
-            }
-            
-            if let favourite = data["favourite"] as? Bool {
-                self.isStarFilled = favourite
+    func deleteOutfit(outfit: Outfit){
+        Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
+            if let err = err {
+                print("Error removing document: \(err)")
+            } else {
+                print("Document \(outfit.id) successfully removed!")
             }
         }
     }
-    
 }
 
 func quickColorEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> Bool {

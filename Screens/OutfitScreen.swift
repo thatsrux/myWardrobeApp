@@ -22,218 +22,174 @@ struct OutfitScreen: View {
         NavigationStack {
             ScrollView{
                 VStack{
-                    if !searchIsActive {
-                        if favouriteActive {
-                            if !database.favOutfits.isEmpty{
-                                LazyVGrid(columns: columns, spacing: 10) {
-                                    ForEach(database.favOutfits, id:\.self){ o in
-                                        if selectedOption == o.stile.rawValue || selectedOption == "AllOutfits" {
-                                            NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                                SingleOutfitGrid(outfit: o)
-                                            }.padding(.leading,10)
-                                                .padding(.trailing,10)
-                                        }
-                                    }
+                    if !database.outfits.isEmpty{
+                        LazyVGrid(columns: columns, spacing: 10) {
+                            ForEach(database.outfits, id:\.self){ o in
+                                if (o.favourite && favouriteActive || !favouriteActive) && // Filtraggio preferiti
+                                    (selectedOption == o.stile.rawValue || selectedOption == "AllOutfits") && // Filtraggio stile
+                                    (o.nome!.lowercased().contains(searchText.lowercased()) || searchText == "") { // Ricerca
+                                    NavigationLink(destination: AddOutfitScreen(outfit: o)) {
+                                        SingleOutfitGrid(outfit: o)
+                                    }.padding(.leading,10)
+                                        .padding(.trailing,10)
                                 }
-                            }
-                        } else {
-                            if !database.outfits.isEmpty {
-                                LazyVGrid(columns: columns, spacing: 10) {
-                                    ForEach(database.outfits, id:\.self){ o in
-                                        if selectedOption == o.stile.rawValue || selectedOption == "AllOutfits" {
-                                            NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                                SingleOutfitGrid(outfit: o)
-                                            }.padding(.leading,10)
-                                                .padding(.trailing,10)
-                                        }
-                                    }
-                                }
-                                
-                            }
-                            else {
-                                Text("inserisci outfit")
                             }
                         }
-                        
                     }
                     else {
-                        if favouriteActive {
-                            if !database.favOutfits.isEmpty{
-                                LazyVGrid(columns: columns, spacing: 10) {
-                                    ForEach(database.favOutfits, id:\.self){ o in
-                                        if (selectedOption == o.stile.rawValue || selectedOption == "AllOutfits") &&
-                                            (o.nome!.lowercased().contains(searchText.lowercased()) || searchText == "") {
-                                            NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                                SingleOutfitGrid(outfit: o)
-                                            }.padding(.leading,10)
-                                                .padding(.trailing,10)
-                                        }
+                        Text("inserisci outfit")
+                    }
+                }
+                .navigationTitle(getNavigationTitle())
+                .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca outfit")
+                .toolbar {
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        Button {
+                            isAddOutfitScreenActive = true
+                        } label: {
+                            Image(systemName: "plus.circle")
+                        }
+                        Button {
+                            if !favouriteActive {
+                                favouriteActive = true
+                            } else {
+                                favouriteActive = false
+                            }
+                        } label: {
+                            if !favouriteActive {
+                                Image(systemName: "star")
+                            } else {
+                                Image(systemName: "star.fill")
+                            }
+                        }
+                        Menu() {
+                            Picker(selection: $selectedOption, label: Text("Options")) {
+                                Text("Tutti gli outfit").tag("AllOutfits")
+                                ForEach(Stile.allCases, id: \.self) { style in
+                                    if style != .NA {
+                                        Text(style.rawValue).tag(style.rawValue)
                                     }
                                 }
                             }
-                        } else {
-                            if !database.outfits.isEmpty {
-                                LazyVGrid(columns: columns, spacing: 10) {
-                                    ForEach(database.outfits, id:\.self){ o in
-                                        if (selectedOption == o.stile.rawValue || selectedOption == "AllOutfits") &&
-                                            (o.nome!.lowercased().contains(searchText.lowercased()) || searchText == "") {
-                                            NavigationLink(destination: AddOutfitScreen(outfit: o)) {
-                                                SingleOutfitGrid(outfit: o)
-                                            }.padding(.leading,10)
-                                                .padding(.trailing,10)
-                                        }
-                                    }
-                                }
-                            }
+                        } label:{
+                            Text("Stile")
                         }
                     }
                 }
-                        .navigationTitle(getNavigationTitle())
-                        .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca outfit")
-                        .toolbar {
-                            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                                Button {
-                                    isAddOutfitScreenActive = true
-                                } label: {
-                                    Image(systemName: "plus.circle")
-                                }
-                                Button {
-                                    if !favouriteActive {
-                                        favouriteActive = true
-                                    } else {
-                                        favouriteActive = false
-                                    }
-                                } label: {
-                                    if !favouriteActive {
-                                        Image(systemName: "star")
-                                    } else {
-                                        Image(systemName: "star.fill")
-                                    }
-                                }
-                                Menu() {
-                                    Picker(selection: $selectedOption, label: Text("Options")) {
-                                        Text("Tutti gli outfit").tag("AllOutfits")
-                                        ForEach(Stile.allCases, id: \.self) { style in
-                                            if style != .NA {
-                                                Text(style.rawValue).tag(style.rawValue)
-                                            }
-                                        }
-                                    }
-                                } label:{
-                                    Text("Stile")
-                                }
-                            }
-                        }
-                        .navigationDestination(isPresented: $isAddOutfitScreenActive){
-                            AddOutfitScreen()
-                        }
+                .navigationDestination(isPresented: $isAddOutfitScreenActive){
+                    AddOutfitScreen()
                 }
             }
-        }
-        
-        func getNavigationTitle() -> Text {
-            if selectedOption == "AllOutfits" && !favouriteActive {
-                return Text("I tuoi outfit")
-            } else if selectedOption != "AllOutfits" && !favouriteActive {
-                return Text("Outfit \(stilePlurale[Stile(rawValue: selectedOption) ?? .NA]!)")
-            } else if selectedOption != "AllOutfits" && favouriteActive {
-                return Text("Outfit \(stilePlurale[Stile(rawValue: selectedOption) ?? .NA]!) preferiti")
-            } else if selectedOption == "AllOutfits" && favouriteActive{
-                return Text("I tuoi outfit preferiti")
-            } else {
-                return Text("Outfit \(stilePlurale[Stile(rawValue: selectedOption) ?? .NA]!)")
-            }
-        }
-        
-        struct SingleOutfitGrid: View, Deletable, Favourable {
-            
-            @EnvironmentObject var database:Database
-            
-            private var outfit: Outfit
-            
-            
-            init(outfit: Outfit){
-                self.outfit = outfit
-            }
-            
-            var body: some View {
-                HStack{
-                    VStack(spacing:10){
-                        Image(uiImage: outfit.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shirt"))
-                            .resizable()
-                            .scaledToFit()
-                            .clipped()
-                            .frame(width:100,height:100)
-                        Image(uiImage: outfit.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "trousers"))
-                            .resizable()
-                            .scaledToFit()
-                            .clipped()
-                            .frame(width:100,height:100)
-                        Image(uiImage: outfit.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shoes"))
-                            .resizable()
-                            .scaledToFit()
-                            .clipped()
-                            .frame(width:100,height:100)
-                        Text(outfit.nome!)
-                            .foregroundStyle(.black)
-                    }.frame(width: 150, height: 370)
-                        .background(Color.white)
-                        .cornerRadius(10)
-                        .contextMenu(menuItems: {
-                            Button(role: .destructive){
-                                deleteOutfit(outfit: outfit)
-                                database.fetchOutfits()
-                            }
-                        label:{
-                            Label("Elimina", systemImage: "trash")
-                            
-                        }
-                            Button{
-                                favouriteToggle(outfit: outfit)
-                                database.fetchOutfits()
-                                database.fetchCategorieOutfit()
-                            }
-                        label:{
-                            Label(!database.favOutfits.contains(outfit) ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti", systemImage:!database.favOutfits.contains(outfit) ? "star" : "star.fill")
-                        }
-                        })
-                        .shadow(radius: 5)
-                        .padding(10)
-                }
-            }
-            
-//            func favouriteToggle(outfit: Outfit) {
-//                
-//                outfit.favourite.toggle()
-//                
-//                let db = Firestore.firestore()
-//                let ref = db.collection("Outfit").document(outfit.id.uuidString)
-//                
-//                ref.updateData([
-//                    "favourite": outfit.favourite
-//                ]) { error in
-//                    if let error = error {
-//                        print("Errore nell'aggiornamento del database: \(error.localizedDescription)")
-//                    } else {
-//                        print("Aggiornamento del database riuscito")
-//                        // Aggiorna l'interfaccia utente dopo l'aggiornamento del database
-//                        DispatchQueue.main.async {
-//                            database.fetchOutfits()
-//                            database.fetchCategorieOutfit()
-//                        }
-//                    }
-//                }
-//            }
-            
-//            func deleteOutfit(outfit: Outfit){
-//                Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
-//                    if let err = err {
-//                        print("Error removing document: \(err)")
-//                    } else {
-//                        print("Document \(outfit.id) successfully removed!")
-//                    }
-//                }
-//                
-//            }
         }
     }
+    
+    func getNavigationTitle() -> Text {
+        if selectedOption == "AllOutfits" && !favouriteActive {
+            return Text("I tuoi outfit")
+        } else if selectedOption != "AllOutfits" && !favouriteActive {
+            return Text("Outfit \(stilePlurale[Stile(rawValue: selectedOption) ?? .NA]!)")
+        } else if selectedOption != "AllOutfits" && favouriteActive {
+            return Text("Outfit \(stilePlurale[Stile(rawValue: selectedOption) ?? .NA]!) preferiti")
+        } else if selectedOption == "AllOutfits" && favouriteActive{
+            return Text("I tuoi outfit preferiti")
+        } else {
+            return Text("Outfit \(stilePlurale[Stile(rawValue: selectedOption) ?? .NA]!)")
+        }
+    }
+    
+    struct SingleOutfitGrid: View {
+        
+        @EnvironmentObject var database:Database
+        
+        private var outfit: Outfit
+        
+        
+        init(outfit: Outfit){
+            self.outfit = outfit
+        }
+        
+        var body: some View {
+            HStack{
+                VStack(spacing:10){
+                    Image(uiImage: outfit.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shirt"))
+                        .resizable()
+                        .scaledToFit()
+                        .clipped()
+                        .frame(width:100,height:100)
+                    Image(uiImage: outfit.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "trousers"))
+                        .resizable()
+                        .scaledToFit()
+                        .clipped()
+                        .frame(width:100,height:100)
+                    Image(uiImage: outfit.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shoes"))
+                        .resizable()
+                        .scaledToFit()
+                        .clipped()
+                        .frame(width:100,height:100)
+                    Text(outfit.nome!)
+                        .foregroundStyle(.black)
+                }.frame(width: 150, height: 370)
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .contextMenu(menuItems: {
+                        Button(role: .destructive){
+                            deleteOutfit(outfit: outfit)
+                            database.fetchOutfits()
+                        }
+                    label:{
+                        Label("Elimina", systemImage: "trash")
+                        
+                    }
+                        Button{
+                            favouriteToggle(outfit: outfit)
+                            database.fetchOutfits()
+                        }
+                    label:{
+                        Label(!outfit.favourite ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti",
+                              systemImage:!outfit.favourite ? "star" : "star.fill")
+                    }
+                    })
+                    .shadow(radius: 5)
+                    .padding(10)
+            }
+        }
+        
+        func favouriteToggle(outfit: Outfit) {
+            if database.favOutfits.contains(outfit){
+                outfit.favourite = false
+            }
+            else{
+                outfit.favourite = true
+            }
+            
+            let db = Firestore.firestore()
+            let ref = db.collection("Outfit").document(outfit.id.uuidString)
+            
+            ref.updateData([
+                "favourite": outfit.favourite
+            ]) { error in
+                if let error = error {
+                    print("Errore nell'aggiornamento del database: \(error.localizedDescription)")
+                } else {
+                    print("Aggiornamento del database riuscito")
+                    // Aggiorna l'interfaccia utente dopo l'aggiornamento del database
+                    DispatchQueue.main.async {
+                        database.fetchOutfits()
+                        database.fetchCategorieOutfit()
+                    }
+                }
+            }
+        }
+        
+        func deleteOutfit(outfit: Outfit){
+            Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
+                if let err = err {
+                    print("Error removing document: \(err)")
+                } else {
+                    print("Document \(outfit.id) successfully removed!")
+                }
+            }
+         
+        }
+    }
+}
