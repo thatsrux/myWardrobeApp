@@ -64,7 +64,7 @@ struct AdvicesScreen: View {
             .onAppear {
                 selectDailyOutfit()
             }
-            .onChange(of: database.outfits) { _, _ in
+            .onChange(of: database.outfits) { _,_ in
                 retrieveDailyOutfit()
             }
         }
@@ -97,10 +97,8 @@ struct AdvicesScreen: View {
                 // Se l'outfit non esiste più, seleziona un nuovo outfit da database.outfits
                 selectNewOutfit()
             }
-        }
-        
-        // Se l'array degli outfits è stato aggiornato ed è non vuoto ma il dailyOutfitID è nil o un outfit valido non è stato selezionato, seleziona un nuovo outfit
-        if dailyOutfitID == nil || !UserDefaults.standard.bool(forKey: "validOutfitSelected"), !database.outfits.isEmpty {
+        } else {
+            // Se l'outfit del giorno non è stato impostato, seleziona un nuovo outfit
             selectNewOutfit()
         }
     }
@@ -120,6 +118,7 @@ struct AdvicesScreen: View {
         } else {
             // Se non ci sono outfit disponibili, segna che non è stato selezionato un outfit valido
             UserDefaults.standard.set(false, forKey: "validOutfitSelected")
+            dailyOutfitID = nil
         }
     }
 
