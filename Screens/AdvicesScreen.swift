@@ -82,26 +82,7 @@ struct AdvicesScreen: View {
             // Se è lo stesso giorno e un outfit valido è stato selezionato, usa l'outfit salvato
             dailyOutfitID = UserDefaults.standard.uuid(forKey: "dailyOutfitID")
         } else {
-            // Prima di selezionare un nuovo outfit, salva l'outfit del giorno precedente
-            let previousOutfitID = UserDefaults.standard.uuid(forKey: "dailyOutfitID")
-            UserDefaults.standard.set(previousOutfitID, forKey: "previousOutfitID")
-            
-            // Seleziona un nuovo outfit casuale diverso dall'outfit del giorno precedente
-            var availableOutfits = database.outfits
-            if let previousID = previousOutfitID {
-                availableOutfits.removeAll(where: { $0.id == previousID })
-            }
-            
-            if let randomOutfit = availableOutfits.randomElement() {
-                dailyOutfitID = randomOutfit.id
-                // Salva l'UUID e la data di oggi
-                UserDefaults.standard.set(dailyOutfitID, forKey: "dailyOutfitID")
-                UserDefaults.standard.set(today, forKey: "dailyOutfitDate")
-                UserDefaults.standard.set(true, forKey: "validOutfitSelected")
-            } else {
-                // Se non ci sono outfit disponibili, segna che non è stato selezionato un outfit valido
-                UserDefaults.standard.set(false, forKey: "validOutfitSelected")
-            }
+            selectNewOutfit()
         }
     }
 
@@ -110,11 +91,35 @@ struct AdvicesScreen: View {
         // Recupera l'outfit salvato
         if let savedID = UserDefaults.standard.uuid(forKey: "dailyOutfitID") {
             dailyOutfitID = savedID
+            
+            // Controlla se l'outfit esiste ancora nel database
+            if !database.outfits.contains(where: { $0.id == savedID }) {
+                // Se l'outfit non esiste più, seleziona un nuovo outfit da database.outfits
+                selectNewOutfit()
+            }
         }
         
         // Se l'array degli outfits è stato aggiornato ed è non vuoto ma il dailyOutfitID è nil o un outfit valido non è stato selezionato, seleziona un nuovo outfit
         if dailyOutfitID == nil || !UserDefaults.standard.bool(forKey: "validOutfitSelected"), !database.outfits.isEmpty {
-            selectDailyOutfit()
+            selectNewOutfit()
+        }
+    }
+
+    // Funzione per selezionare un nuovo outfit da database.outfits
+    func selectNewOutfit() {
+        let today = Date()
+        
+        // Seleziona un nuovo outfit casuale da database.outfits
+        if let randomOutfit = database.outfits.randomElement() {
+            dailyOutfitID = randomOutfit.id
+            
+            // Salva l'UUID e la data di oggi
+            UserDefaults.standard.set(dailyOutfitID, forKey: "dailyOutfitID")
+            UserDefaults.standard.set(today, forKey: "dailyOutfitDate")
+            UserDefaults.standard.set(true, forKey: "validOutfitSelected")
+        } else {
+            // Se non ci sono outfit disponibili, segna che non è stato selezionato un outfit valido
+            UserDefaults.standard.set(false, forKey: "validOutfitSelected")
         }
     }
 
