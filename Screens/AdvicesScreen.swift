@@ -64,7 +64,7 @@ struct AdvicesScreen: View {
             .onAppear {
                 selectDailyOutfit()
             }
-            .onChange(of: database.outfits) { _ in
+            .onChange(of: database.outfits) { _, _ in
                 retrieveDailyOutfit()
             }
         }
