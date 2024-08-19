@@ -68,10 +68,10 @@ class Database:ObservableObject{
                     let cloth = Cloth(id: UUID(uuidString: id)!, image: image, mainColor: ColorData(red: color1r.CGFloatValue()! , green: color1g.CGFloatValue()!, blue: color1b.CGFloatValue()!, alpha: color1a.CGFloatValue()!), secondColor: ColorData(red: color2r.CGFloatValue()!, green: color2g.CGFloatValue()!, blue: color2b.CGFloatValue()!, alpha: color2a.CGFloatValue()!), thirdColor: ColorData(red: color3r.CGFloatValue()!, green: color3g.CGFloatValue()!, blue: color3b.CGFloatValue()!, alpha: color3a.CGFloatValue()!), colorsNum: colorsNum, categoria: Categoria(rawValue: categoria) ?? Categoria.NA, nome: nome, taglia: Taglia(rawValue: taglia) ?? Taglia.NA,stile: Stile(rawValue: stile) ?? Stile.NA, data: dataAgg.data(using: .utf8)!, favourite: favourite)
                     
                     self.clothes.append(cloth)
-                    self.clothes.sort(by:{$0.data>$1.data})
+                    self.clothesNum += 1
                 }
             }
-            self.clothesNum = self.clothes.count
+            self.clothes.sort(by:{$0.data>$1.data})
         }
     }
     
@@ -151,10 +151,10 @@ class Database:ObservableObject{
                         let outfit = Outfit(id: UUID(uuidString: id)!, shirt: shirt ?? Cloth(image: UIImage(imageLiteralResourceName: "shirt")), trousers: trousers ?? Cloth(image: UIImage(imageLiteralResourceName: "trousers")), shoes: shoes ?? Cloth(image: UIImage(imageLiteralResourceName: "shoes")), nome: nome, stile: Stile(rawValue: stile) ?? .NA, favourite: favourite)
                         
                             self.outfits.append(outfit)
+                            self.outfitsNum += 1
                     }
                 }
             }
-            outfitsNum = outfits.count
         }
     }
     
