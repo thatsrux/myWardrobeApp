@@ -155,7 +155,6 @@ struct OutfitScreen: View {
         }
         
         func favouriteToggle(outfit: Outfit) {
-            
             if database.favOutfits.contains(outfit){
                 outfit.favourite = false
             }
@@ -190,7 +189,7 @@ struct OutfitScreen: View {
                     print("Document \(outfit.id) successfully removed!")
                 }
             }
-            
+         
         }
     }
 }

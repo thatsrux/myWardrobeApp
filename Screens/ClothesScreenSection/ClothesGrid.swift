@@ -30,7 +30,7 @@ struct ClothesGrid: View {
 }
 
 
-struct SingleClothGrid: View {
+struct SingleClothGrid: View, Favourable {
     
     @EnvironmentObject var database:Database
     private let cloth: Cloth
@@ -83,19 +83,4 @@ struct SingleClothGrid: View {
             })
     }
     
-    func favouriteToggle(cloth:Cloth){
-        
-        cloth.favourite.toggle()
-        
-        let db = Firestore.firestore()
-        let ref = db.collection("Cloth").document(cloth.id.uuidString)
-        ref.updateData([
-            "favourite": cloth.favourite
-        ]){
-            error in
-            if let error = error {
-                print(error.localizedDescription)
-            }
-        }
-    }
 }

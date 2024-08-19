@@ -1,7 +1,7 @@
 import SwiftUI
 import Firebase
 
-struct AddOutfitScreen: View {
+struct AddOutfitScreen: View, Deletable, Favourable {
     @State private var isAddToOutfitScreenActive = false
     @EnvironmentObject var database: Database
     @Environment(\.dismiss) private var dismiss
