@@ -3,7 +3,7 @@ import BackgroundRemoval
 import ColorThiefSwift
 import Firebase
 
-struct InfoClothScreen: View, Deletable, Favourable {
+struct InfoClothScreen: View, Deletable {
     var image: UIImage
     
     var cloth:Cloth

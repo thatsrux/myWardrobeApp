@@ -97,7 +97,7 @@ struct OutfitScreen: View {
         }
     }
     
-    struct SingleOutfitGrid: View {
+    struct SingleOutfitGrid: View, Deletable, Favourable {
         
         @EnvironmentObject var database:Database
         
@@ -152,44 +152,6 @@ struct OutfitScreen: View {
                     .shadow(radius: 5)
                     .padding(10)
             }
-        }
-        
-        func favouriteToggle(outfit: Outfit) {
-            if database.favOutfits.contains(outfit){
-                outfit.favourite = false
-            }
-            else{
-                outfit.favourite = true
-            }
-            
-            let db = Firestore.firestore()
-            let ref = db.collection("Outfit").document(outfit.id.uuidString)
-            
-            ref.updateData([
-                "favourite": outfit.favourite
-            ]) { error in
-                if let error = error {
-                    print("Errore nell'aggiornamento del database: \(error.localizedDescription)")
-                } else {
-                    print("Aggiornamento del database riuscito")
-                    // Aggiorna l'interfaccia utente dopo l'aggiornamento del database
-                    DispatchQueue.main.async {
-                        database.fetchOutfits()
-                        database.fetchCategorieOutfit()
-                    }
-                }
-            }
-        }
-        
-        func deleteOutfit(outfit: Outfit){
-            Firestore.firestore().collection("Outfit").document(outfit.id.uuidString).delete() { err in
-                if let err = err {
-                    print("Error removing document: \(err)")
-                } else {
-                    print("Document \(outfit.id) successfully removed!")
-                }
-            }
-         
         }
     }
 }
