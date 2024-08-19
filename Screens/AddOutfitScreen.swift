@@ -320,6 +320,7 @@ struct AddOutfitScreen: View, Deletable {
             return
         }
         
+        database.outfitsNum += 1
         var shirtToAdd:Cloth?
         var trousersToAdd:Cloth?
         var shoesToAdd:Cloth?

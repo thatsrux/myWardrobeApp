@@ -381,6 +381,7 @@ struct InfoClothScreen: View, Deletable {
             editCloth()
         }
         else {
+            database.clothesNum += 1
             let coreImage = image.cgImage
             UIGraphicsBeginImageContext(CGSize(width: coreImage!.width, height: coreImage!.height))
             image.draw(in: CGRect(x: Int(0.0), y: Int(0.0), width: coreImage!.width, height: coreImage!.height))
