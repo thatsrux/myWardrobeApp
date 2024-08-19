@@ -254,6 +254,7 @@ struct AddOutfitScreen: View, Deletable {
                     }.disabled(shirt == nil || trousers == nil || shoes == nil)
                     if edit {
                         Button(action: {
+                            database.outfitsNum -= 1
                             deleteOutfit(outfit: outfit!)
                             
                             database.fetchOutfits()

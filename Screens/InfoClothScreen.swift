@@ -301,6 +301,7 @@ struct InfoClothScreen: View, Deletable {
                 }
                 
                 Button(action: {
+                    database.clothesNum -= 1
                     deleteCloth(cloth: cloth)
                     database.fetchClothes()
                     database.fetchCategorie()

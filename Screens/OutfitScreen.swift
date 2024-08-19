@@ -13,7 +13,6 @@ struct OutfitScreen: View {
     
     @EnvironmentObject var database:Database
     
-    
     let columns = [
         GridItem(.adaptive(minimum: 160))
     ]
@@ -37,7 +36,11 @@ struct OutfitScreen: View {
                         }
                     }
                     else {
-                        Text("inserisci outfit")
+                        if database.outfitsNum <= 0 {
+                            Text("Inserisci un outfit")
+                        } else {
+                            ProgressView("Aggiornamento guardaroba in corso").frame(maxHeight: .infinity, alignment: .center)
+                        }
                     }
                 }
                 .navigationTitle(getNavigationTitle())
@@ -133,6 +136,7 @@ struct OutfitScreen: View {
                     .cornerRadius(10)
                     .contextMenu(menuItems: {
                         Button(role: .destructive){
+                            database.outfitsNum -= 1
                             deleteOutfit(outfit: outfit)
                             database.fetchOutfits()
                         }

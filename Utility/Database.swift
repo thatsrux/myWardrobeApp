@@ -3,18 +3,17 @@ import Firebase
 class Database:ObservableObject{
     
     @Published var clothes:[Cloth]
-    @Published var favClothes:[Cloth]
     @Published var categorie:[String]
     @Published var outfits:[Outfit]
-    @Published var favOutfits:[Outfit]
     @Published var categorieOutfit:[String]
+    
+    @Published var clothesNum = 0
+    @Published var outfitsNum = 0
     
     init(){
         self.clothes = []
-        self.favClothes = []
         self.categorie = []
         self.outfits = []
-        self.favOutfits = []
         self.categorieOutfit = []
         
         fetchClothes()
@@ -25,7 +24,6 @@ class Database:ObservableObject{
     
     func fetchClothes(){
         clothes.removeAll()
-        favClothes.removeAll()
         let db = Firestore.firestore()
         let ref = db.collection("Cloth")
         ref.getDocuments{ snapshot, error in
@@ -73,6 +71,7 @@ class Database:ObservableObject{
                     self.clothes.sort(by:{$0.data>$1.data})
                 }
             }
+            self.clothesNum = self.clothes.count
         }
     }
     
@@ -104,7 +103,6 @@ class Database:ObservableObject{
     
     func fetchOutfits(){
         outfits.removeAll()
-        favOutfits.removeAll()
         let db = Firestore.firestore()
         let ref = db.collection("Outfit")
         ref.getDocuments{ [self] snapshot, error in
@@ -153,15 +151,10 @@ class Database:ObservableObject{
                         let outfit = Outfit(id: UUID(uuidString: id)!, shirt: shirt ?? Cloth(image: UIImage(imageLiteralResourceName: "shirt")), trousers: trousers ?? Cloth(image: UIImage(imageLiteralResourceName: "trousers")), shoes: shoes ?? Cloth(image: UIImage(imageLiteralResourceName: "shoes")), nome: nome, stile: Stile(rawValue: stile) ?? .NA, favourite: favourite)
                         
                             self.outfits.append(outfit)
-                        
-                        if favourite && !self.favOutfits.contains(outfit){
-                            self.favOutfits.append(outfit)
-                        }
-                        
-                        
                     }
                 }
             }
+            outfitsNum = outfits.count
         }
     }
     
@@ -191,6 +184,7 @@ class Database:ObservableObject{
     }
     
     func deleteCloth(cloth:Cloth){
+        clothesNum -= 1
         Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
             if let err = err {
                 print("Error removing document: \(err)")
