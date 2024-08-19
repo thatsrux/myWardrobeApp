@@ -13,16 +13,15 @@ struct OutfitScreen: View {
     
     @EnvironmentObject var database:Database
     
-    
     let columns = [
         GridItem(.adaptive(minimum: 160))
     ]
     
     var body: some View {
         NavigationStack {
-            ScrollView{
-                VStack{
-                    if !database.outfits.isEmpty{
+            VStack{
+                if !database.outfits.isEmpty{
+                    ScrollView{
                         LazyVGrid(columns: columns, spacing: 10) {
                             ForEach(database.outfits, id:\.self){ o in
                                 if (o.favourite && favouriteActive || !favouriteActive) && // Filtraggio preferiti
@@ -36,49 +35,53 @@ struct OutfitScreen: View {
                             }
                         }
                     }
-                    else {
-                        Text("inserisci outfit")
+                }
+                else {
+                    if database.outfitsNum <= 0 {
+                        Text("Inserisci un outfit")
+                    } else {
+                        ProgressView("Aggiornamento guardaroba in corso").frame(maxHeight: .infinity, alignment: .center)
                     }
                 }
-                .navigationTitle(getNavigationTitle())
-                .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca outfit")
-                .toolbar {
-                    ToolbarItemGroup(placement: .navigationBarTrailing) {
-                        Button {
-                            isAddOutfitScreenActive = true
-                        } label: {
-                            Image(systemName: "plus.circle")
+            }
+            .navigationTitle(getNavigationTitle())
+            .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca outfit")
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button {
+                        isAddOutfitScreenActive = true
+                    } label: {
+                        Image(systemName: "plus.circle")
+                    }
+                    Button {
+                        if !favouriteActive {
+                            favouriteActive = true
+                        } else {
+                            favouriteActive = false
                         }
-                        Button {
-                            if !favouriteActive {
-                                favouriteActive = true
-                            } else {
-                                favouriteActive = false
-                            }
-                        } label: {
-                            if !favouriteActive {
-                                Image(systemName: "star")
-                            } else {
-                                Image(systemName: "star.fill")
-                            }
+                    } label: {
+                        if !favouriteActive {
+                            Image(systemName: "star")
+                        } else {
+                            Image(systemName: "star.fill")
                         }
-                        Menu() {
-                            Picker(selection: $selectedOption, label: Text("Options")) {
-                                Text("Tutti gli outfit").tag("AllOutfits")
-                                ForEach(Stile.allCases, id: \.self) { style in
-                                    if style != .NA {
-                                        Text(style.rawValue).tag(style.rawValue)
-                                    }
+                    }
+                    Menu() {
+                        Picker(selection: $selectedOption, label: Text("Options")) {
+                            Text("Tutti gli outfit").tag("AllOutfits")
+                            ForEach(Stile.allCases, id: \.self) { style in
+                                if style != .NA {
+                                    Text(style.rawValue).tag(style.rawValue)
                                 }
                             }
-                        } label:{
-                            Text("Stile")
                         }
+                    } label:{
+                        Text("Stile")
                     }
                 }
-                .navigationDestination(isPresented: $isAddOutfitScreenActive){
-                    AddOutfitScreen()
-                }
+            }
+            .navigationDestination(isPresented: $isAddOutfitScreenActive){
+                AddOutfitScreen()
             }
         }
     }
@@ -133,6 +136,7 @@ struct OutfitScreen: View {
                     .cornerRadius(10)
                     .contextMenu(menuItems: {
                         Button(role: .destructive){
+                            database.outfitsNum -= 1
                             deleteOutfit(outfit: outfit)
                             database.fetchOutfits()
                         }

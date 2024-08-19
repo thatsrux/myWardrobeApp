@@ -23,8 +23,6 @@ struct ClothesScreen: View {
     
     @State private var favouriteActive = false
     
-    
-    
     func deleteClothSwipe(at offsets:IndexSet){
         
         guard let index = offsets.first else {
@@ -88,7 +86,11 @@ struct ClothesScreen: View {
                         }
                     }
                     else{
-                        Text("Inserisci un capo d'abbigliamento")
+                        if database.clothesNum <= 0 {
+                            Text("Inserisci un capo d'abbigliamento")
+                        } else {
+                            ProgressView("Aggiornamento guardaroba in corso").frame(maxHeight: .infinity, alignment: .center)
+                        }
                     }
                 }
             }
