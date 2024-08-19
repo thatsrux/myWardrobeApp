@@ -64,7 +64,8 @@ struct AdvicesScreen: View {
             .onAppear {
                 selectDailyOutfit()
             }
-            .onChange(of: database.outfits) { _,_ in
+            .onChange(of: database.outfits) { _ in
+                // Assicurati di controllare se l'outfit giornaliero è ancora valido
                 retrieveDailyOutfit()
             }
         }
@@ -107,8 +108,17 @@ struct AdvicesScreen: View {
     func selectNewOutfit() {
         let today = Date()
         
-        // Seleziona un nuovo outfit casuale da database.outfits
-        if let randomOutfit = database.outfits.randomElement() {
+        // Recupera l'outfit del giorno precedente
+        let previousOutfitID = UserDefaults.standard.uuid(forKey: "dailyOutfitID")
+        
+        // Escludi l'outfit del giorno precedente dalla selezione
+        var availableOutfits = database.outfits
+        if let previousID = previousOutfitID {
+            availableOutfits.removeAll(where: { $0.id == previousID })
+        }
+        
+        // Seleziona un nuovo outfit casuale
+        if let randomOutfit = availableOutfits.randomElement() {
             dailyOutfitID = randomOutfit.id
             
             // Salva l'UUID e la data di oggi
