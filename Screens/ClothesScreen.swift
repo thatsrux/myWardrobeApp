@@ -128,24 +128,6 @@ struct ClothesScreen: View {
                                 Image(systemName: "list.bullet")
                             }.tag("elenco")
                         }
-                        
-                        Divider()
-                        Button(action: {
-                            for cloth in database.clothes{
-                                Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
-                                    if let err = err {
-                                        print("Error removing document: \(err)")
-                                    } else {
-                                        print("Document successfully removed!")
-                                    }
-                                }
-                            }
-                            database.fetchClothes()
-                            database.fetchCategorie()
-                        }) {
-                            Text("Svuota")
-                            Image(systemName: "trash")
-                        }
                     }
                 label:{
                     Image(systemName: "ellipsis.circle")
