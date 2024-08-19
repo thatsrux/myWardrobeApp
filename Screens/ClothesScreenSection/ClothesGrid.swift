@@ -69,9 +69,12 @@ struct SingleClothGrid: View, Favourable {
             .cornerRadius(10)
             .shadow(radius: 5)
             .contextMenu(menuItems: {
-                Button("Elimina", role: .destructive, action: {
+                Button(role: .destructive) {
                     database.deleteCloth(cloth: cloth)
-                })
+                }
+            label:{
+                Label("Elimina", systemImage: "trash")
+                }
             
         Button{
             favouriteToggle(cloth: cloth)
