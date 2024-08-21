@@ -13,7 +13,7 @@ struct ContentView: View {
 
                 OutfitScreen()
                     .tabItem {
-                        Label ("Galleria Outfit", systemImage: "tshirt")
+                        Label ("Outfit", systemImage: "tshirt")
                         .accentColor(.primary)}
                     .tag (0)
                 
