@@ -39,7 +39,6 @@ struct AddToOutfitScreen: View {
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 10) {
                             ForEach(category.filter { cat in
-                                // Check if there are any clothes in this category that match the filters
                                 let filteredClothes = database.clothes.filter { cloth in
                                     (favouriteActive && cloth.favourite || !favouriteActive) &&
                                     (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") &&
