@@ -47,7 +47,7 @@ struct InfoClothScreen: View, Deletable {
     init(image: UIImage) {
         self.isStarFilled = false
         let backgroundRemoval = BackgroundRemoval()
-
+        
         do {
             imageNoBackground = try backgroundRemoval.removeBackground(image: image)
             self.image = imageNoBackground!.croppedToBoundingBox() ?? imageNoBackground!
@@ -63,7 +63,7 @@ struct InfoClothScreen: View, Deletable {
         } else {
             classifier.detect(uiImage: image)
         }
-
+        
     }
     
     var body: some View {
@@ -223,6 +223,9 @@ struct InfoClothScreen: View, Deletable {
                     LabeledContent {
                         TextField("Nome articolo", text: $nomeText)
                             .font(.system(size: 18))
+                            .multilineTextAlignment(.trailing)
+                            .padding(.trailing, 14)
+                        
                     } label: {
                         Text("Nome articolo: ")
                             .font(.system(size: 18, weight: .bold))
@@ -311,7 +314,7 @@ struct InfoClothScreen: View, Deletable {
                 }
             }
         }
-
+        
         .navigationTitle(cloth.nome)
     }
     
@@ -420,61 +423,61 @@ struct InfoClothScreen: View, Deletable {
         InfoClothScreen.save(cloth: cloth)
     }
     
-//    func deleteCloth(cloth:Cloth){
-//        Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
-//            if let err = err {
-//                print("Error removing document: \(err)")
-//            } else {
-//                print("Document successfully removed!")
-//            }
-//        }
-//    }
+    //    func deleteCloth(cloth:Cloth){
+    //        Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
+    //            if let err = err {
+    //                print("Error removing document: \(err)")
+    //            } else {
+    //                print("Document successfully removed!")
+    //            }
+    //        }
+    //    }
     
     static func save(cloth:Cloth) {
         
         var img:UIImage?
         
-            if let data = cloth.image?.toImage()!.compress(to: 100){
-                img = UIImage(data: data)!
+        if let data = cloth.image?.toImage()!.compress(to: 100){
+            img = UIImage(data: data)!
+        }
+        else{
+            img = cloth.image?.toImage()!
+        }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
+        let dataString = dateFormatter.string(from: cloth.data)
+        
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("Cloth").document(cloth.id.uuidString)
+        ref.setData(["foto": img!.toPngString()!,
+                     "id" : cloth.id.uuidString,
+                     "nome": cloth.nome,
+                     "categoria": cloth.categoria.rawValue,
+                     "taglia": cloth.taglia.rawValue,
+                     "color1a": cloth.mainColor.alpha.description,
+                     "color1r": cloth.mainColor.red.description,
+                     "color1g": cloth.mainColor.green.description,
+                     "color1b": cloth.mainColor.blue.description,
+                     "color2a": cloth.secondColor.alpha.description,
+                     "color2r": cloth.secondColor.red.description,
+                     "color2g": cloth.secondColor.green.description,
+                     "color2b": cloth.secondColor.blue.description,
+                     "color3a": cloth.thirdColor.alpha.description,
+                     "color3r": cloth.thirdColor.red.description,
+                     "color3g": cloth.thirdColor.green.description,
+                     "color3b": cloth.thirdColor.blue.description,
+                     "colorsnum" : cloth.colorsNum,
+                     "stile": cloth.stile.rawValue,
+                     "data":dataString,
+                     "favourite": cloth.favourite
+                    ]){
+            error in
+            if let error = error {
+                print(error.localizedDescription)
             }
-            else{
-                img = cloth.image?.toImage()!
-            }
-            
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
-            let dataString = dateFormatter.string(from: cloth.data)
-            
-            
-            let db = Firestore.firestore()
-            let ref = db.collection("Cloth").document(cloth.id.uuidString)
-            ref.setData(["foto": img!.toPngString()!,
-                         "id" : cloth.id.uuidString,
-                         "nome": cloth.nome,
-                         "categoria": cloth.categoria.rawValue,
-                         "taglia": cloth.taglia.rawValue,
-                         "color1a": cloth.mainColor.alpha.description,
-                         "color1r": cloth.mainColor.red.description,
-                         "color1g": cloth.mainColor.green.description,
-                         "color1b": cloth.mainColor.blue.description,
-                         "color2a": cloth.secondColor.alpha.description,
-                         "color2r": cloth.secondColor.red.description,
-                         "color2g": cloth.secondColor.green.description,
-                         "color2b": cloth.secondColor.blue.description,
-                         "color3a": cloth.thirdColor.alpha.description,
-                         "color3r": cloth.thirdColor.red.description,
-                         "color3g": cloth.thirdColor.green.description,
-                         "color3b": cloth.thirdColor.blue.description,
-                         "colorsnum" : cloth.colorsNum,
-                         "stile": cloth.stile.rawValue,
-                         "data":dataString,
-                         "favourite": cloth.favourite
-                        ]){
-                error in
-                if let error = error {
-                    print(error.localizedDescription)
-                }
-            }
+        }
         
     }
     
