@@ -55,7 +55,9 @@ struct AddToOutfitScreen: View {
                                         (cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "") &&
                                         cloth.categoria == cat
                                     }) { cloth in
-                                        NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                        Button(action: {
+                                            chooseClothType(cloth: cloth)
+                                        }) {
                                             SingleClothGrid(cloth: cloth)
                                         }
                                     }
