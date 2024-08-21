@@ -135,6 +135,15 @@ struct OutfitScreen: View {
                     .background(Color.white)
                     .cornerRadius(10)
                     .contextMenu(menuItems: {
+                        
+                        Button{
+                            favouriteToggle(outfit: outfit)
+                            database.fetchOutfits()
+                        }
+                    label:{
+                        Label(!outfit.favourite ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti",
+                              systemImage:!outfit.favourite ? "star" : "star.fill")
+                    }
                         Button(role: .destructive){
                             database.outfitsNum -= 1
                             deleteOutfit(outfit: outfit)
@@ -143,14 +152,6 @@ struct OutfitScreen: View {
                     label:{
                         Label("Elimina", systemImage: "trash")
                         
-                    }
-                        Button{
-                            favouriteToggle(outfit: outfit)
-                            database.fetchOutfits()
-                        }
-                    label:{
-                        Label(!outfit.favourite ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti",
-                              systemImage:!outfit.favourite ? "star" : "star.fill")
                     }
                     })
                     .shadow(radius: 5)

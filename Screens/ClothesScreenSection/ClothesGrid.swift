@@ -69,20 +69,21 @@ struct SingleClothGrid: View, Favourable {
             .cornerRadius(10)
             .shadow(radius: 5)
             .contextMenu(menuItems: {
+                
+                
+                Button{
+                    favouriteToggle(cloth: cloth)
+                    database.fetchClothes()
+                }
+            label:{
+                Label(!cloth.favourite ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti", systemImage:!cloth.favourite ? "star" : "star.fill")
+            }
                 Button(role: .destructive) {
                     database.deleteCloth(cloth: cloth)
                 }
             label:{
                 Label("Elimina", systemImage: "trash")
-                }
-            
-        Button{
-            favouriteToggle(cloth: cloth)
-            database.fetchClothes()
-        }
-        label:{
-            Label(!cloth.favourite ? "Aggiungi ai preferiti" : "Rimuovi dai preferiti", systemImage:!cloth.favourite ? "star" : "star.fill")
-        }
+            }
             })
     }
     
