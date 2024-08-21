@@ -15,27 +15,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch" translatesAutoresizingMaskIntoConstraints="NO" id="qP9-MD-SHH">
-                                <rect key="frame" x="-14" y="226" width="421" height="182"/>
-                            </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="myWardrobe" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="GJd-Yh-RWb">
                                 <rect key="frame" x="0.0" y="405" width="393" height="43"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="36"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch" translatesAutoresizingMaskIntoConstraints="NO" id="iYz-wF-ul3">
+                                <rect key="frame" x="76" y="269" width="241" height="128"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="iYz-wF-ul3" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="76" id="3mU-hp-6Co"/>
                             <constraint firstItem="GJd-Yh-RWb" firstAttribute="centerX" secondItem="Bcu-3y-fUS" secondAttribute="centerX" id="9e9-VS-mLN"/>
-                            <constraint firstItem="qP9-MD-SHH" firstAttribute="centerX" secondItem="Bcu-3y-fUS" secondAttribute="centerX" id="APk-eT-TFk"/>
-                            <constraint firstItem="qP9-MD-SHH" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="-30" id="NVt-s4-8K0"/>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="centerX" secondItem="GJd-Yh-RWb" secondAttribute="centerX" id="Q3B-4B-g5h"/>
-                            <constraint firstItem="qP9-MD-SHH" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="167" id="Yf0-jU-5wV"/>
+                            <constraint firstItem="iYz-wF-ul3" firstAttribute="centerX" secondItem="GJd-Yh-RWb" secondAttribute="centerX" id="W2Y-yG-lPK"/>
                             <constraint firstItem="GJd-Yh-RWb" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="bottom" multiplier="1/3" constant="142.5" id="moa-c2-u7t"/>
-                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="qP9-MD-SHH" secondAttribute="bottom" constant="410" id="nYh-Ne-lMR"/>
+                            <constraint firstItem="iYz-wF-ul3" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="210" id="t0B-r5-0S0"/>
                             <constraint firstItem="GJd-Yh-RWb" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" symbolic="YES" id="x7j-FC-K8j"/>
+                            <constraint firstItem="GJd-Yh-RWb" firstAttribute="top" secondItem="iYz-wF-ul3" secondAttribute="bottom" constant="8" symbolic="YES" id="zkm-o6-fsk"/>
                         </constraints>
                     </view>
                 </viewController>
