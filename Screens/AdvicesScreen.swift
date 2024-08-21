@@ -64,10 +64,6 @@ struct AdvicesScreen: View {
             .onAppear {
                 selectDailyOutfit()
             }
-            .onChange(of: database.outfits) { _ in
-                // Assicurati di controllare se l'outfit giornaliero è ancora valido
-                retrieveDailyOutfit()
-            }
         }
     }
     
@@ -79,27 +75,11 @@ struct AdvicesScreen: View {
         // Controlla se è stato già selezionato un outfit valido oggi
         if let savedDate = UserDefaults.standard.object(forKey: "dailyOutfitDate") as? Date,
            calendar.isDate(savedDate, inSameDayAs: today),
-           UserDefaults.standard.bool(forKey: "validOutfitSelected") {
-            // Se è lo stesso giorno e un outfit valido è stato selezionato, usa l'outfit salvato
-            dailyOutfitID = UserDefaults.standard.uuid(forKey: "dailyOutfitID")
-        } else {
-            selectNewOutfit()
-        }
-    }
-
-    // Funzione per recuperare l'outfit del giorno dopo l'aggiornamento degli outfits
-    func retrieveDailyOutfit() {
-        // Recupera l'outfit salvato
-        if let savedID = UserDefaults.standard.uuid(forKey: "dailyOutfitID") {
+           let savedID = UserDefaults.standard.uuid(forKey: "dailyOutfitID"),
+           database.outfits.contains(where: { $0.id == savedID }) {
+            // Se è lo stesso giorno e l'outfit salvato esiste ancora, usa l'outfit salvato
             dailyOutfitID = savedID
-            
-            // Controlla se l'outfit esiste ancora nel database
-            if !database.outfits.contains(where: { $0.id == savedID }) {
-                // Se l'outfit non esiste più, seleziona un nuovo outfit da database.outfits
-                selectNewOutfit()
-            }
         } else {
-            // Se l'outfit del giorno non è stato impostato, seleziona un nuovo outfit
             selectNewOutfit()
         }
     }
@@ -171,7 +151,6 @@ struct AdvicesScreen: View {
     }
 }
 
-// Estensione per salvare e recuperare UUID in UserDefaults
 extension UserDefaults {
     func set(_ value: UUID?, forKey defaultName: String) {
         set(value?.uuidString, forKey: defaultName)
@@ -184,3 +163,4 @@ extension UserDefaults {
         return nil
     }
 }
+
