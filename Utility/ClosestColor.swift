@@ -1,5 +1,4 @@
-import UIKit
-
+import SwiftUI
 // Assegnazione di nomi ai colori
 // Per i colori più scuri sono presenti più variazioni
 let colorMap: [String: UIColor] = [
