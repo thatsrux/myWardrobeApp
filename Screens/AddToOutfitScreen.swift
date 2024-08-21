@@ -1,10 +1,3 @@
-//
-//  ClothesScreen.swift
-//  myWardrobe
-//
-//  Created by Studente on 02/07/24.
-//
-
 import SwiftUI
 import Firebase
 
@@ -24,69 +17,54 @@ struct AddToOutfitScreen: View {
     @State private var searchText = ""
     @State private var searchIsActive = false
     
-    @EnvironmentObject var database:Database
+    @EnvironmentObject var database: Database
     @Environment(\.dismiss) private var dismiss
     
     var onDismiss: ((_ model: Cloth) -> Void)?
     
     @Binding var category: [Categoria]
     
-    @Binding var shirtToAdd:Cloth?
-    @Binding var trousersToAdd:Cloth?
-    @Binding var shoesToAdd:Cloth?
+    @Binding var shirtToAdd: Cloth?
+    @Binding var trousersToAdd: Cloth?
+    @Binding var shoesToAdd: Cloth?
     
     @State private var selectedOption2 = "AllTypes"
     
     @State private var favouriteActive = false
     
-    //    init(category: Categoria) {
-    //        self.category = category
-    //    }
-    
     var body: some View {
         NavigationStack {
             VStack {
-                if !database.clothes.isEmpty{
-                    if selectedOption2 == "AllTypes" && !favouriteActive && searchText == "" {
-                        ScrollView {
-                            LazyVGrid(columns: columns, spacing: 10) {
-                                ForEach(category, id: \.self){
-                                    cat in
-                                    Section(header: Text(categoriePlurale[Categoria(rawValue: cat.rawValue) ?? .NA]!).font(.headline)){
-                                        ForEach(database.clothes) { cloth in
-                                            if cloth.categoria == cat {
-                                                SingleClothGrid(cloth: cloth)
-                                                    .onTapGesture {
-                                                        chooseClothType(cloth: cloth)
-                                                    }
-                                            }
+                if !database.clothes.isEmpty {
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 10) {
+                            ForEach(category.filter { cat in
+                                // Check if there are any clothes in this category that match the filters
+                                let filteredClothes = database.clothes.filter { cloth in
+                                    (favouriteActive && cloth.favourite || !favouriteActive) &&
+                                    (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") &&
+                                    (cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "") &&
+                                    cloth.categoria == cat
+                                }
+                                return !filteredClothes.isEmpty
+                            }, id: \.self) { cat in
+                                Section(header: Text(categoriePlurale[Categoria(rawValue: cat.rawValue) ?? .NA]!).font(.headline)) {
+                                    ForEach(database.clothes.filter { cloth in
+                                        (favouriteActive && cloth.favourite || !favouriteActive) &&
+                                        (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") &&
+                                        (cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "") &&
+                                        cloth.categoria == cat
+                                    }) { cloth in
+                                        NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
+                                            SingleClothGrid(cloth: cloth)
                                         }
                                     }
                                 }
                             }
                         }
+                        .padding()
                     }
-                    else {
-                        ScrollView{
-                            LazyVGrid(columns: columns, spacing: 10) {
-                                ForEach(category, id: \.self){
-                                    cat in
-                                    ForEach(database.clothes, id: \.self) { cloth in
-                                        if (favouriteActive && cloth.favourite || !favouriteActive ) && // Filtraggio preferiti
-                                            (selectedOption2 == cloth.categoria.rawValue || selectedOption2 == "AllTypes") && // Filtraggio tipo
-                                            (cloth.nome.lowercased().contains(searchText.lowercased()) || searchText == "") // Ricerca
-                                            && cloth.categoria == cat {
-                                            NavigationLink(destination: InfoClothScreen(cloth: cloth)) {
-                                                SingleClothGrid(cloth: cloth)
-                                            }
-                                        }
-                                    }
-                                }
-                            }.padding()
-                        }
-                    }
-                }
-                else{
+                } else {
                     Text("Inserisci un capo d'abbigliamento")
                 }
             }
@@ -98,19 +76,11 @@ struct AddToOutfitScreen: View {
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
-                        if !favouriteActive {
-                            favouriteActive = true
-                        } else {
-                            favouriteActive = false
-                        }
+                        favouriteActive.toggle()
                     } label: {
-                        if !favouriteActive {
-                            Image(systemName: "star")
-                        } else {
-                            Image(systemName: "star.fill")
-                        }
+                        Image(systemName: favouriteActive ? "star.fill" : "star")
                     }
-                    Menu() {
+                    Menu {
                         Picker(selection: $selectedOption2, label: Text("Options")) {
                             Text("Tutti i tipi").tag("AllTypes")
                             ForEach(category, id: \.self) { cat in
@@ -119,7 +89,7 @@ struct AddToOutfitScreen: View {
                                 }
                             }
                         }
-                    } label:{
+                    } label: {
                         Text("Tipi")
                     }
                 }
@@ -127,16 +97,15 @@ struct AddToOutfitScreen: View {
             .searchable(text: $searchText, isPresented: $searchIsActive, prompt: "Cerca capo")
         }
     }
+    
     func chooseClothType(cloth: Cloth) {
         if upperCat.contains(cloth.categoria) {
             shirtToAdd = cloth
             onDismiss?(shirtToAdd!)
-        }
-        else if lowerCat.contains(cloth.categoria) {
+        } else if lowerCat.contains(cloth.categoria) {
             trousersToAdd = cloth
             onDismiss?(trousersToAdd!)
-        }
-        else if shoesCat.contains(cloth.categoria) {
+        } else if shoesCat.contains(cloth.categoria) {
             shoesToAdd = cloth
             onDismiss?(shoesToAdd!)
         }
@@ -144,8 +113,3 @@ struct AddToOutfitScreen: View {
         dismiss()
     }
 }
-//#Preview {
-//    @EnvironmentObject var database:Database
-//    ClothesScreen(clothes: $database.clothes)
-//}
-
