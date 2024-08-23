@@ -60,7 +60,6 @@ struct ContentView: View {
                         .shadow(radius: 10)
                         .offset(y: showDisconnectBanner ? 0 : -100) // Start above the view
                         .opacity(showDisconnectBanner ? 1 : 0) // Start invisible
-                        .animation(.easeInOut(duration: 0.5), value: showDisconnectBanner)
                     Spacer()
                 }
                 .padding()
@@ -78,7 +77,6 @@ struct ContentView: View {
                         .shadow(radius: 10)
                         .offset(y: showReconnectBanner ? 0 : -100) // Start above the view
                         .opacity(showReconnectBanner ? 1 : 0) // Start invisible
-                        .animation(.easeInOut(duration: 0.5), value: showReconnectBanner)
                     Spacer()
                 }
                 .padding()
