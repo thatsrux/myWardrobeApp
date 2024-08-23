@@ -82,7 +82,7 @@ struct ContentView: View {
                     Spacer()
                 }
                 .padding()
-                .transition(.move(edge: .top).combined(with: .opacity))
+                .transition(.asymmetric(insertion: .move(edge: .top).combined(with: .opacity), removal: .move(edge: .bottom).combined(with: .opacity)))
             }
         }
     }
@@ -95,7 +95,7 @@ struct ContentView: View {
                 
                 if wasConnected && !isConnected {
                     // Mostra banner di disconnessione
-                    showBannerMessage()
+                    showDisconnectBannerMessage()
                 } else if !wasConnected && isConnected {
                     // Mostra banner di riconnessione
                     showReconnectBannerMessage()
@@ -106,7 +106,7 @@ struct ContentView: View {
         monitor.start(queue: queue)
     }
 
-    func showBannerMessage() {
+    func showDisconnectBannerMessage() {
         withAnimation {
             showDisconnectBanner = true
         }
