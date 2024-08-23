@@ -82,7 +82,7 @@ struct ContentView: View {
                     Spacer()
                 }
                 .padding()
-                .transition(.asymmetric(insertion: .move(edge: .top).combined(with: .opacity), removal: .move(edge: .bottom).combined(with: .opacity)))
+                .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
     }
