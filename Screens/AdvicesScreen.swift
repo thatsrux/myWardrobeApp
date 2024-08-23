@@ -13,7 +13,6 @@ struct AdvicesScreen: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
                 VStack {
                     Text("Outfit del giorno").font(.headline)
 
@@ -60,7 +59,6 @@ struct AdvicesScreen: View {
                 }
                 .padding()
                 .navigationTitle("Consigli per te")
-            }
             .onAppear {
                 selectDailyOutfit()
             }
