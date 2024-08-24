@@ -382,6 +382,7 @@ struct InfoClothScreen: View, Deletable {
     private func saveCloth() {
         if edit {
             editCloth()
+            database.fetchOutfits()
         }
         else {
             database.clothesNum += 1
