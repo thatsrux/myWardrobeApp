@@ -320,7 +320,7 @@ struct InfoClothScreen: View, Deletable {
     
     func extractColorsAndClassify() {
         // Estrazione dei tre colori principali, ignorando il bianco puro, inserendo uno sfondo bianco all'immagine semitrasparente.
-        // Questo metodo fornisce più accurati
+        // Questo metodo fornisce risultati più accurati
         let colors = ColorThief.getPalette(from: image.withBackground(color: UIColor.white), colorCount: 3, quality: 1, ignoreWhite: true)
         
         // Estrazione dei nove colori principali, lasciando il bianco puro, sull'immagine semitrasparente.
@@ -423,16 +423,6 @@ struct InfoClothScreen: View, Deletable {
         cloth.colorsNum = colorsNum
         InfoClothScreen.save(cloth: cloth)
     }
-    
-    //    func deleteCloth(cloth:Cloth){
-    //        Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
-    //            if let err = err {
-    //                print("Error removing document: \(err)")
-    //            } else {
-    //                print("Document successfully removed!")
-    //            }
-    //        }
-    //    }
     
     static func save(cloth:Cloth) {
         
