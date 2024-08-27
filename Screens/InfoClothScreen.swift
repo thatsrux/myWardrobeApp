@@ -447,18 +447,9 @@ struct InfoClothScreen: View, Deletable {
                      "nome": cloth.nome,
                      "categoria": cloth.categoria.rawValue,
                      "taglia": cloth.taglia.rawValue,
-                     "color1a": cloth.mainColor.alpha.description,
-                     "color1r": cloth.mainColor.red.description,
-                     "color1g": cloth.mainColor.green.description,
-                     "color1b": cloth.mainColor.blue.description,
-                     "color2a": cloth.secondColor.alpha.description,
-                     "color2r": cloth.secondColor.red.description,
-                     "color2g": cloth.secondColor.green.description,
-                     "color2b": cloth.secondColor.blue.description,
-                     "color3a": cloth.thirdColor.alpha.description,
-                     "color3r": cloth.thirdColor.red.description,
-                     "color3g": cloth.thirdColor.green.description,
-                     "color3b": cloth.thirdColor.blue.description,
+                     "color1": cloth.mainColor.rgbaToHex(),
+                     "color2": cloth.secondColor.rgbaToHex(),
+                     "color3":cloth.thirdColor.rgbaToHex(),
                      "colorsnum" : cloth.colorsNum,
                      "stile": cloth.stile.rawValue,
                      "data":dataString,
@@ -467,7 +458,7 @@ struct InfoClothScreen: View, Deletable {
             error in
             if let error = error {
                 print(error.localizedDescription)
-            }
+            }            
         }
         
     }
