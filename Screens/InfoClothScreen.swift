@@ -303,15 +303,18 @@ struct InfoClothScreen: View, Deletable {
                     Text("Salva")
                 }
                 
-                Button(action: {
-                    database.clothesNum -= 1
-                    deleteCloth(cloth: cloth)
-                    database.fetchClothes()
-                    database.fetchCategorie()
-                    dismiss()
-                }) {
-                    Text("Elimina")
+                if edit{
+                    Button(action: {
+                        database.clothesNum -= 1
+                        deleteCloth(cloth: cloth)
+                        database.fetchClothes()
+                        database.fetchCategorie()
+                        dismiss()
+                    }) {
+                        Text("Elimina")
+                    }
                 }
+                
             }
         }
         
