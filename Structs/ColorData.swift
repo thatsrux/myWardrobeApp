@@ -80,7 +80,7 @@ struct ColorData: Codable {
             return String(format: "#%02X%02X%02X", r, g, b)
         }
     }
-
+    
     var uiColor: UIColor { UIColor(red: red, green: green, blue: blue, alpha: alpha) }
     
     func toColor() -> Color {

@@ -175,6 +175,102 @@ extension String {
     }
 }
 
+
+extension Color {
+    
+    func toUIColor() -> UIColor {
+            let components = self.cgColor?.components
+            let red = components?[0] ?? 0
+            let green = components?[1] ?? 0
+            let blue = components?[2] ?? 0
+        let alpha = components!.count > 3 ? components?[3] ?? 1 : 1
+            return UIColor(red: red, green: green, blue: blue, alpha: alpha)
+        }
+
+    init(hex: String) {
+        // Rimuovi il simbolo `#` se presente
+        let hex = hex.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
+        
+        // Se la stringa non ha la lunghezza corretta, usa un colore di default
+        guard hex.count == 6 || hex.count == 8 else {
+            self.init(red: 1.0, green: 1.0, blue: 1.0, opacity: 1.0)
+            return
+        }
+        
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        
+        let r, g, b, a: CGFloat
+        switch hex.count {
+        case 6:
+            // RGB
+            (r, g, b, a) = (
+                CGFloat((int >> 16) & 0xFF) / 255.0,
+                CGFloat((int >> 8) & 0xFF) / 255.0,
+                CGFloat(int & 0xFF) / 255.0,
+                1.0
+            )
+        case 8:
+            // RGBA
+            (r, g, b, a) = (
+                CGFloat((int >> 16) & 0xFF) / 255.0,
+                CGFloat((int >> 8) & 0xFF) / 255.0,
+                CGFloat(int & 0xFF) / 255.0,
+                CGFloat((int >> 24) & 0xFF) / 255.0
+            )
+        default:
+            // Valore di default se il formato non è valido
+            (r, g, b, a) = (1.0, 1.0, 1.0, 1.0)
+        }
+        
+        // Inizializza il colore con i valori calcolati
+        self.init(red: r, green: g, blue: b, opacity: a)
+    }
+}
+
+extension UIColor {
+    func rgbaToHex() -> String {
+        // Ottieni i componenti del colore (red, green, blue, alpha)
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        // Assicurati che il colore sia in formato RGB
+        self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        
+        // Converti i componenti in valori esadecimali
+        let r = Int(red * 255)
+        let g = Int(green * 255)
+        let b = Int(blue * 255)
+        let a = Int(alpha * 255)
+        
+        // Crea una stringa esadecimale
+        if alpha < 1.0 {
+            // Include alpha se è meno di 1.0 (parzialmente trasparente)
+            return String(format: "#%02X%02X%02X%02X", r, g, b, a)
+        } else {
+            // Se alpha è 1.0 (pieno), si omette
+            return String(format: "#%02X%02X%02X", r, g, b)
+        }
+    }
+    
+    var displayP3Color: UIColor {
+            if let cgColor = self.cgColor.converted(to: CGColorSpace(name: CGColorSpace.displayP3)!, intent: .defaultIntent, options: nil) {
+                return UIColor(cgColor: cgColor)
+            }
+            return self
+        }
+
+        var sRGBColor: UIColor {
+            if let cgColor = self.cgColor.converted(to: CGColorSpace(name: CGColorSpace.sRGB)!, intent: .defaultIntent, options: nil) {
+                return UIColor(cgColor: cgColor)
+            }
+            return self
+        }
+}
+
+
 #Preview {
     ContentView()
 }
