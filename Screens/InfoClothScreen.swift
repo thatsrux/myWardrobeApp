@@ -303,15 +303,18 @@ struct InfoClothScreen: View, Deletable {
                     Text("Salva")
                 }
                 
-                Button(action: {
-                    database.clothesNum -= 1
-                    deleteCloth(cloth: cloth)
-                    database.fetchClothes()
-                    database.fetchCategorie()
-                    dismiss()
-                }) {
-                    Text("Elimina")
+                if edit{
+                    Button(action: {
+                        database.clothesNum -= 1
+                        deleteCloth(cloth: cloth)
+                        database.fetchClothes()
+                        database.fetchCategorie()
+                        dismiss()
+                    }) {
+                        Text("Elimina")
+                    }
                 }
+                
             }
         }
         
@@ -420,6 +423,8 @@ struct InfoClothScreen: View, Deletable {
         cloth.mainColor = ColorData(uiColor: UIColor(cpColor1))
         cloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
         cloth.thirdColor = ColorData(uiColor: UIColor(cpColor3))
+        
+        
         cloth.colorsNum = colorsNum
         InfoClothScreen.save(cloth: cloth)
     }
@@ -439,7 +444,6 @@ struct InfoClothScreen: View, Deletable {
         dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
         let dataString = dateFormatter.string(from: cloth.data)
         
-        
         let db = Firestore.firestore()
         let ref = db.collection("Cloth").document(cloth.id.uuidString)
         ref.setData(["foto": img!.toPngString()!,
@@ -447,18 +451,9 @@ struct InfoClothScreen: View, Deletable {
                      "nome": cloth.nome,
                      "categoria": cloth.categoria.rawValue,
                      "taglia": cloth.taglia.rawValue,
-                     "color1a": cloth.mainColor.alpha.description,
-                     "color1r": cloth.mainColor.red.description,
-                     "color1g": cloth.mainColor.green.description,
-                     "color1b": cloth.mainColor.blue.description,
-                     "color2a": cloth.secondColor.alpha.description,
-                     "color2r": cloth.secondColor.red.description,
-                     "color2g": cloth.secondColor.green.description,
-                     "color2b": cloth.secondColor.blue.description,
-                     "color3a": cloth.thirdColor.alpha.description,
-                     "color3r": cloth.thirdColor.red.description,
-                     "color3g": cloth.thirdColor.green.description,
-                     "color3b": cloth.thirdColor.blue.description,
+                     "color1": cloth.mainColor.rgbaToHex(),
+                     "color2": cloth.secondColor.rgbaToHex(),
+                     "color3":cloth.thirdColor.rgbaToHex(),
                      "colorsnum" : cloth.colorsNum,
                      "stile": cloth.stile.rawValue,
                      "data":dataString,
@@ -480,3 +475,4 @@ struct InfoClothScreen: View, Deletable {
         colorsNum += 1
     }
 }
+

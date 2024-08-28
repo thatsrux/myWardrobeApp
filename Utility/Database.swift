@@ -46,20 +46,9 @@ class Database:ObservableObject{
                     let categoria = data["categoria"] as? String ?? ""
                     let taglia = data["taglia"] as? String ?? ""
                     
-                    let color1a = data["color1a"] as? String ?? ""
-                    let color1r = data["color1r"] as? String ?? ""
-                    let color1g = data["color1g"] as? String ?? ""
-                    let color1b = data["color1b"] as? String ?? ""
-                    
-                    let color2a = data["color2a"] as? String ?? ""
-                    let color2r = data["color2r"] as? String ?? ""
-                    let color2g = data["color2g"] as? String ?? ""
-                    let color2b = data["color2b"] as? String ?? ""
-                    
-                    let color3a = data["color3a"] as? String ?? ""
-                    let color3r = data["color3r"] as? String ?? ""
-                    let color3g = data["color3g"] as? String ?? ""
-                    let color3b = data["color3b"] as? String ?? ""
+                    let firstColor = data["color1"] as? String ?? ""
+                    let secondColor = data["color2"] as? String ?? ""
+                    let thirdColor = data["color3"] as? String ?? ""
                     
                     let colorsNum = data["colorsnum"] as? Int ?? 3
                     
@@ -68,7 +57,11 @@ class Database:ObservableObject{
                     
                     let favourite = data["favourite"] as? Bool ?? false
                     
-                    let cloth = Cloth(id: UUID(uuidString: id)!, image: image, mainColor: ColorData(red: color1r.CGFloatValue()! , green: color1g.CGFloatValue()!, blue: color1b.CGFloatValue()!, alpha: color1a.CGFloatValue()!), secondColor: ColorData(red: color2r.CGFloatValue()!, green: color2g.CGFloatValue()!, blue: color2b.CGFloatValue()!, alpha: color2a.CGFloatValue()!), thirdColor: ColorData(red: color3r.CGFloatValue()!, green: color3g.CGFloatValue()!, blue: color3b.CGFloatValue()!, alpha: color3a.CGFloatValue()!), colorsNum: colorsNum, categoria: Categoria(rawValue: categoria) ?? Categoria.NA, nome: nome, taglia: Taglia(rawValue: taglia) ?? Taglia.NA,stile: Stile(rawValue: stile) ?? Stile.NA, data: dataAgg.data(using: .utf8)!, favourite: favourite)
+                    let cloth = Cloth(id: UUID(uuidString: id)!, image: image,
+                                      mainColor: ColorData(hex:firstColor),
+                                      secondColor:ColorData(hex:secondColor),
+                                      thirdColor: ColorData(hex:thirdColor),
+                                      colorsNum: colorsNum, categoria: Categoria(rawValue: categoria) ?? Categoria.NA, nome: nome, taglia: Taglia(rawValue: taglia) ?? Taglia.NA,stile: Stile(rawValue: stile) ?? Stile.NA, data: dataAgg.data(using: .utf8)!, favourite: favourite)
                     
                     self.clothes.append(cloth)
                     if self.firstClothCheck {
@@ -247,20 +240,10 @@ class Database:ObservableObject{
                 let categoria = data["categoria"] as? String ?? ""
                 let taglia = data["taglia"] as? String ?? ""
                 
-                let color1a = data["color1a"] as? String ?? ""
-                let color1r = data["color1r"] as? String ?? ""
-                let color1g = data["color1g"] as? String ?? ""
-                let color1b = data["color1b"] as? String ?? ""
-                
-                let color2a = data["color2a"] as? String ?? ""
-                let color2r = data["color2r"] as? String ?? ""
-                let color2g = data["color2g"] as? String ?? ""
-                let color2b = data["color2b"] as? String ?? ""
-                
-                let color3a = data["color3a"] as? String ?? ""
-                let color3r = data["color3r"] as? String ?? ""
-                let color3g = data["color3g"] as? String ?? ""
-                let color3b = data["color3b"] as? String ?? ""
+                let firstColor = data["color1"] as? String ?? ""
+                let secondColor = data["color2"] as? String ?? ""
+                let thirdColor = data["color3"] as? String ?? ""
+
                 
                 let colorsNum = data["colorsnum"] as? Int ?? 3
                 
@@ -272,24 +255,9 @@ class Database:ObservableObject{
                 let cloth = Cloth(
                     id: UUID(uuidString: id) ?? UUID(),
                     image: image,
-                    mainColor: ColorData(
-                        red: CGFloat(color1r.CGFloatValue() ?? 0),
-                        green: CGFloat(color1g.CGFloatValue() ?? 0),
-                        blue: CGFloat(color1b.CGFloatValue() ?? 0),
-                        alpha: CGFloat(color1a.CGFloatValue() ?? 0)
-                    ),
-                    secondColor: ColorData(
-                        red: CGFloat(color2r.CGFloatValue() ?? 0),
-                        green: CGFloat(color2g.CGFloatValue() ?? 0),
-                        blue: CGFloat(color2b.CGFloatValue() ?? 0),
-                        alpha: CGFloat(color2a.CGFloatValue() ?? 0)
-                    ),
-                    thirdColor: ColorData(
-                        red: CGFloat(color3r.CGFloatValue() ?? 0),
-                        green: CGFloat(color3g.CGFloatValue() ?? 0),
-                        blue: CGFloat(color3b.CGFloatValue() ?? 0),
-                        alpha: CGFloat(color3a.CGFloatValue() ?? 0)
-                    ),
+                    mainColor: ColorData(hex:firstColor),
+                    secondColor: ColorData(hex: secondColor),
+                    thirdColor: ColorData(hex:thirdColor),
                     colorsNum: colorsNum,
                     categoria: Categoria(rawValue: categoria) ?? Categoria.NA,
                     nome: nome,
