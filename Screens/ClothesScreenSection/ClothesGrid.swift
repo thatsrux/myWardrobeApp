@@ -62,6 +62,7 @@ struct SingleClothGrid: View, Favourable {
                     .foregroundStyle(.black)
                 if cloth.taglia != .NA {
                     Text(cloth.taglia.rawValue)
+                        .padding(.bottom,10)
                 }
             }
         }.frame(width: 150, height: 200)
