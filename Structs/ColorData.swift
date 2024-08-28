@@ -67,18 +67,9 @@ struct ColorData: Codable {
 
     
     func rgbaToHex() -> String {
-        let r = Int(red * 255)
-        let g = Int(green * 255)
-        let b = Int(blue * 255)
-        let a = Int(alpha * 255)
+        let cgColor = CGColor(red: red, green: green, blue: blue, alpha: alpha)
         
-        if alpha < 1.0 {
-            // Include alpha se è meno di 1.0 (parzialmente trasparente)
-            return String(format: "#%02X%02X%02X%02X", r, g, b, a)
-        } else {
-            // Se alpha è 1.0 (pieno), si omette
-            return String(format: "#%02X%02X%02X", r, g, b)
-        }
+        return cgColor.toHex() ?? ""
     }
 
     var uiColor: UIColor { UIColor(red: red, green: green, blue: blue, alpha: alpha) }
@@ -91,4 +82,28 @@ struct ColorData: Codable {
         return String(format: "#%02x%02x%02x", Int(red * 255), Int(green * 255),Int(blue * 255),Int(alpha * 255))
     }
 
+}
+
+
+extension CGColor {
+    func toHex() -> String? {
+        guard let components = components else { return nil }
+        
+        if components.count == 2 {
+            let value = components[0]
+            let alpha = components[1]
+            return String(format: "#%02lX%02lX%02lX%02lX", lroundf(Float(alpha*255)), lroundf(Float(value*255)), lroundf(Float(value*255)), lroundf(Float(value*255)))
+        }
+        
+        guard components.count == 4 else { return nil }
+        
+        let red   = components[0]
+        let green = components[1]
+        let blue  = components[2]
+        let alpa  = components[3]
+        
+        let hexString = String(format: "#%02lX%02lX%02lX%02lX",lroundf(Float(alpa*255)), lroundf(Float(red*255)), lroundf(Float(green*255)), lroundf(Float(blue*255)))
+        
+        return hexString
+    }
 }
