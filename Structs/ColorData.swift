@@ -71,7 +71,7 @@ struct ColorData: Codable {
         
         return cgColor.toHex() ?? ""
     }
-
+    
     var uiColor: UIColor { UIColor(red: red, green: green, blue: blue, alpha: alpha) }
     
     func toColor() -> Color {

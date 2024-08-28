@@ -280,9 +280,10 @@ struct InfoClothScreen: View, Deletable {
                 extractColorsAndClassify()
             }
             else {
-                self.cpColor1 = cloth.mainColor.toColor()
-                self.cpColor2 = cloth.secondColor.toColor()
-                self.cpColor3 = cloth.thirdColor.toColor()
+                
+                self.cpColor1 = Color(hex: cloth.mainColor.rgbaToHex())
+                self.cpColor2 = Color(hex: cloth.secondColor.rgbaToHex())
+                self.cpColor3 = Color(hex: cloth.thirdColor.rgbaToHex())
                 colorsNum = cloth.colorsNum
             }
         }
@@ -420,9 +421,13 @@ struct InfoClothScreen: View, Deletable {
         cloth.stile = stileClassificato
         cloth.favourite = isStarFilled
         
-        cloth.mainColor = ColorData(uiColor: UIColor(cpColor1))
-        cloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
-        cloth.thirdColor = ColorData(uiColor: UIColor(cpColor3))
+        
+        
+        cloth.mainColor = ColorData(hex: cpColor1.toUIColor().rgbaToHex())
+        cloth.secondColor = ColorData(hex: cpColor2.toUIColor().rgbaToHex())
+        cloth.thirdColor = ColorData(hex: cpColor3.toUIColor().rgbaToHex())
+        
+        
         cloth.colorsNum = colorsNum
         InfoClothScreen.save(cloth: cloth)
     }
@@ -442,7 +447,6 @@ struct InfoClothScreen: View, Deletable {
         dateFormatter.dateFormat = "dd/MM/yyyy HH:mm"
         let dataString = dateFormatter.string(from: cloth.data)
         
-        
         let db = Firestore.firestore()
         let ref = db.collection("Cloth").document(cloth.id.uuidString)
         ref.setData(["foto": img!.toPngString()!,
@@ -461,7 +465,7 @@ struct InfoClothScreen: View, Deletable {
             error in
             if let error = error {
                 print(error.localizedDescription)
-            }            
+            }
         }
         
     }
@@ -474,3 +478,4 @@ struct InfoClothScreen: View, Deletable {
         colorsNum += 1
     }
 }
+
