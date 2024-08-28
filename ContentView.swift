@@ -254,20 +254,6 @@ extension UIColor {
             return String(format: "#%02X%02X%02X", r, g, b)
         }
     }
-    
-    var displayP3Color: UIColor {
-            if let cgColor = self.cgColor.converted(to: CGColorSpace(name: CGColorSpace.displayP3)!, intent: .defaultIntent, options: nil) {
-                return UIColor(cgColor: cgColor)
-            }
-            return self
-        }
-
-        var sRGBColor: UIColor {
-            if let cgColor = self.cgColor.converted(to: CGColorSpace(name: CGColorSpace.sRGB)!, intent: .defaultIntent, options: nil) {
-                return UIColor(cgColor: cgColor)
-            }
-            return self
-        }
 }
 
 
