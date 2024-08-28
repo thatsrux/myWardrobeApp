@@ -18,6 +18,8 @@ struct ColorMatch: View{
                         Text("Abbinamenti sconsigliati:")
                             .font(.title2)
                             .fontWeight(.bold)
+                        Text("I seguenti colori sono facilmente abbinabili, per cui sono riportati solo gli abbinamenti da evitare assolutamente")
+                            .multilineTextAlignment(.center)
                         colorPairsView(colorPairs: coloriVietati)
                     }
                     .padding()
