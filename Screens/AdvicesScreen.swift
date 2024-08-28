@@ -91,11 +91,11 @@ struct AdvicesScreen: View {
         
         // Escludi l'outfit del giorno precedente dalla selezione
         var availableOutfits = database.outfits
-        if let previousID = previousOutfitID {
+        if let previousID = previousOutfitID, availableOutfits.count > 1 {
             availableOutfits.removeAll(where: { $0.id == previousID })
         }
         
-        // Seleziona un nuovo outfit casuale
+        // Seleziona un nuovo outfit casuale o ripropone lo stesso se è l'unico
         if let randomOutfit = availableOutfits.randomElement() {
             dailyOutfitID = randomOutfit.id
             
@@ -103,12 +103,16 @@ struct AdvicesScreen: View {
             UserDefaults.standard.set(dailyOutfitID, forKey: "dailyOutfitID")
             UserDefaults.standard.set(today, forKey: "dailyOutfitDate")
             UserDefaults.standard.set(true, forKey: "validOutfitSelected")
+        } else if let previousID = previousOutfitID {
+            // Se non ci sono altri outfit disponibili, ripropone lo stesso outfit
+            dailyOutfitID = previousID
         } else {
             // Se non ci sono outfit disponibili, segna che non è stato selezionato un outfit valido
             UserDefaults.standard.set(false, forKey: "validOutfitSelected")
             dailyOutfitID = nil
         }
     }
+
 
     struct SingleOutfitGrid: View {
         
