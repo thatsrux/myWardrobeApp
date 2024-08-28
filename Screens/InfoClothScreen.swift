@@ -280,10 +280,9 @@ struct InfoClothScreen: View, Deletable {
                 extractColorsAndClassify()
             }
             else {
-                
-                self.cpColor1 = Color(hex: cloth.mainColor.rgbaToHex())
-                self.cpColor2 = Color(hex: cloth.secondColor.rgbaToHex())
-                self.cpColor3 = Color(hex: cloth.thirdColor.rgbaToHex())
+                self.cpColor1 = cloth.mainColor.toColor()
+                self.cpColor2 = cloth.secondColor.toColor()
+                self.cpColor3 = cloth.thirdColor.toColor()
                 colorsNum = cloth.colorsNum
             }
         }
@@ -421,11 +420,9 @@ struct InfoClothScreen: View, Deletable {
         cloth.stile = stileClassificato
         cloth.favourite = isStarFilled
         
-        
-        
-        cloth.mainColor = ColorData(hex: cpColor1.toUIColor().rgbaToHex())
-        cloth.secondColor = ColorData(hex: cpColor2.toUIColor().rgbaToHex())
-        cloth.thirdColor = ColorData(hex: cpColor3.toUIColor().rgbaToHex())
+        cloth.mainColor = ColorData(uiColor: UIColor(cpColor1))
+        cloth.secondColor = ColorData(uiColor: UIColor(cpColor2))
+        cloth.thirdColor = ColorData(uiColor: UIColor(cpColor3))
         
         
         cloth.colorsNum = colorsNum
