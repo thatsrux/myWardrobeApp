@@ -19,13 +19,38 @@ struct AdvicesScreen: View {
                     // Se esiste un dailyOutfitID, mostra l'outfit del giorno
                     if let dailyOutfitID = dailyOutfitID,
                        let outfit = database.outfits.first(where: { $0.id == dailyOutfitID }) {
-                        SingleOutfitGrid(outfit: outfit)
+                        HStack {
+                            VStack(spacing: 10) {
+                                Image(uiImage: outfit.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shirt"))
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipped()
+                                    .frame(minWidth: 100, maxWidth: 150, minHeight: 100, maxHeight: 150)
+                                Image(uiImage: outfit.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "trousers"))
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipped()
+                                    .frame(minWidth: 100, maxWidth: 150, minHeight: 100, maxHeight: 150)
+                                Image(uiImage: outfit.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shoes"))
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipped()
+                                    .frame(minWidth: 100, maxWidth: 150, minHeight: 100, maxHeight: 150)
+                                Text(outfit.nome ?? "")
+                                    .foregroundStyle(.black)
+                            }
+                            .frame(minWidth: 150, maxWidth: 225, minHeight: 370, maxHeight: 555)
+                            .background(Color.white)
+                            .cornerRadius(10)
+                            .shadow(radius: 5)
+                            .padding(10)
+                        }
                     } else {
                         Text("Nessun outfit disponibile")
                         Spacer(minLength: 300)
                     }
                 }
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
+                VStack {
                     Button(action: {
                         isColorMatchScreenActive.toggle()
                     }) {
