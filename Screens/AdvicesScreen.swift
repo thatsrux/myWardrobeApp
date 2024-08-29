@@ -12,86 +12,117 @@ struct AdvicesScreen: View {
     @State var cloth: Cloth?
 
     var body: some View {
-        NavigationStack {
+       NavigationStack {
+            GeometryReader { geometry in
                 VStack {
-                    Text("Outfit del giorno").font(.headline)
-
-                    // Se esiste un dailyOutfitID, mostra l'outfit del giorno
+                    // Header
+                    Text("Outfit del giorno")
+                        .font(.headline)
+                        .padding(.top, 20)
+                    
+                    // Contenuto principale
                     if let dailyOutfitID = dailyOutfitID,
                        let outfit = database.outfits.first(where: { $0.id == dailyOutfitID }) {
+                        
                         HStack {
                             VStack(spacing: 10) {
                                 Image(uiImage: outfit.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shirt"))
                                     .resizable()
                                     .scaledToFit()
                                     .clipped()
-                                    .frame(minWidth: 100, maxWidth: 150, minHeight: 100, maxHeight: 150)
-                                    .aspectRatio(contentMode: .fit)
+                                    .frame(
+                                        width: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.width * 0.35 : geometry.size.width * 0.4,
+                                        height: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.height * 0.15 : geometry.size.height * 0.2
+                                    )
                                 Image(uiImage: outfit.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "trousers"))
                                     .resizable()
                                     .scaledToFit()
                                     .clipped()
-                                    .frame(minWidth: 100, maxWidth: 150, minHeight: 100, maxHeight: 150)
-                                    .aspectRatio(contentMode: .fit)
+                                    .frame(
+                                        width: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.width * 0.35 : geometry.size.width * 0.4,
+                                        height: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.height * 0.15 : geometry.size.height * 0.2
+                                    )
                                 Image(uiImage: outfit.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shoes"))
                                     .resizable()
                                     .scaledToFit()
                                     .clipped()
-                                    .frame(minWidth: 100, maxWidth: 150, minHeight: 100, maxHeight: 150)
-                                    .aspectRatio(contentMode: .fit)
+                                    .frame(
+                                        width: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.width * 0.35 : geometry.size.width * 0.4,
+                                        height: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.height * 0.15 : geometry.size.height * 0.2
+                                    )
                                 Text(outfit.nome ?? "")
                                     .foregroundStyle(.black)
                             }
-                            .frame(minWidth: 150, maxWidth: 225, minHeight: 370, maxHeight: 555)
-                            .aspectRatio(contentMode: .fit)
+                            .frame(
+                                width: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.width * 0.4 : geometry.size.width * 0.45,
+                                height: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.height * 0.6 : geometry.size.height * 0.7
+                            )
                             .background(Color.white)
                             .cornerRadius(10)
                             .shadow(radius: 5)
                             .padding(10)
                         }
+                        .frame(maxHeight: .infinity)
                     } else {
                         Text("Nessun outfit disponibile")
-                        Spacer(minLength: 300)
-                    }
-                }
-                VStack {
-                    Button(action: {
-                        isColorMatchScreenActive.toggle()
-                    }) {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(LinearGradient(gradient: Gradient(colors: [.red, .orange, .yellow, .green, .blue, .indigo, .purple]), startPoint: .leading, endPoint: .trailing))
-                            .frame(height: 100)
-                            .overlay(
-                                Text("Color Match")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                            )
-                    }
-                    .sheet(isPresented: $isColorMatchScreenActive) {
-                        ColorMatch()
+                            .padding(.top, 50)
+                        Spacer()
                     }
                     
-                    Button(action: {
-                        isMagicOutfitScreenActive.toggle()
-                    }) {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(Color(.purple))
-                            .frame(height: 100)
-                            .overlay(
-                                Text("Magic Outfit")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                            )
-                    }.sheet(isPresented: $isMagicOutfitScreenActive) {
-                        MagicOutfit(cloth: cloth)
+                    // Bottoni
+                    VStack(spacing: 20) {
+                        Button(action: {
+                            isColorMatchScreenActive.toggle()
+                        }) {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(LinearGradient(gradient: Gradient(colors: [.red, .orange, .yellow, .green, .blue, .indigo, .purple]), startPoint: .leading, endPoint: .trailing))
+                                .frame(
+                                    width: geometry.size.width * 0.9,
+                                    height: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.height * 0.12 : geometry.size.height * 0.1
+                                )
+                                .overlay(
+                                    Text("Color Match")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                )
+                        }
+                        .sheet(isPresented: $isColorMatchScreenActive) {
+                            ColorMatch()
+                        }
+                        
+                        Button(action: {
+                            isMagicOutfitScreenActive.toggle()
+                        }) {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color(.purple))
+                                .frame(
+                                    width: geometry.size.width * 0.9,
+                                    height: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.height * 0.12 : geometry.size.height * 0.1
+                                )
+                                .overlay(
+                                    Text("Magic Outfit")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                )
+                        }
+                        .sheet(isPresented: $isMagicOutfitScreenActive) {
+                            MagicOutfit(cloth: cloth)
+                        }
                     }
+                    .padding(.bottom, 20)
                 }
-                .padding()
-                .navigationTitle("Consigli per te")
+                .frame(width: geometry.size.width, height: geometry.size.height)
+            }
+            .navigationTitle("Consigli per te")
             .onAppear {
                 selectDailyOutfit()
             }
         }
+
+
+
+
+
     }
     
     // Funzione per selezionare l'outfit del giorno
