@@ -14,41 +14,12 @@ struct AdvicesScreen: View {
     var body: some View {
         NavigationStack {
                 VStack {
-                    Text("Outfit del giorno").font(.headline)
+                    Text("Outfit del giorno").font(.system(size: 20, weight: .bold))
 
                     // Se esiste un dailyOutfitID, mostra l'outfit del giorno
                     if let dailyOutfitID = dailyOutfitID,
                        let outfit = database.outfits.first(where: { $0.id == dailyOutfitID }) {
-                        HStack {
-                            VStack(spacing: 10) {
-                                Image(uiImage: outfit.shirt?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shirt"))
-                                    .resizable()
-                                    .scaledToFit()
-                                    .clipped()
-                                    .frame(minWidth: 100, maxWidth: 150, minHeight: 100, maxHeight: 150)
-                                    .aspectRatio(contentMode: .fit)
-                                Image(uiImage: outfit.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "trousers"))
-                                    .resizable()
-                                    .scaledToFit()
-                                    .clipped()
-                                    .frame(minWidth: 100, maxWidth: 150, minHeight: 100, maxHeight: 150)
-                                    .aspectRatio(contentMode: .fit)
-                                Image(uiImage: outfit.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shoes"))
-                                    .resizable()
-                                    .scaledToFit()
-                                    .clipped()
-                                    .frame(minWidth: 100, maxWidth: 150, minHeight: 100, maxHeight: 150)
-                                    .aspectRatio(contentMode: .fit)
-                                Text(outfit.nome ?? "")
-                                    .foregroundStyle(.black)
-                            }
-                            .frame(minWidth: 150, maxWidth: 225, minHeight: 370, maxHeight: 555)
-                            .aspectRatio(contentMode: .fit)
-                            .background(Color.white)
-                            .cornerRadius(10)
-                            .shadow(radius: 5)
-                            .padding(10)
-                        }
+                        SingleOutfitGrid(outfit: outfit)
                     } else {
                         Text("Nessun outfit disponibile")
                         Spacer(minLength: 300)
@@ -194,4 +165,3 @@ extension UserDefaults {
         return nil
     }
 }
-
