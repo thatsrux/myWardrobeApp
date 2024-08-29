@@ -15,12 +15,10 @@ struct AdvicesScreen: View {
        NavigationStack {
             GeometryReader { geometry in
                 VStack {
-                    // Header
                     Text("Outfit del giorno")
                         .font(.headline)
                         .padding(.top, 20)
                     
-                    // Contenuto principale
                     if let dailyOutfitID = dailyOutfitID,
                        let outfit = database.outfits.first(where: { $0.id == dailyOutfitID }) {
                         
@@ -31,31 +29,31 @@ struct AdvicesScreen: View {
                                     .scaledToFit()
                                     .clipped()
                                     .frame(
-                                        width: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.width * 0.35 : geometry.size.width * 0.4,
-                                        height: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.height * 0.15 : geometry.size.height * 0.2
+                                        width: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.width * 0.35 : geometry.size.width * 0.33,
+                                        height: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.height * 0.15 : geometry.size.height * 0.16
                                     )
                                 Image(uiImage: outfit.trousers?.image?.toImage() ?? UIImage(imageLiteralResourceName: "trousers"))
                                     .resizable()
                                     .scaledToFit()
                                     .clipped()
                                     .frame(
-                                        width: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.width * 0.35 : geometry.size.width * 0.4,
-                                        height: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.height * 0.15 : geometry.size.height * 0.2
+                                        width: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.width * 0.35 : geometry.size.width * 0.33,
+                                        height: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.height * 0.15 : geometry.size.height * 0.16
                                     )
                                 Image(uiImage: outfit.shoes?.image?.toImage() ?? UIImage(imageLiteralResourceName: "shoes"))
                                     .resizable()
                                     .scaledToFit()
                                     .clipped()
                                     .frame(
-                                        width: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.width * 0.35 : geometry.size.width * 0.4,
-                                        height: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.height * 0.15 : geometry.size.height * 0.2
+                                        width: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.width * 0.2 : geometry.size.width * 0.2,
+                                        height: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.height * 0.085 : geometry.size.height * 0.1
                                     )
                                 Text(outfit.nome ?? "")
                                     .foregroundStyle(.black)
                             }
                             .frame(
-                                width: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.width * 0.4 : geometry.size.width * 0.45,
-                                height: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.height * 0.6 : geometry.size.height * 0.7
+                                width: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.width * 0.4 : geometry.size.width * 0.375,
+                                height: UIDevice.current.userInterfaceIdiom == .phone ? geometry.size.height * 0.6 : geometry.size.height * 0.58
                             )
                             .background(Color.white)
                             .cornerRadius(10)
