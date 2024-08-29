@@ -10,7 +10,7 @@ protocol Deletable {
 extension Deletable {
     
     func deleteCloth(cloth:Cloth){
-        Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
+        Firestore.firestore().collection("Clothes").document(cloth.id.uuidString).delete() { err in
             if let err = err {
                 print("Error removing document: \(err)")
             } else {

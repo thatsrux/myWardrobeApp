@@ -28,7 +28,7 @@ class Database:ObservableObject{
     func fetchClothes(){
         clothes.removeAll()
         let db = Firestore.firestore()
-        let ref = db.collection("Cloth")
+        let ref = db.collection("Clothes")
         ref.getDocuments{ snapshot, error in
             guard error == nil else {
                 print(error!.localizedDescription)
@@ -78,7 +78,7 @@ class Database:ObservableObject{
     func fetchCategorie(){
         categorie.removeAll()
         let db = Firestore.firestore()
-        let ref = db.collection("Cloth")
+        let ref = db.collection("Clothes")
         ref.getDocuments{ snapshot, error in
             guard error == nil else {
                 print(error!.localizedDescription)
@@ -188,7 +188,7 @@ class Database:ObservableObject{
     
     func deleteCloth(cloth:Cloth){
         clothesNum -= 1
-        Firestore.firestore().collection("Cloth").document(cloth.id.uuidString).delete() { err in
+        Firestore.firestore().collection("Clothes").document(cloth.id.uuidString).delete() { err in
             if let err = err {
                 print("Error removing document: \(err)")
             } else {
@@ -218,7 +218,7 @@ class Database:ObservableObject{
     
     func getClothById(_ idCloth: String, completion: @escaping (Cloth?) -> Void) {
         let db = Firestore.firestore()
-        let ref = db.collection("Cloth").document(idCloth)
+        let ref = db.collection("Clothes").document(idCloth)
         
         ref.getDocument { document, error in
             guard error == nil else {

@@ -445,7 +445,7 @@ struct InfoClothScreen: View, Deletable {
         let dataString = dateFormatter.string(from: cloth.data)
         
         let db = Firestore.firestore()
-        let ref = db.collection("Cloth").document(cloth.id.uuidString)
+        let ref = db.collection("Clothes").document(cloth.id.uuidString)
         ref.setData(["foto": img!.toPngString()!,
                      "id" : cloth.id.uuidString,
                      "nome": cloth.nome,

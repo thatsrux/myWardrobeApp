@@ -28,7 +28,7 @@ extension Favourable {
         cloth.favourite.toggle()
         
         let db = Firestore.firestore()
-        let ref = db.collection("Cloth").document(cloth.id.uuidString)
+        let ref = db.collection("Clothes").document(cloth.id.uuidString)
         ref.updateData([
             "favourite": cloth.favourite
         ]){
