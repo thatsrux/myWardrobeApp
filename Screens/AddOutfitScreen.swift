@@ -11,9 +11,9 @@ struct AddOutfitScreen: View, Deletable {
     @State var trousers: Cloth?
     @State var shoes: Cloth?
     
-    let defaultShirt = Cloth(image: UIImage(named: "shirt")!)
+    let defaultShirt = Cloth(image: UIImage(systemName: "tshirt")!)
     let defaultTrousers = Cloth(image: UIImage(named: "trousers")!)
-    let defaultShoes = Cloth(image: UIImage(named: "shoes")!)
+    let defaultShoes = Cloth(image: UIImage(systemName: "shoe")!)
     
     @State private var missingCloth: [Categoria] = [.NA]
     
@@ -76,8 +76,21 @@ struct AddOutfitScreen: View, Deletable {
                                     Text("Rimuovi")                                }
                             }
                         } else {
-                            Image(uiImage: UIImage(imageLiteralResourceName: "shirt"))
-                                .resizable()
+                            ZStack() {
+                                Image(systemName: "tshirt")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipped()
+                                    .frame(width:150,height:150)
+                                    .foregroundStyle(.black)
+                                    .opacity(0.2)
+                                Image(systemName: "plus.app")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipped()
+                                    .frame(width:50,height:50)
+                                    .foregroundStyle(.black)
+                            }
                         }
                     }
                     Button(action: {
@@ -100,8 +113,21 @@ struct AddOutfitScreen: View, Deletable {
                                 }
                             }
                         } else {
-                            Image(uiImage: UIImage(imageLiteralResourceName: "trousers"))
-                                .resizable()
+                            ZStack() {
+                                Image(uiImage: UIImage(imageLiteralResourceName: "trousers"))
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipped()
+                                    .frame(width:150,height:150)
+                                    .foregroundStyle(.black)
+                                    .opacity(0.2)
+                                Image(systemName: "plus.app")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipped()
+                                    .frame(width:50,height:50)
+                                    .foregroundStyle(.black)
+                            }
                         }
                     }
                     Button(action: {
@@ -124,9 +150,21 @@ struct AddOutfitScreen: View, Deletable {
                                 }
                             }
                         } else {
-                            
-                            Image(uiImage: UIImage(imageLiteralResourceName: "shoes"))
-                                .resizable()
+                            ZStack() {
+                                Image(systemName: "shoe")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipped()
+                                    .frame(width:150,height:150)
+                                    .foregroundStyle(.black)
+                                    .opacity(0.2)
+                                Image(systemName: "plus.app")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .clipped()
+                                    .frame(width:50,height:50)
+                                    .foregroundStyle(.black)
+                            }
                         }
                     }
                 }.frame(width: 200, height: 550)
