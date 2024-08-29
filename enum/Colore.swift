@@ -40,8 +40,6 @@ let coloriVietati: [Colore: [Colore]] = [
 ]
 
 var coloriConsentiti: [Colore: [Colore]] = [
-    .bianco: [.rosso, .bordeaux, .rosa, .arancione, .gialloUovo, .giallo, .lime, .verdeFluo, .verdeFoglia, .verdeScuro, .verdeOliva,
-              .avio, .avioScuro, .blu, .bluNavy, .bluNotte, .viola, .fuxia, .fuxiaFluo, .marrone, .marroneScuro, .marroneCammello, .celeste, .celesteScuro, .grigio, .nero],
     .rosso: [.bluNotte, .bluNavy, .fuxia, .viola, .grigio, .avio, .avioScuro, .bianco, .nero],
     .bordeaux: [.beige, .verdeFoglia, .rosa, .grigio, .avio, .avioScuro, .bianco],
     .rosa: [.avio, .viola, .fuxia, .blu, .bordeaux, .marrone, .grigio, .avio, .avioScuro, .bianco, .nero],
@@ -69,7 +67,7 @@ var coloriConsentiti: [Colore: [Colore]] = [
     .marroneScuro: [.marrone, .verdeOliva, .verdeFoglia, .grigio, .avio, .avioScuro, .bianco],
     .grigio: [.rosso, .bordeaux, .rosa, .arancione, .gialloUovo, .giallo, .lime, .verdeFluo, .verdeFoglia, .verdeScuro, .verdeOliva,
               .avio, .avioScuro, .blu, .bluNavy, .bluNotte, .viola, .fuxia, .fuxiaFluo, .marrone, .marroneScuro, .crema, .beige,
-              .marroneCammello, .celeste, .celesteScuro, .bianco, .bianco],
+              .marroneCammello, .celeste, .celesteScuro, .bianco],
     .celeste: [.arancione, .blu, .giallo, .grigio, .avio, .avioScuro, .bianco],
     .celesteScuro: [.bluNotte, .verdeScuro, .grigio, .avio, .avioScuro, .bianco],
     .marroneCammello: [.bluNavy, .beige, .marrone, .grigio, .avio, .avioScuro, .bianco]
