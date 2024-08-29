@@ -18,24 +18,22 @@ struct MagicOutfit: View{
     
     var body: some View{
         NavigationStack {
-            ScrollView{
-                VStack{
+            VStack (alignment: .center) {
                     if !isOutfitCreated {
                         if let cloth = cloth {
                             if let image = cloth.image?.toImage() {
-                                Spacer().frame(height:200)
                                 Image(uiImage: image)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width:100,height:100)
+                                    .frame(minWidth:100, maxWidth:150, minHeight:100, maxHeight:150)
                                 
                                 Button(action: {
                                     generateOutfit(cloth: cloth)
                                     isOutfitCreated = true
                                 }){
-                                    Circle()
-                                        .fill(Color(.purple))
-                                        .frame(height: 100)
+                                    RoundedRectangle(cornerRadius: 50)
+                                    .fill(LinearGradient(gradient: Gradient(colors: [.purple, .indigo]), startPoint: .leading, endPoint: .trailing))
+                                    .frame(width: 100, height: 80)
                                         .overlay(
                                             Text("Crea outfit")
                                                 .font(.headline)
@@ -49,11 +47,13 @@ struct MagicOutfit: View{
                         }
                         else{
                             VStack(spacing:20){
-                                Spacer().frame(height:200)
+                                Text("Genera casualmente un outfit a partire da un capo a scelta")
+                                    .multilineTextAlignment(.center)
+                                    .font(.system(size: 18, weight: .bold))
                                 NavigationLink(destination: PickCloth(selectedCloth: $cloth)) {
-                                    Circle()
-                                        .fill(Color(.purple))
-                                        .frame(height: 100)
+                                        RoundedRectangle(cornerRadius: 50)
+                                        .fill(LinearGradient(gradient: Gradient(colors: [.purple, .indigo]), startPoint: .leading, endPoint: .trailing))
+                                        .frame(width: 100, height: 80)
                                         .overlay(
                                             Text("Scegli un capo")
                                                 .font(.headline)
@@ -67,20 +67,20 @@ struct MagicOutfit: View{
                             Image(uiImage: (outfit[0].image?.toImage())!)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width:100,height:100)
+                                .frame(minWidth:100, maxWidth:150, minHeight:100, maxHeight:150)
                             Image(uiImage: (outfit[1].image?.toImage())!)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width:100,height:100)
+                                .frame(minWidth:100, maxWidth:150, minHeight:100, maxHeight:150)
                             Image(uiImage: (outfit[2].image?.toImage())!)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width:100,height:100)
+                                .frame(minWidth:100, maxWidth:150, minHeight:100, maxHeight:150)
                             HStack(spacing:20) {
                                 NavigationLink(destination: AddOutfitScreen(shirt: outfit[0], trousers: outfit[1], shoes: outfit[2])) {
-                                    Circle()
-                                        .fill(Color(.purple))
-                                        .frame(height: 100)
+                                    RoundedRectangle(cornerRadius: 50)
+                                    .fill(LinearGradient(gradient: Gradient(colors: [.purple, .indigo]), startPoint: .leading, endPoint: .trailing))
+                                    .frame(width: 100, height: 80)
                                         .overlay(
                                             Text("Salva")
                                                 .font(.headline)
@@ -90,9 +90,9 @@ struct MagicOutfit: View{
                                 Button(action: {
                                     outfit = validOutfits.randomElement()!
                                 }){
-                                    Circle()
-                                        .fill(Color(.purple))
-                                        .frame(height: 100)
+                                    RoundedRectangle(cornerRadius: 50)
+                                    .fill(LinearGradient(gradient: Gradient(colors: [.purple, .indigo]), startPoint: .leading, endPoint: .trailing))
+                                    .frame(width: 100, height: 80)
                                         .overlay(
                                             Text("Crea altro outfit")
                                                 .font(.headline)
@@ -100,9 +100,9 @@ struct MagicOutfit: View{
                                         )
                                 }
                                 NavigationLink(destination: PickCloth(selectedCloth: $cloth)) {
-                                    Circle()
-                                        .fill(Color(.purple))
-                                        .frame(height: 100)
+                                    RoundedRectangle(cornerRadius: 50)
+                                    .fill(LinearGradient(gradient: Gradient(colors: [.purple, .indigo]), startPoint: .leading, endPoint: .trailing))
+                                    .frame(width: 100, height: 80)
                                         .overlay(
                                             Text("Scegli un altro capo")
                                                 .font(.headline)
@@ -114,16 +114,18 @@ struct MagicOutfit: View{
                             }
                         } else {
                             Text("Impossibile creare un outfit con il capo selezionato")
+                                .multilineTextAlignment(.center)
+                                .font(.system(size: 18, weight: .bold))
                             Spacer().frame(height:200)
                             Image(uiImage: (cloth!.image?.toImage())!)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width:100,height:100)
+                                .frame(minWidth:100, maxWidth:150, minHeight:100, maxHeight:150)
                             VStack(spacing:20){
                                 NavigationLink(destination: PickCloth(selectedCloth: $cloth)) {
-                                    Circle()
-                                        .fill(Color(.purple))
-                                        .frame(height: 100)
+                                    RoundedRectangle(cornerRadius: 50)
+                                    .fill(LinearGradient(gradient: Gradient(colors: [.purple, .indigo]), startPoint: .leading, endPoint: .trailing))
+                                    .frame(width: 100, height: 80)
                                         .overlay(
                                             Text("Scegli un altro capo")
                                                 .font(.headline)
@@ -135,9 +137,9 @@ struct MagicOutfit: View{
                             }
                         }
                     }
-                }
             }
             .navigationTitle("Magic Outfit")
+            .padding()
         }
     }
     
