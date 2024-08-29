@@ -10,12 +10,14 @@ struct AdvicesScreen: View {
     @State private var isMagicOutfitScreenActive = false
     
     @State var cloth: Cloth?
-
+    
     var body: some View {
         NavigationStack {
-                VStack {
+            ScrollView {
+                VStack(spacing: 10){
+                    Spacer().frame(height:5)
                     Text("Outfit del giorno").font(.system(size: 20, weight: .bold))
-
+                    
                     // Se esiste un dailyOutfitID, mostra l'outfit del giorno
                     if let dailyOutfitID = dailyOutfitID,
                        let outfit = database.outfits.first(where: { $0.id == dailyOutfitID }) {
@@ -25,15 +27,16 @@ struct AdvicesScreen: View {
                         Spacer(minLength: 300)
                     }
                 }
-                VStack {
+                VStack (spacing: 10) {
                     Button(action: {
                         isColorMatchScreenActive.toggle()
                     }) {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(LinearGradient(gradient: Gradient(colors: [.red, .orange, .yellow, .green, .blue, .indigo, .purple]), startPoint: .leading, endPoint: .trailing))
-                            .frame(height: 100)
+                            .frame(minHeight: 80, maxHeight: 100)
                             .overlay(
                                 Text("Color Match")
+                                    .font(.system(size: 18, weight: .bold))
                                     .font(.headline)
                                     .foregroundColor(.white)
                             )
@@ -46,11 +49,11 @@ struct AdvicesScreen: View {
                         isMagicOutfitScreenActive.toggle()
                     }) {
                         RoundedRectangle(cornerRadius: 10)
-                            .fill(Color(.purple))
-                            .frame(height: 100)
+                            .fill(LinearGradient(gradient: Gradient(colors: [.purple, .indigo]), startPoint: .leading, endPoint: .trailing))
+                            .frame(minHeight: 80, maxHeight: 100)
                             .overlay(
                                 Text("Magic Outfit")
-                                    .font(.headline)
+                                    .font(.system(size: 18, weight: .bold))
                                     .foregroundColor(.white)
                             )
                     }.sheet(isPresented: $isMagicOutfitScreenActive) {
@@ -59,8 +62,9 @@ struct AdvicesScreen: View {
                 }
                 .padding()
                 .navigationTitle("Consigli per te")
-            .onAppear {
-                selectDailyOutfit()
+                .onAppear {
+                    selectDailyOutfit()
+                }
             }
         }
     }
@@ -69,7 +73,7 @@ struct AdvicesScreen: View {
     func selectDailyOutfit() {
         let calendar = Calendar.current
         let today = Date()
-
+        
         // Controlla se è stato già selezionato un outfit valido oggi
         if let savedDate = UserDefaults.standard.object(forKey: "dailyOutfitDate") as? Date,
            calendar.isDate(savedDate, inSameDayAs: today),
@@ -81,7 +85,7 @@ struct AdvicesScreen: View {
             selectNewOutfit()
         }
     }
-
+    
     // Funzione per selezionare un nuovo outfit da database.outfits
     func selectNewOutfit() {
         let today = Date()
@@ -112,8 +116,8 @@ struct AdvicesScreen: View {
             dailyOutfitID = nil
         }
     }
-
-
+    
+    
     struct SingleOutfitGrid: View {
         
         private var outfit: Outfit
@@ -157,7 +161,7 @@ extension UserDefaults {
     func set(_ value: UUID?, forKey defaultName: String) {
         set(value?.uuidString, forKey: defaultName)
     }
-
+    
     func uuid(forKey defaultName: String) -> UUID? {
         if let uuidString = string(forKey: defaultName) {
             return UUID(uuidString: uuidString)

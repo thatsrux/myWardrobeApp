@@ -55,7 +55,6 @@ struct AddOutfitScreen: View, Deletable {
     var body: some View {
         NavigationStack {
             ScrollView{
-                Spacer().frame(height: 50)
                 VStack(){
                     Button(action: {
                         isAddToOutfitScreenActive = true
