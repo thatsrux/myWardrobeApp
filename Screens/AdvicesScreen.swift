@@ -33,7 +33,7 @@ struct AdvicesScreen: View {
                     }) {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(LinearGradient(gradient: Gradient(colors: [.red, .orange, .yellow, .green, .blue, .indigo, .purple]), startPoint: .leading, endPoint: .trailing))
-                            .frame(minHeight: 80, maxHeight: 100)
+                            .frame(minWidth: 200, maxWidth: 500, minHeight: 80, maxHeight: 100)
                             .overlay(
                                 Text("Color Match")
                                     .font(.system(size: 18, weight: .bold))
@@ -50,7 +50,7 @@ struct AdvicesScreen: View {
                     }) {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(LinearGradient(gradient: Gradient(colors: [.purple, .indigo]), startPoint: .leading, endPoint: .trailing))
-                            .frame(minHeight: 80, maxHeight: 100)
+                            .frame(minWidth: 200, maxWidth: 500, minHeight: 80, maxHeight: 100)
                             .overlay(
                                 Text("Magic Outfit")
                                     .font(.system(size: 18, weight: .bold))
