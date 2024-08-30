@@ -177,6 +177,8 @@ struct AddOutfitScreen: View, Deletable {
                     LabeledContent {
                         TextField("Nome outfit", text: $nomeText)
                             .font(.system(size: 18))
+                            .multilineTextAlignment(.trailing)
+                            .padding(.trailing, 14)
                     } label: {
                         Text("Nome outfit: ")
                             .font(.system(size: 18, weight: .bold))
