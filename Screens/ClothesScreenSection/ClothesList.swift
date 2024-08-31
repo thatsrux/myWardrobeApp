@@ -1,10 +1,3 @@
-//
-//  SwiftUIView.swift
-//  myWardrobe
-//
-//  Created by Studente on 23/07/24.
-//
-
 import SwiftUI
 import Firebase
 

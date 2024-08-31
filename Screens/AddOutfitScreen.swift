@@ -647,11 +647,3 @@ func quickStyleEvaluation(shirt: Cloth, trousers: Cloth, shoes: Cloth) -> Bool {
     
     return stileValido
 }
-
-
-
-//
-//#Preview {
-//    AddOutfitScreen()
-//}
-

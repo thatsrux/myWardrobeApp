@@ -174,7 +174,3 @@ extension String {
         return CGFloat(doubleValue)
     }
 }
-
-#Preview {
-    ContentView()
-}

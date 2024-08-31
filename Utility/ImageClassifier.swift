@@ -1,10 +1,3 @@
-//
-//  ImageClassifier.swift
-//  TemplateCoreMLSwiftUI
-//
-//  Created by Ignazio Finizio on 27/06/24.
-//
-
 import SwiftUI
 
 class ImageClassifier: ObservableObject {
@@ -43,7 +36,6 @@ class ImageClassifier: ObservableObject {
        return ret
    }
         
-    // MARK: Intent(s)
     func detect(uiImage: UIImage) {
         guard let ciImage = CIImage (image: uiImage) else { return }
         classifier.detect(ciImage: ciImage)

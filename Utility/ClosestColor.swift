@@ -83,43 +83,6 @@ let colorMap: [String: UIColor] = [
     "Nero2": UIColor(red: 0.17, green: 0.12, blue: 0.05, alpha: 1.0),
     "Bianco": UIColor.white,
     "Bianco2": UIColor(red: 0.93, green: 0.92, blue: 0.92, alpha: 1.0),
-    
-    // COLORI RIMOSSI
-    
-    //"Blu Notte4": UIColor(red: 0, green: 0, blue: 0.2, alpha: 1.
-    //"Blu Notte5": UIColor(red: 0.1, green: 0.15, blue: 0.2, alpha: 1.0),
-    //"Nero2": UIColor(red: 0.17, green: 0.17, blue: 0, alpha: 1.0),
-    //"Nero3": UIColor(red: 0.176, green: 0.169, blue: 0.09, alpha: 1.0), // Se il nero e blu notte si confondono modificare questo
-    //"Nero5": UIColor(red: 0.16, green: 0.16, blue: 0.16, alpha: 1.0),
-    //"Viola3": UIColor(red: 0.25, green: 0.18, blue: 0.25, alpha: 1.0),
-    //"Viola7": UIColor(red: 0.27, green: 0, blue: 0.4, alpha: 1.0),
-    //"Rosa carne": UIColor(red: 0.8, green: 0.3, blue: 0.5, alpha: 1.0),
-    //"Avorio": UIColor(red: 0.96, green: 0.96, blue: 0.86, alpha: 1.0),
-    //"Turchese": UIColor(red: 0.0, green: 1.0, blue: 1.0, alpha: 1.0),
-    //"Porpora": UIColor(red: 0.3, green: 0.08, blue: 0.16, alpha: 1.0),
-    //"Bronze": UIColor(red: 0.8, green: 0.5, blue: 0.2, alpha: 1.0),
-    //"Charcoal": UIColor(red: 0.21, green: 0.27, blue: 0.31, alpha: 1.0),
-    //"Coffee Brown": UIColor(red: 0.44, green: 0.31, blue: 0.22, alpha: 1.0),
-    //"Copper": UIColor(red: 0.72, green: 0.45, blue: 0.2, alpha: 1.0),
-    //"Grey Melange": UIColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1.0),
-    //"Khaki": UIColor(red: 0.76, green: 0.69, blue: 0.57, alpha: 1.0),
-    //"Kavanda": UIColor(red: 0.9, green: 0.9, blue: 0.98, alpha: 1.0),
-    //"Maroon": UIColor(red: 0.5, green: 0.0, blue: 0.0, alpha: 1.0),
-    //"Mauve": UIColor(red: 0.88, green: 0.69, blue: 1.0, alpha: 1.0),
-    //"Metallic": UIColor(red: 0.81, green: 0.83, blue: 0.82, alpha: 1.0),
-    //"Mushroom Brown": UIColor(red: 0.65, green: 0.58, blue: 0.5, alpha: 1.0),
-    //"Mustard": UIColor(red: 1.0, green: 0.86, blue: 0.35, alpha: 1.0),
-    //"NA": UIColor.clear, // Placeholder
-    //"Nude": UIColor(red: 0.92, green: 0.78, blue: 0.62, alpha: 1.0),
-    //"Off White": UIColor(red: 0.99, green: 0.98, blue: 0.93, alpha: 1.0),
-    //"Peach": UIColor(red: 1.0, green: 0.9, blue: 0.71, alpha: 1.0),
-    //"Rosato": UIColor(red: 1.0, green: 0.0, blue: 0.5, alpha: 1.0),
-    //"Rust": UIColor(red: 0.72, green: 0.26, blue: 0.06, alpha: 1.0),
-    //"Silver": UIColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1.0),
-    //"Skin": UIColor(red: 1.0, green: 0.82, blue: 0.71, alpha: 1.0),
-    //"Steel": UIColor(red: 0.69, green: 0.77, blue: 0.87, alpha: 1.0),
-    //"Tan": UIColor(red: 0.82, green: 0.71, blue: 0.55, alpha: 1.0),
-    //"Taupe": UIColor(red: 0.28, green: 0.24, blue: 0.2, alpha: 1.0),
 ]
 
 func closestColor(to color: UIColor) -> Colore {

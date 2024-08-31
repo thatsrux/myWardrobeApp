@@ -1,10 +1,3 @@
-//
-//  Classifier.swift
-//  TemplateCoreMLSwiftUI
-//
-//  Created by Ignazio Finizio on 27/06/24.
-//
-
 import CoreML
 import Vision
 import CoreImage

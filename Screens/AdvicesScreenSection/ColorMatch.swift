@@ -63,7 +63,3 @@ struct ColorMatch: View{
     }
 
 }
-
-#Preview {
-    ColorMatch()
-}
