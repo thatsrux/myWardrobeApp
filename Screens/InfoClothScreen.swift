@@ -350,7 +350,7 @@ struct InfoClothScreen: View, Deletable {
             colorsNum = 2
         }
         
-        // Se il secondo colore è poco differente dal primo, o se quando viene preso dal primo test è molto simile al nero puro, il capo ha 2 colori.
+        // Se il secondo colore è poco differente dal primo, o se quando viene preso dal primo test è molto simile al nero puro, il capo ha 1 colore.
         if diff1 < 20 || diff2 < 1 {
             colorsNum = 1
         }
