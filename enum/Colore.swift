@@ -63,12 +63,12 @@ var coloriConsentiti: [Colore: [Colore]] = [
     .viola: [.giallo, .rosa, .gialloUovo, .rosso, .fuxiaFluo, .grigio, .avio, .avioScuro, .bianco, .nero],
     .fuxiaFluo: [.viola, .grigio, .rosa, .avio, .avioScuro, .bianco, .nero],
     .fuxia: [.blu, .rosso, .avio, .grigio, .avioScuro, .bianco, .nero],
-    .marrone: [.verdeOliva, .marroneScuro, .rosa, .grigio, .avio, .avioScuro, .bianco],
-    .marroneScuro: [.marrone, .verdeOliva, .verdeFoglia, .grigio, .avio, .avioScuro, .bianco],
+    .marrone: [.verdeOliva, .marroneScuro, .marroneCammello, .rosa, .grigio, .avio, .avioScuro, .bianco],
+    .marroneScuro: [.marrone, .marroneCammello, .verdeOliva, .verdeFoglia, .grigio, .avio, .avioScuro, .bianco],
     .grigio: [.rosso, .bordeaux, .rosa, .arancione, .gialloUovo, .giallo, .lime, .verdeFluo, .verdeFoglia, .verdeScuro, .verdeOliva,
               .avio, .avioScuro, .blu, .bluNavy, .bluNotte, .viola, .fuxia, .fuxiaFluo, .marrone, .marroneScuro, .crema, .beige,
               .marroneCammello, .celeste, .celesteScuro, .bianco, .nero],
     .celeste: [.arancione, .blu, .giallo, .grigio, .avio, .avioScuro, .bianco, .nero],
     .celesteScuro: [.grigio, .avio, .avioScuro, .bianco, .nero],
-    .marroneCammello: [.bluNavy, .beige, .marrone, .grigio, .avio, .avioScuro, .bianco]
+    .marroneCammello: [.bluNavy, .beige, .marrone, .marroneScuro, .grigio, .avio, .avioScuro, .bianco]
 ]
