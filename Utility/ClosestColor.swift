@@ -76,9 +76,10 @@ let colorMap: [String: UIColor] = [
     "Marrone": UIColor.brown,
     // Variazioni del marrone
     "Marrone2": UIColor(red: 0.675, green: 0.475, blue: 0.3, alpha: 1.0),
-    "Marrone Cammello": UIColor(red: 0.63, green: 0.5, blue: 0.42, alpha: 1.0),
+    "Marrone Cammello": UIColor(red: 0.69, green: 0.52, blue: 0.42, alpha: 1.0),
     "Marrone Scuro": UIColor(red: 0.32, green: 0.2, blue: 0.05, alpha: 1.0),
     "Grigio": UIColor.gray,
+    "Grigio2": UIColor(red: 0.64, green: 0.65, blue: 0.69, alpha: 1.0),
     "Nero": UIColor.black,
     "Nero2": UIColor(red: 0.17, green: 0.12, blue: 0.05, alpha: 1.0),
     "Bianco": UIColor.white,
